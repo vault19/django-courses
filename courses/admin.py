@@ -1,9 +1,35 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.html import format_html
+
 from courses.models import Courses, Curriculums, CurriculumDetails, Runs, Artefact, PeerReview, Certificates
 
 
 class CoursesAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "state", "view_runs_link", "view_curriculums_link")
+
+    def view_runs_link(self, obj):
+        count = obj.runs_set.count()
+        url = (
+                reverse("admin:courses_runs_changelist")
+                + "?"
+                + urlencode({"courses__id": f"{obj.id}"})
+        )
+        return format_html('<a href="{}">{} Run(s)</a>', url, count)
+
+    view_runs_link.short_description = "Runs"
+
+    def view_curriculums_link(self, obj):
+        count = obj.runs_set.count()
+        url = (
+                reverse("admin:courses_curriculums_changelist")
+                + "?"
+                + urlencode({"courses__id": f"{obj.id}"})
+        )
+        return format_html('<a href="{}">{} Curriculum(s)</a>', url, count)
+
+    view_curriculums_link.short_description = "Curriculums"
 
 
 class CurriculumsAdmin(admin.ModelAdmin):
