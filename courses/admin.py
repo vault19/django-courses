@@ -8,6 +8,7 @@ from courses.models import Course, Curriculum, CurriculumDetail, Run, Artefact, 
 
 class CurriculumInline(admin.TabularInline):
     model = Curriculum
+    show_change_link = True
     extra = 0
 
 
@@ -67,6 +68,8 @@ class ArtefactInline(admin.TabularInline):
     model = Artefact
     fields = ("curriculum", "author", "title", "description", "data")
     readonly_fields = ("curriculum", "author", "title", "description", "data")
+    show_change_link = True
+    can_delete = False
     extra = 0
 
 
@@ -91,7 +94,6 @@ class RunAdmin(admin.ModelAdmin):
 class ReviewInline(admin.TabularInline):
     model = Review
     fields = ("author", "title", "description")
-    readonly_fields = ("author", "title", "description")
     extra = 0
 
 
@@ -103,19 +105,9 @@ class ArtefactAdmin(admin.ModelAdmin):
 
     def view_reviews_link(self, obj):
         count = obj.review_set.count()
-        url = (
-                reverse("admin:courses_review_changelist")
-                + "?"
-                + urlencode({"artefact__id": f"{obj.id}"})
-        )
-        return format_html('<a href="{}">{} Review(s)</a>', url, count)
+        return format_html('{} Review(s)', count)
 
     view_reviews_link.short_description = "Reviews"
-
-
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("title", "artefact", "author")
 
 
 @admin.register(Certificate)

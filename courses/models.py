@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -43,11 +46,23 @@ class Run(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True)
     start = models.DateField()
-    end = models.DateField(blank=True, null=True)
+    end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically "
+                                                              "if any of the curriculums has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        total_days = 0
+
+        for curriculum in self.course.curriculum_set.all():
+            total_days += curriculum.length
+
+        if total_days:
+            self.end = self.start + timedelta(days=total_days)
+
+        super().save(*args, **kwargs)
 
 
 class Artefact(models.Model):
@@ -73,6 +88,10 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+    def clean(self):
+        if self.author == self.artefact.author:
+            raise ValidationError({'author': _('You can not review your own artefact!')})
 
 
 class Certificate(models.Model):
