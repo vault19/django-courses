@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h2>{{ course.course.name }}</h2>
+        <h3>{{ course.title|upper }}</h3>
+        <p>{{ course.start }} - {{ course.end }}</p>
+        <p>{{ course.description }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for curricula in course.course.curriculum_set.all %}
+    <div class="col">
+      <h2>{{ curricula.title }}</h2>
+        <p>{{ curricula.description }}</p>
+        <a href="{% url 'detail' curricula.id %}">More ...</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<h2>
+{% endblock %}
