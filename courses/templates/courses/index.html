@@ -2,20 +2,43 @@
 
 
 {% block content %}
-<div class="container">
-  <div class="row">
-
-    {% for course in courses_list %}
-    <div class="col">
-      <h2>{{ course.course.name }}</h2>
-        <h3>{{ course.title|upper }}</h3>
-        <p>{{ course.start }} - {{ course.end }}</p>
-        <p>{{ course.description }}</p>
-        <a href="{% url 'detail' course.id %}">More ...</a>
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Školenia a webináre pre učiteľov</h1>
+        <p class="lead text-muted">Ako žiakov zaujať na hodinách informatiky? A ako ich pri tom aj naučiť niečo užitočné, ako je digitálna gramotnosť? Ideálnou voľbou je programovateľná "hračka", ktorá okrem iného bliká, bzučí, reaguje na dotyk či ovláda motorčeky.</p>
+        <p>
+          <a href="https://www.ucimeshardverom.sk/" class="btn btn-primary my-2">Učíme s Hardvérom</a>
+          <a href="https://www.ucimeshardverom.sk/o_nas/" class="btn btn-secondary my-2">O nás</a>
+        </p>
+      </div>
     </div>
-    {% endfor %}
+  </section>
 
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        {% for course in courses_list %}
+        <div class="col">
+          <div class="card shadow-sm">
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+            <div class="card-body">
+              <h5 class="card-title">{{ course.course.name }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ course.title|upper }}</h6>
+              <p class="card-text">{{ course.description }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'detail' course.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+                <small class="text-muted">{{ course.start }} - {{ course.end }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
   </div>
-</div>
-<h2>
 {% endblock %}
