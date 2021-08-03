@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.text import slugify
 
 from autoslug import AutoSlugField
 
@@ -24,13 +23,13 @@ class Course(models.Model):
         return f"{self.name}"
 
 
-class Curriculum(models.Model):
+class Chapter(models.Model):
     title = models.CharField(max_length=250)
     slug = AutoSlugField(populate_from='title', unique=True)
     description = models.TextField(help_text=_('Explain what will user learn in this lesson.'))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    length = models.IntegerField(blank=True, null=True, help_text=_('Number of days that curriculum will be open.'))
-    # require_artifact = models.BooleanField()
+    length = models.IntegerField(blank=True, null=True, help_text=_('Number of days that chapter will be open.'))
+    require_submission = models.BooleanField(help_text=_('Next chapter wont be unlocked until submission is provided.'))
 
     def __str__(self):
         return f"{self.course}: {self.title}"
@@ -40,7 +39,7 @@ class Lecture(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe study material.'))
     data = models.FileField(help_text=_('Upload study material (document, video, image).'))
-    curriculum = models.ForeignKey(Curriculum, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.title}"
@@ -52,7 +51,7 @@ class Run(models.Model):
     description = models.TextField(blank=True, null=True)
     start = models.DateField()
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically "
-                                                              "if any of the curriculums has length set."))
+                                                              "if any of the chapter has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -61,14 +60,11 @@ class Run(models.Model):
     def save(self, *args, **kwargs):
         total_days = 0
 
-        for curriculum in self.course.curriculum_set.all():
-            total_days += curriculum.length
+        for chapter in self.course.chapter_set.all():
+            total_days += chapter.length
 
         if total_days:
             self.end = self.start + timedelta(days=total_days)
-
-        if not self.slug:
-            self.slug = slugify(self.title)
 
         super().save(*args, **kwargs)
 
@@ -77,12 +73,13 @@ class Submission(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
     data = models.FileField(blank=True, null=True, help_text=_('Upload proof of your work (document, video, image).'))
-    curriculum = models.ForeignKey(Curriculum, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, blank=True, null=True)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, blank=True, null=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.curriculum}: {self.title}"
+        return f"{self.chapter}: {self.title}"
 
 
 class Review(models.Model):

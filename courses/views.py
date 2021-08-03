@@ -1,7 +1,7 @@
 import datetime
 from django.http import Http404
 from django.shortcuts import render
-from courses.models import Curriculum, Run
+from courses.models import Chapter, Run
 
 
 def index(request):
@@ -21,8 +21,8 @@ def course_run_detail(request, run_slug):
 
 def curriculum_detail(request, run_slug, curriculum_slug):
     try:
-        curriculum = Curriculum.objects.get(slug=curriculum_slug)
-    except Curriculum.DoesNotExist:
+        curriculum = Chapter.objects.get(slug=curriculum_slug)
+    except Chapter.DoesNotExist:
         raise Http404("Curriculum does not exist...")
     return render(request, 'courses/curriculum.html', {'curriculum': curriculum})
 

@@ -3,11 +3,11 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
 
-from courses.models import Course, Curriculum, Lecture, Run, Submission, Review, Certificate
+from courses.models import Course, Chapter, Lecture, Run, Submission, Review, Certificate
 
 
-class CurriculumInline(admin.TabularInline):
-    model = Curriculum
+class ChapterInline(admin.TabularInline):
+    model = Chapter
     show_change_link = True
     extra = 0
 
@@ -19,9 +19,9 @@ class RunInline(admin.TabularInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("name", "state", "view_run_link", "view_curriculum_link",)
+    list_display = ("name", "state", "view_run_link", "view_chapter_link",)
     list_filter = ("state",)
-    inlines = (RunInline, CurriculumInline,)
+    inlines = (RunInline, ChapterInline,)
 
     def view_run_link(self, obj):
         count = obj.run_set.count()
@@ -34,16 +34,16 @@ class CourseAdmin(admin.ModelAdmin):
 
     view_run_link.short_description = "Runs"
 
-    def view_curriculum_link(self, obj):
-        count = obj.curriculum_set.count()
+    def view_chapter_link(self, obj):
+        count = obj.chapter_set.count()
         url = (
-                reverse("admin:courses_curriculum_changelist")
+                reverse("admin:courses_chapter_changelist")
                 + "?"
                 + urlencode({"courses__id": f"{obj.id}"})
         )
-        return format_html('<a href="{}">{} Curriculum(s)</a>', url, count)
+        return format_html('<a href="{}">{} Chapter(s)</a>', url, count)
 
-    view_curriculum_link.short_description = "Curriculums"
+    view_chapter_link.short_description = "Chapter"
 
 
 class LectureDetailInline(admin.TabularInline):
@@ -51,8 +51,8 @@ class LectureDetailInline(admin.TabularInline):
     extra = 1
 
 
-@admin.register(Curriculum)
-class CurriculumAdmin(admin.ModelAdmin):
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "length", "view_details_link")
     inlines = (LectureDetailInline,)
 
@@ -66,8 +66,8 @@ class CurriculumAdmin(admin.ModelAdmin):
 
 class SubmissionInline(admin.TabularInline):
     model = Submission
-    fields = ("curriculum", "author", "title", "description", "data")
-    readonly_fields = ("curriculum", "author", "title", "description", "data")
+    fields = ("chapter", "author", "title", "description", "data")
+    readonly_fields = ("chapter", "author", "title", "description", "data")
     show_change_link = True
     can_delete = False
     extra = 0
@@ -99,7 +99,7 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "curriculum", "run", "view_reviews_link")
+    list_display = ("title", "author", "chapter", "run", "view_reviews_link")
     list_filter = ("run",)
     inlines = (ReviewInline,)
 
