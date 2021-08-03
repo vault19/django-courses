@@ -1,11 +1,17 @@
 import datetime
+
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render
+
 from courses.models import Chapter, Run
 
 
 def index(request):
-    course_runs = Run.objects.filter(course__state='O').filter(start__gt=datetime.datetime.today()).order_by('-start')
+    course_runs = Run.objects\
+        .filter(course__state='O')\
+        .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
+        .order_by('-start')
     context = {'course_runs': course_runs}
 
     return render(request, 'courses/index.html', context)
