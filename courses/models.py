@@ -20,6 +20,13 @@ LECTURE_TYPE = (
     ('PF', _('Peer Feedback')),
     ('P', _('Project')),
     ('F', _('Feedback')),
+    ('L', _('Live lesson')),
+)
+
+SUBMISSION_TYPE = (
+    ('N', _('Not required')),
+    ('C', _('Required for next chapter')),
+    ('E', _('Required to end course')),
 )
 
 
@@ -65,10 +72,11 @@ class Lecture(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default='V')
 
+    require_submission = models.CharField(max_length=1, choices=SUBMISSION_TYPE, default='N', help_text=_(
+        'A submission can be required either for continuing to the next chapter or to finish the course.'))
+    require_submission_review = models.CharField(max_length=1, choices=SUBMISSION_TYPE, default='N', help_text=_(
+        'Submission is accepted only after being accepted by a review.'))
 
-    require_submission = models.BooleanField(help_text=_('Next chapter wont be unlocked until submission is provided.'))
-    require_submission_certificate = models.BooleanField(help_text=_('The course certificate wont be unlocked until submission is provided.'))
-    
     def __str__(self):
         return f"{self.title}"
 
@@ -81,6 +89,9 @@ class Run(models.Model):
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
                                                               "chapter has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    limit = models.IntegerField(default=0, help_text=_(
+        'Max number of attendees, after which registration for the Run will close. If set to 0 the course will have no '
+        'limit.'))
 
     def __str__(self):
         return f"{self.title}"
@@ -99,24 +110,34 @@ class Run(models.Model):
         super().save(*args, **kwargs)
 
 
+class Meeting(models.Model):
+    run = models.ForeignKey(Run, on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    link = models.CharField(max_length=250)
+    description = models.TextField(blank=True, null=True)
+
+
 class Submission(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
     data = models.FileField(blank=True, null=True, help_text=_('Upload proof of your work (document, video, image).'))
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, blank=True, null=True)
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, blank=True, null=True)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.chapter}: {self.title}"
+        return f"{self.lecture}: {self.title}"
 
 
 class Review(models.Model):
     title = models.CharField(max_length=250)
-    description = models.TextField(blank=True, null=True, help_text=_('Describe your opinion about the artefact.'))
+    description = models.TextField(blank=True, null=True, help_text=_('Describe your opinion about the submission.'))
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    accepted = models.BooleanField(help_text=_(
+        'Check if the submission if acceptable. If not, the reviewee will have to submit a new submission.'))
 
     class Meta:
         unique_together = ("submission", "author",)
@@ -126,7 +147,7 @@ class Review(models.Model):
 
     def clean(self):
         if self.author == self.submission.author:
-            raise ValidationError({'author': _('You can not review your own artefact!')})
+            raise ValidationError({'author': _('You can not review your own submission!')})
 
 
 class Certificate(models.Model):
