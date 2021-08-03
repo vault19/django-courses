@@ -61,9 +61,10 @@ class Run(models.Model):
         total_days = 0
 
         for chapter in self.course.chapter_set.all():
-            total_days += chapter.length
+            if chapter.length:
+                total_days += chapter.length
 
-        if total_days:
+        if total_days != 0:
             self.end = self.start + timedelta(days=total_days)
 
         super().save(*args, **kwargs)
