@@ -14,6 +14,14 @@ COURSE_STATE = (
     ('P', _('Private')),
 )
 
+LECTURE_TYPE = (
+    ('V', _('Video Lesson')),
+    ('T', _('Text to read')),
+    ('PF', _('Peer Feedback')),
+    ('P', _('Project')),
+    ('F', _('Feedback')),
+)
+
 
 class Course(models.Model):
     name = models.CharField(max_length=250)
@@ -43,7 +51,6 @@ class Chapter(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     length = models.IntegerField(default=7, help_text=_('Number of days that chapter will be open. If all chapters '
                                                         'length is set to 0 course is considered self-paced.'))
-    require_submission = models.BooleanField(help_text=_('Next chapter wont be unlocked until submission is provided.'))
 
     def __str__(self):
         return f"{self.course}: {self.title}"
@@ -51,11 +58,17 @@ class Chapter(models.Model):
 
 class Lecture(models.Model):
     title = models.CharField(max_length=250)
+    subtitle = models.CharField(blank=True, null=True, max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Introduce the study material, explain what data '
                                                                       'are uploaded.'))
-    data = models.FileField(help_text=_('Upload study material (document, video, image).'))
+    data = models.FileField(blank=True, null=True, help_text=_('Upload study material (document, video, image).'))
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default='V')
 
+
+    require_submission = models.BooleanField(help_text=_('Next chapter wont be unlocked until submission is provided.'))
+    require_submission_certificate = models.BooleanField(help_text=_('The course certificate wont be unlocked until submission is provided.'))
+    
     def __str__(self):
         return f"{self.title}"
 
