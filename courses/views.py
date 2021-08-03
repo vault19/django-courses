@@ -25,12 +25,12 @@ def course_run_detail(request, run_slug):
     return render(request, 'courses/run_detail.html', {'run': run})
 
 
-def curriculum_detail(request, run_slug, curriculum_slug):
+def chapter_detail(request, run_slug, chapter_slug):
     try:
-        curriculum = Chapter.objects.get(slug=curriculum_slug)
+        chapter = Chapter.objects.get(slug=chapter_slug)
     except Chapter.DoesNotExist:
-        raise Http404("Curriculum does not exist...")
-    return render(request, 'courses/curriculum.html', {'curriculum': curriculum})
+        raise Http404("Chapter does not exist...")
+    return render(request, 'courses/chapter.html', {'chapter': chapter})
 
 
 # def lecture_detail(request, course_id, lecture_id):
