@@ -5,10 +5,10 @@
   <section class="py-5 text-center container">
     <div class="row py-lg-5">
       <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">{{ course.course.name }}</h1>
-        <h2 class="fw-light">{{ course.title|upper }}</h2>
-        <p class="lead text-muted">{{ course.description }}</p>
-        <p>{{ course.start }} - {{ course.end }}</p>
+        <h1 class="fw-light">{{ run.course.name }}</h1>
+        <h2 class="fw-light">{{ run.title|upper }}</h2>
+        <p class="lead text-muted">{{ run.description }}</p>
+        <p>{{ run.start }} - {{ run.end }}</p>
       </div>
     </div>
   </section>
@@ -17,7 +17,7 @@
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-        {% for curricula in course.course.curriculum_set.all %}
+        {% for curricula in run.course.curriculum_set.all %}
         <div class="col">
           <div class="card shadow-sm">
 {#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
@@ -27,7 +27,7 @@
               <p class="card-text">{{ curricula.description }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="{% url 'detail' curricula.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                  <a href="{% url 'curriculum_detail' run.slug curricula.slug %}" class="btn btn-sm btn-outline-secondary">View</a>
                 </div>
 {#                <small class="text-muted">{{ course.start }} - {{ course.end }}</small>#}
               </div>

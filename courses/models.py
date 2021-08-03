@@ -4,6 +4,9 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
+
+from autoslug import AutoSlugField
 
 COURSE_STATE = (
     ('D', _('Draft')),
@@ -23,6 +26,7 @@ class Course(models.Model):
 
 class Curriculum(models.Model):
     title = models.CharField(max_length=250)
+    slug = AutoSlugField(populate_from='title', unique=True)
     description = models.TextField(help_text=_('Explain what will user learn in this lesson.'))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     length = models.IntegerField(blank=True, null=True, help_text=_('Number of days that curriculum will be open.'))
@@ -32,7 +36,7 @@ class Curriculum(models.Model):
         return f"{self.course}: {self.title}"
 
 
-class CurriculumDetail(models.Model):
+class Lecture(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe study material.'))
     data = models.FileField(help_text=_('Upload study material (document, video, image).'))
@@ -44,6 +48,7 @@ class CurriculumDetail(models.Model):
 
 class Run(models.Model):
     title = models.CharField(max_length=250)
+    slug = AutoSlugField(populate_from='title', unique=True)
     description = models.TextField(blank=True, null=True)
     start = models.DateField()
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically "
@@ -62,10 +67,13 @@ class Run(models.Model):
         if total_days:
             self.end = self.start + timedelta(days=total_days)
 
+        if not self.slug:
+            self.slug = slugify(self.title)
+
         super().save(*args, **kwargs)
 
 
-class Artefact(models.Model):
+class Submission(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
     data = models.FileField(blank=True, null=True, help_text=_('Upload proof of your work (document, video, image).'))
@@ -80,17 +88,17 @@ class Artefact(models.Model):
 class Review(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe your opinion about the artefact.'))
-    artefact = models.ForeignKey(Artefact, on_delete=models.CASCADE)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ("artefact", "author",)
+        unique_together = ("submission", "author",)
 
     def __str__(self):
         return f"{self.title}"
 
     def clean(self):
-        if self.author == self.artefact.author:
+        if self.author == self.submission.author:
             raise ValidationError({'author': _('You can not review your own artefact!')})
 
 

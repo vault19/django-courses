@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h2 class="fw-light">{{ curriculum.title|upper }}</h2>
+        {% if curriculum.length %}
+        <p class="lead text-muted">Days: {{ curriculum.length }} TODO: calculate dates...</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% if curriculum.description %}
+  <section class="bg-light">
+    <div class="py-5 container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <p>{{ curriculum.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if curriculum.lecture_set.all %}
+  <div class="py-5 container">
+    <div class="row py-lg-5">
+
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        {% for lecture in curriculum.lecture_set.all %}
+        <li class="nav-item" role="presentation">
+          <button class="nav-link{% if forloop.first %} active{% endif %}" id="tab-{{ lecture.id }}" data-bs-toggle="tab" data-bs-target="#tab-id-{{ lecture.id }}" type="button" role="tab" aria-controls="tab-id-{{ lecture.id }}" aria-selected="true">
+          {{ lecture.title }}
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        {% for lecture in curriculum.lecture_set.all %}
+        <div class="py-3 tab-pane fade show{% if forloop.first %} active{% endif %}" id="tab-id-{{ lecture.id }}" role="tabpanel" aria-labelledby="tab-{{ lecture.id }}">
+          <p>{{ lecture.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
