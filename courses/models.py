@@ -54,6 +54,8 @@ class Course(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=250)
     slug = AutoSlugField(populate_from='title', unique=True)
+    perex = models.TextField(blank=True, null=True, help_text=_('Short description of the chapter displayed in the list'
+                                                                ' of all chapters.'))
     description = models.TextField(help_text=_('Explain what will user learn in this lesson.'))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     length = models.IntegerField(default=7, help_text=_('Number of days that chapter will be open. If all chapters '
@@ -84,14 +86,15 @@ class Lecture(models.Model):
 class Run(models.Model):
     title = models.CharField(max_length=250)
     slug = AutoSlugField(populate_from='title', unique=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True,
+                                   help_text=_("Short description displayed in course list, use as course perex. If "
+                                               "empty course description will be used."))
     start = models.DateField()
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
                                                               "chapter has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    limit = models.IntegerField(default=0, help_text=_(
-        'Max number of attendees, after which registration for the Run will close. If set to 0 the course will have no '
-        'limit.'))
+    limit = models.IntegerField(default=0, help_text=_('Max number of attendees, after which registration for the Run '
+                                                       'will close. If set to 0 the course will have no limit.'))
 
     def __str__(self):
         return f"{self.title}"
@@ -136,8 +139,8 @@ class Review(models.Model):
     description = models.TextField(blank=True, null=True, help_text=_('Describe your opinion about the submission.'))
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    accepted = models.BooleanField(help_text=_(
-        'Check if the submission if acceptable. If not, the reviewee will have to submit a new submission.'))
+    accepted = models.BooleanField(help_text=_('Check if the submission if acceptable. If not, the reviewee will have '
+                                               'to submit a new submission.'))
 
     class Meta:
         unique_together = ("submission", "author",)

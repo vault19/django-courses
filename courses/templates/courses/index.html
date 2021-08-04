@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load markdownify %}
 
 {% block content %}
   <section class="py-5 text-center container">
@@ -26,7 +27,7 @@
             <div class="card-body">
               <h5 class="card-title">{{ course_run.course.name }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ course_run.title|upper }}</h6>
-              <p class="card-text">{{ course_run.description }}</p>
+              <p class="card-text">{% if course_run.description %}{{ course_run.description|markdownify }}{% else %}{{ course_run.course.description|markdownify }}{% endif %}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>

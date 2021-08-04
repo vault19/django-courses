@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-
+{% load i18n %}
+{% load markdownify %}
 
 {% block content %}
   <section class="py-5 text-center container">
@@ -7,7 +8,7 @@
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">{{ run.course.name }}</h1>
         <h2 class="fw-light">{{ run.title|upper }}</h2>
-        <p class="lead text-muted">{{ run.description }}</p>
+        <p class="lead text-muted">{{ run.course.description|markdownify }}</p>
         <p>{{ run.start }} - {{ run.end }}</p>
       </div>
     </div>
@@ -24,10 +25,10 @@
             <div class="card-body">
               <h5 class="card-title">{{ chapter.title }}</h5>
 {#              <h6 class="card-subtitle mb-2 text-muted">{{ course.title|upper }}</h6>#}
-              <p class="card-text">{{ chapter.description }}</p>
+              <p class="card-text">{{ chapter.perex|markdownify }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm btn-outline-secondary">View</a>
+                  <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
                 </div>
 {#                <small class="text-muted">{{ course.start }} - {{ course.end }}</small>#}
               </div>
