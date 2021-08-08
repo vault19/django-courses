@@ -53,6 +53,7 @@ class Course(models.Model):
 
 class Chapter(models.Model):
     title = models.CharField(max_length=250)
+    previous = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
     slug = AutoSlugField(populate_from='title', unique=True)
     perex = models.TextField(blank=True, null=True, help_text=_('Short description of the chapter displayed in the list'
                                                                 ' of all chapters.'))
@@ -63,6 +64,20 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.course}: {self.title}"
+
+    def get_run_dates(self, run):
+        total_days = 0
+        previous_chapter = self.previous
+
+        while previous_chapter is not None:
+            total_days += previous_chapter.length
+            previous_chapter = previous_chapter.previous
+
+        return run.start + timedelta(days=total_days), run.start + timedelta(days=total_days + self.length - 1)
+
+    def clean(self):
+        if self.previous and self.previous.course != self.course:
+            raise ValidationError({'previous': _('You can not link to chapter in different course!')})
 
 
 class Lecture(models.Model):
@@ -108,7 +123,7 @@ class Run(models.Model):
 
     def save(self, *args, **kwargs):
         if self.length != 0:
-            self.end = self.start + timedelta(days=self.length)
+            self.end = self.start + timedelta(days=self.length - 1)
 
         super().save(*args, **kwargs)
 

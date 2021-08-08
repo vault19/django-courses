@@ -7,8 +7,15 @@ from django import forms
 from courses.models import Course, Chapter, Lecture, Run, Submission, Review, Certificate, Meeting
 
 
+class ChapterInlineAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['previous'].queryset = self.instance.previous.all()
+
+
 class ChapterInline(admin.TabularInline):
     model = Chapter
+    # form = ChapterInlineAdminForm
     show_change_link = True
     extra = 0
 
