@@ -1,13 +1,17 @@
 import datetime
 
 from django.db.models import Q
-from django.http import Http404
-from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
+from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-
-from courses.models import Chapter, Run
-from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
+from courses.forms import SubmissionForm
+from courses.models import Chapter, Run, Submission
+from courses.utils import get_run_chapter, verify_course_dates
+from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, \
+    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
 
 
 def index(request):
@@ -31,11 +35,7 @@ def closed_runs(request):
 
 
 def course_run_detail(request, run_slug):
-    try:
-        run = Run.objects.get(slug=run_slug)
-    except Run.DoesNotExist:
-        raise Http404(_("Course does not exist..."))
-
+    run = get_object_or_404(Run, slug=run_slug)
     chapters = []
 
     for chapter in run.course.chapter_set.all():
@@ -59,31 +59,58 @@ def course_run_detail(request, run_slug):
 
 
 def chapter_detail(request, run_slug, chapter_slug):
-    try:
-        run = Run.objects.get(slug=run_slug)
-    except Run.DoesNotExist:
-        raise Http404(_("Course does not exist..."))
-
-    try:
-        chapter = Chapter.objects.get(slug=chapter_slug)
-    except Chapter.DoesNotExist:
-        raise Http404(_("Chapter does not exist..."))
-
+    run, chapter = get_run_chapter(run_slug, chapter_slug)
     start, end = chapter.get_run_dates(run=run)
-
-    context = {'chapter': chapter, 'start': start, 'end': end}
-
-    if datetime.date.today() > end:
-        if COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
-            context['alert'] = {"severity": "warning", "message": _("Chapter has already ended...")}
-        else:
-            raise Http404(_("Chapter has already ended...") + " " + _("Sorry it is not available any more."))
-
-    if datetime.date.today() < start:
-        raise Http404(_("Chapter hasnt started yet...") + " " + _("Please come back later."))
+    context = {
+        'run': run,
+        'chapter': chapter,
+        'start': start,
+        'end': end
+    }
+    verify_course_dates(start, end, context)
 
     return render(request, 'courses/chapter.html', context)
 
+
+def chapter_submission(request, run_slug, chapter_slug):
+    run, chapter = get_run_chapter(run_slug, chapter_slug)
+    start, end = chapter.get_run_dates(run=run)
+    context = {
+        'run': run,
+        'chapter': chapter,
+        'start': start,
+        'end': end
+    }
+    verify_course_dates(start, end, context)
+    user_submissions = Submission.objects.filter(author=request.user).filter(run=run).filter(chapter=chapter).all()
+
+    if request.method == 'POST':
+        if datetime.date.today() > end and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+            raise PermissionDenied(_("Chapter has already ended...") + " " + _("Submission is not allowed."))
+
+        if len(user_submissions) == 1:
+            submission = user_submissions[0]
+        else:
+            submission = Submission(chapter=chapter, run=run, author=request.user)
+
+        form = SubmissionForm(request.POST, request.FILES, instance=submission)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/thanks/')
+    else:
+        if datetime.date.today() > end and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+            context['user_submissions'] = user_submissions
+            form = None
+        elif len(user_submissions) == 1:
+            submission = user_submissions[0]
+            form = SubmissionForm(instance=submission)
+        else:
+            form = SubmissionForm()
+
+    context['form'] = form
+
+    return render(request, 'courses/chapter_submission.html', context)
 
 # def lecture_detail(request, course_id, lecture_id):
 #     try:

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load markdownify %}
 {% load courses_extra %}
 
@@ -8,8 +9,9 @@
       <div class="col-lg-6 col-md-8 mx-auto">
         <h2 class="fw-light">{{ chapter.title|upper }}</h2>
         {% if chapter.length %}
-        <p class="lead text-muted">{{ chapterstart }} - {{ end }}</p>
+        <p class="lead text-muted">{{ start }} - {{ end }}</p>
         {% endif %}
+        <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-outline-secondary">{% translate "Course Chapters" %}</a>
       </div>
     </div>
   </section>
@@ -20,6 +22,7 @@
       <div class="row">
         <div class="col-12 mx-auto">
           <p>{{ chapter.description|markdownify }}</p>
+          <a href="{% url 'chapter_submission' run.slug chapter.slug %}" class="btn btn-outline-secondary">{% translate "Submission" %}</a>
         </div>
       </div>
     </div>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+{% load bootstrap_tags %}
+
+
+{% block content %}
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h2 class="fw-light">{{ chapter.title|upper }}</h2>
+        {% if chapter.length %}
+        <p class="lead text-muted">{{ start }} - {{ end }}</p>
+        {% endif %}
+        <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-outline-secondary">{% translate "Course Chapters" %}</a>
+      </div>
+    </div>
+  </section>
+
+  {% if chapter.description %}
+  <section class="bg-light">
+    <div class="py-5 container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <p>{{ chapter.description|markdownify }}</p>
+          <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-outline-secondary">{% translate "Lectures" %}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if chapter.lecture_set.all %}
+  <div class="py-5 container">
+    <div class="row py-lg-5">
+      {% if user_submissions %}
+        {% for submission in user_submissions %}
+          <div class="col-12 mx-auto">
+            <b>{{ submission.title }}</b>
+          </div>
+          <div class="col-12 mx-auto">
+            <p>{{ submission.description|markdownify }}</p>
+          </div>
+        {% endfor %}
+      {% elif form %}
+      <form method="post">
+        <legend>{% translate "My Submission" %}</legend>
+        {% csrf_token %}
+        {{ form|as_bootstrap }}
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

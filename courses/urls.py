@@ -7,6 +7,7 @@ urlpatterns = [
     path('closed/', views.closed_runs, name='closed_runs'),
     path('course/<str:run_slug>/', views.course_run_detail, name='course_run_detail'),
     path('course/<str:run_slug>/<str:chapter_slug>/', views.chapter_detail, name='chapter_detail'),
+    path('course/<str:run_slug>/<str:chapter_slug>/submission/', views.chapter_submission, name='chapter_submission'),
     # path('course/<str:run_slug>/<str:curriculum_slug>/<int:lecture_id>/', views.lecture_detail, name='lecture_detail'),
 
     # path('<int:question_id>/results/', views.results, name='results'),

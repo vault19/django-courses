@@ -142,11 +142,26 @@ class Submission(models.Model):
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
     data = models.FileField(blank=True, null=True, help_text=_('Upload proof of your work (document, video, image).'))
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.lecture}: {self.title}"
+
+    def clean(self):
+        if self.chapter and self.chapter not in self.run.course.chapter_set.all():
+            raise ValidationError({'chapter': _('Selected chapter does not belong to submission\'s course.')})
+
+        if self.lecture:
+            selected = False
+
+            for chapter in self.run.course.chapter_set.all():
+                if self.lecture in chapter.lecture_set.all():
+                    selected = True
+
+            if not selected:
+                raise ValidationError({'lecture': _('Selected lecture does not belong to submission\'s course.')})
 
 
 class Review(models.Model):
