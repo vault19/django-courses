@@ -2,6 +2,7 @@ import datetime
 
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_list_or_404, get_object_or_404
@@ -24,6 +25,7 @@ def index(request):
     return render(request, 'courses/index.html', context)
 
 
+@login_required
 def closed_runs(request):
     course_runs = Run.objects \
         .filter(Q(course__state='O') | Q(course__state='C')) \
@@ -58,6 +60,7 @@ def course_run_detail(request, run_slug):
     return render(request, 'courses/run_detail.html', {'run': run, 'chapters': chapters})
 
 
+@login_required
 def chapter_detail(request, run_slug, chapter_slug):
     run, chapter = get_run_chapter(run_slug, chapter_slug)
     start, end = chapter.get_run_dates(run=run)
@@ -72,6 +75,7 @@ def chapter_detail(request, run_slug, chapter_slug):
     return render(request, 'courses/chapter.html', context)
 
 
+@login_required
 def chapter_submission(request, run_slug, chapter_slug):
     run, chapter = get_run_chapter(run_slug, chapter_slug)
     start, end = chapter.get_run_dates(run=run)
@@ -112,6 +116,7 @@ def chapter_submission(request, run_slug, chapter_slug):
 
     return render(request, 'courses/chapter_submission.html', context)
 
+# @login_required
 # def lecture_detail(request, course_id, lecture_id):
 #     try:
 #         course = Run.objects.get(pk=course_id)
