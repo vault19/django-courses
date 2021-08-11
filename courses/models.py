@@ -108,6 +108,7 @@ class Run(models.Model):
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
                                                               "chapter has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     limit = models.IntegerField(default=0, help_text=_('Max number of attendees, after which registration for the Run '
                                                        'will close. If set to 0 the course will have no limit.'))
 
@@ -125,6 +126,10 @@ class Run(models.Model):
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
 
+        if self.limit > 0:
+            # TODO: validate number of subscribed users
+            pass
+
         super().save(*args, **kwargs)
 
 
@@ -135,6 +140,9 @@ class Meeting(models.Model):
     end = models.DateTimeField()
     link = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True)
+
+# class Subscription(models.Model):
+#     models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Submission(models.Model):
