@@ -116,6 +116,21 @@ def chapter_submission(request, run_slug, chapter_slug):
 
     return render(request, 'courses/chapter_submission.html', context)
 
+
+@login_required
+def subscribe_to_run(request, run_slug):
+    run = get_object_or_404(Run, slug=run_slug)
+    run.users.add(request.user)
+    run.save()
+
+
+@login_required
+def unsubscribe_from_run(request, run_slug):
+    run = get_object_or_404(Run, slug=run_slug)
+    run.users.remove(request.user)
+    run.save()
+
+
 # @login_required
 # def lecture_detail(request, course_id, lecture_id):
 #     try:
