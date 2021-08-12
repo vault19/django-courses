@@ -1,18 +1,16 @@
 import datetime
 
 from django.db.models import Q
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
-from django.forms.models import model_to_dict
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, get_list_or_404, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from courses.forms import SubmissionForm
-from courses.models import Chapter, Run, Submission
+from courses.models import Run, Submission
 from courses.utils import get_run_chapter, verify_course_dates
-from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, \
-    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
+from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
 
 
 def index(request):
@@ -70,7 +68,7 @@ def chapter_detail(request, run_slug, chapter_slug):
         'start': start,
         'end': end
     }
-    verify_course_dates(start, end, context)
+    verify_course_dates(start, end)
 
     return render(request, 'courses/chapter.html', context)
 
@@ -85,7 +83,7 @@ def chapter_submission(request, run_slug, chapter_slug):
         'start': start,
         'end': end
     }
-    verify_course_dates(start, end, context)
+    verify_course_dates(start, end)
     user_submissions = Submission.objects.filter(author=request.user).filter(run=run).filter(chapter=chapter).all()
 
     if request.method == 'POST':
@@ -101,7 +99,9 @@ def chapter_submission(request, run_slug, chapter_slug):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/thanks/')
+
+            messages.success(request, _('Your submission has been saved.'))
+            return redirect('chapter_submission', run_slug=run_slug, chapter_slug=chapter_slug)
     else:
         if datetime.date.today() > end and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
             context['user_submissions'] = user_submissions
@@ -123,12 +123,18 @@ def subscribe_to_run(request, run_slug):
     run.users.add(request.user)
     run.save()
 
+    messages.success(request, _('You have been subscribed to course: %s' % run))
+    return redirect('course_run_detail', run_slug=run_slug)
+
 
 @login_required
 def unsubscribe_from_run(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
     run.users.remove(request.user)
     run.save()
+
+    messages.success(request, _('You have been unsubscribed from course: %s' % run))
+    return redirect('course_run_detail', run_slug=run_slug)
 
 
 # @login_required

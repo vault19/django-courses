@@ -1,11 +1,12 @@
 import datetime
 
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 
 from courses.models import Chapter, Run
-from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
-from django.utils.translation import ugettext_lazy as _
+from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
 
 
 def get_run_chapter(run_slug, chapter_slug):
@@ -15,11 +16,9 @@ def get_run_chapter(run_slug, chapter_slug):
     return run, chapter
 
 
-def verify_course_dates(start, end, context):
+def verify_course_dates(start, end):
     if datetime.date.today() > end:
-        if COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
-            context['alert'] = {"severity": "warning", "message": _("Chapter has already ended...")}
-        else:
+        if not COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
             raise PermissionDenied(_("Chapter has already ended...") + " " + _("Sorry it is not available any more."))
 
     if datetime.date.today() < start:
