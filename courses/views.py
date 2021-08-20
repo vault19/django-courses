@@ -10,11 +10,12 @@ from django.utils.translation import ugettext_lazy as _
 from courses.forms import SubmissionForm
 from courses.models import Course, Run, Submission
 from courses.utils import get_run_chapter, verify_course_dates
-from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
+from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_SHOW_FUTURE_CHAPTERS, \
+    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
 
 
 def index(request):
-    return redirect('courses')
+    return redirect(COURSES_LANDING_PAGE_URL)
 
 
 def courses(request):

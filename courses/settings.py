@@ -1,5 +1,8 @@
 from django.conf import settings
 
+# Default redirect from index page
+COURSES_LANDING_PAGE_URL = getattr(settings, 'COURSES_LANDING_PAGE_URL', 'all_active_runs')
+
 # In run details display also future chapters that are not available yet.
 COURSES_SHOW_FUTURE_CHAPTERS = getattr(settings, 'COURSES_SHOW_FUTURE_CHAPTERS', False)
 
