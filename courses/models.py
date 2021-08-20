@@ -32,6 +32,7 @@ SUBMISSION_TYPE = (
 
 class Course(models.Model):
     name = models.CharField(max_length=250)
+    slug = AutoSlugField(populate_from='name', unique=True)
     description = models.TextField()
     state = models.CharField(max_length=1, choices=COURSE_STATE, default='D')
 

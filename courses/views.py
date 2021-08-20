@@ -8,12 +8,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from courses.forms import SubmissionForm
-from courses.models import Run, Submission
+from courses.models import Course, Run, Submission
 from courses.utils import get_run_chapter, verify_course_dates
 from courses.settings import COURSES_SHOW_FUTURE_CHAPTERS, COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
 
 
 def index(request):
+    return redirect('courses')
+
+
+def courses(request):
+    courses = Course.objects \
+        .filter(state='O') \
+        .order_by('name')
+    context = {'courses': courses}
+
+    return render(request, 'courses/courses.html', context)
+
+
+def all_active_runs(request):
     course_runs = Run.objects\
         .filter(course__state='O')\
         .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
@@ -24,7 +37,7 @@ def index(request):
 
 
 @login_required
-def closed_runs(request):
+def all_closed_runs(request):
     course_runs = Run.objects \
         .filter(Q(course__state='O') | Q(course__state='C')) \
         .filter(Q(end__lt=datetime.datetime.today())) \
