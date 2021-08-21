@@ -34,7 +34,7 @@ def course_detail(request, course_slug):
         'course_runs': course.run_set.all(),
     }
 
-    return render(request, 'courses/course_details.html', context)
+    return render(request, 'courses/course_detail.html', context)
 
 
 def all_active_runs(request):
@@ -42,9 +42,9 @@ def all_active_runs(request):
         .filter(course__state='O')\
         .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
         .order_by('-start')
-    context = {'course_runs': course_runs}
+    context = {'runs': course_runs}
 
-    return render(request, 'courses/index.html', context)
+    return render(request, 'courses/runs_list.html', context)
 
 
 @login_required
@@ -53,9 +53,9 @@ def all_closed_runs(request):
         .filter(Q(course__state='O') | Q(course__state='C')) \
         .filter(Q(end__lt=datetime.datetime.today())) \
         .order_by('-start')
-    context = {'course_runs': course_runs}
+    context = {'runs': course_runs}
 
-    return render(request, 'courses/index.html', context)
+    return render(request, 'courses/runs_list.html', context)
 
 
 def course_run_detail(request, run_slug):
@@ -94,7 +94,7 @@ def chapter_detail(request, run_slug, chapter_slug):
     }
     verify_course_dates(start, end)
 
-    return render(request, 'courses/chapter.html', context)
+    return render(request, 'courses/chapter_detail.html', context)
 
 
 @login_required

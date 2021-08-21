@@ -27,7 +27,7 @@
             <div class="card-body">
               <h5 class="card-title">{{ course.title }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ course_run.title|upper }}</h6>
-              <p class="card-text">{{ course.description|markdownify }}</p>
+              <p class="card-text">{{ course.perex|markdownify }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a href="{% url 'course_detail' course.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>

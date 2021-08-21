@@ -4,21 +4,7 @@
 {% load courses_extra %}
 
 {% block content %}
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">{{ run.course.title }}</h1>
-        <h2 class="fw-light">{{ run.title|upper }}</h2>
-        <p class="lead text-muted">{{ run.course.description|markdownify }}</p>
-        <p>{{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
-          {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}</p>
-        <p>
-          <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-primary my-2">{% translate "Subscribe" %}</a>
-          <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-primary my-2">{% translate "Unsubscribe" %}</a>
-        </p>
-      </div>
-    </div>
-  </section>
+  {% include "courses/includes/course_header.html" with course=run.course run=run %}
 
   <div class="album py-5 bg-light">
     <div class="container">
