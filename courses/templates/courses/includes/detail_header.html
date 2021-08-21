@@ -1,14 +1,22 @@
 {% load i18n %}
 {% load markdownify %}
 
-<section class="py-5 text-center container">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
+<section class="py-5 container">
+  <div class="row {#py-lg-5#}">
+    <div class="col-lg-8 col-md-10 mx-auto text-center">
       <h1 class="fw-light">{{ course.title }}</h1>
       {% if run %}
         <h2 class="fw-light">{{ run.title|upper }}</h2>
       {% endif %}
-      <p class="lead text-muted">{{ course.description|markdownify }}</p>
+    </div>
+  </div>
+  <div class="row {#py-lg-5#}">
+    <div class="col">
+      <p class="lead">{{ course.description|markdownify }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
       {% if run %}
         <p>{{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
           {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}

@@ -1,53 +1,17 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load markdownify %}
-{% load courses_extra %}
-
+`
 {% block content %}
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Školenia a webináre pre učiteľov</h1>
-        <p class="lead text-muted">Ako žiakov zaujať na hodinách informatiky? A ako ich pri tom aj naučiť niečo užitočné, ako je digitálna gramotnosť? Ideálnou voľbou je programovateľná "hračka", ktorá okrem iného bliká, bzučí, reaguje na dotyk či ovláda motorčeky.</p>
-        <p>
-          <a href="https://www.ucimeshardverom.sk/" class="btn btn-primary my-2">Učíme s Hardvérom</a>
-          <a href="https://www.ucimeshardverom.sk/o_nas/" class="btn btn-secondary my-2">O nás</a>
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
 
-        {% for course_run in runs %}
-        <div class="col">
-          <div class="card shadow-sm">
-{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
-            <div class="card-body">
-              <h5 class="card-title">{{ course_run.course.title }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ course_run.title|upper }}</h6>
-              <p class="card-text">{% if course_run.perex %}{{ course_run.perex|markdownify }}{% elif course_run.course.perex %}{{ course_run.course.perex|markdownify }}{% else %}{{ course_run.course.description|markdownify }}{% endif %}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
-                  {% if course_run|is_subscribed:request.user %}
-                    <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-success disabled">{% translate "Subscribed" %}</a>
-                  {% endif %}
-                  {% if course_run.is_past_due %}
-                    <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
-                  {% endif %}
-                </div>
-                <small class="text-muted"><i class="fas fa-calendar-alt"></i> {{ course_run.start }}{% if course_run.end %} - {{ course_run.end }}{% endif %}
-                {% if course_run.self_paced %} - {% translate "Self-paced" %}{% endif %}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
+      {% for course_run in runs %}
+        {% include "courses/includes/list.html" with course=course_run.course run=course_run %}
+      {% endfor %}
 
-      </div>
     </div>
   </div>
+</div>
+
 {% endblock %}

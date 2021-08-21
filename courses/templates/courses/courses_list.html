@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 g-3">
+
+      {% for course in courses %}
+        {% include "courses/includes/list.html" with course=course %}
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

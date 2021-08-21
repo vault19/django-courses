@@ -24,7 +24,7 @@ def courses(request):
         .order_by('title')
     context = {'courses': courses}
 
-    return render(request, 'courses/courses.html', context)
+    return render(request, 'courses/courses_list.html', context)
 
 
 def course_detail(request, course_slug):

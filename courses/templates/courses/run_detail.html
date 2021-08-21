@@ -4,7 +4,21 @@
 {% load courses_extra %}
 
 {% block content %}
-  {% include "courses/includes/course_header.html" with course=run.course run=run subscribed=subscribed %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb" class="mt-2">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'all_active_runs' %}">Kurzy</a></li>
+          <li class="breadcrumb-item active">{{ run.course.title }} - {{ run.title|upper }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+  {% include "courses/includes/detail_header.html" with course=run.course run=run subscribed=subscribed %}
 
   <div class="album py-5 bg-light">
     <div class="container">
