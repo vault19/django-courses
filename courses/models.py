@@ -144,6 +144,11 @@ class Run(models.Model):
     def self_paced(self):
         return self.course.self_paced()
 
+    def is_subscribed(self, user):
+        return self.users \
+            .filter(runusers__user=user) \
+            .count() > 0
+
     def save(self, *args, **kwargs):
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)

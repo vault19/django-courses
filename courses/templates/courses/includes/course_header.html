@@ -15,8 +15,11 @@
         </p>
         {% if user.is_authenticated %}
           <p>
-            <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-primary my-2">{% translate "Subscribe" %}</a>
-            <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-primary my-2">{% translate "Unsubscribe" %}</a>
+            {% if subscribed %}
+              <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-primary my-2">{% translate "Unsubscribe" %}</a>
+            {% else %}
+              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-primary my-2">{% translate "Subscribe" %}</a>
+            {% endif %}
           </p>
         {% endif %}
       {% endif %}

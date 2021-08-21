@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load markdownify %}
+{% load courses_extra %}
 
 {% block content %}
   <section class="py-5 text-center container">
@@ -31,8 +32,11 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
+                  {% if course_run|is_subscribed:request.user %}
+                    <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-success disabled">{% translate "Subscribed" %}</a>
+                  {% endif %}
                 </div>
-                <small class="text-muted">{{ course_run.start }}{% if course_run.end %} - {{ course_run.end }}{% endif %}
+                <small class="text-muted"><i class="fas fa-calendar-alt"></i> {{ course_run.start }}{% if course_run.end %} - {{ course_run.end }}{% endif %}
                 {% if course_run.self_paced %} - {% translate "Self-paced" %}{% endif %}</small>
               </div>
             </div>

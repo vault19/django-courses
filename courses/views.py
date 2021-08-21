@@ -87,13 +87,17 @@ def all_closed_runs(request):
 
 def course_run_detail(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
-    chapters = []
+    context = {
+        'run': run,
+        'chapters': [],
+        'subscribed': run.is_subscribed(request.user)
+    }
 
     for chapter in run.course.chapter_set.all():
         start, end = chapter.get_run_dates(run=run)
 
         if COURSES_SHOW_FUTURE_CHAPTERS or start <= datetime.date.today():
-            chapters.append({
+            context['chapters'].append({
                 'start': start,
                 'end': end,
                 'title': chapter.title,
@@ -106,7 +110,7 @@ def course_run_detail(request, run_slug):
                 'passed': end < datetime.date.today(),
             })
 
-    return render(request, 'courses/run_detail.html', {'run': run, 'chapters': chapters})
+    return render(request, 'courses/run_detail.html', context)
 
 
 @login_required
@@ -119,6 +123,7 @@ def chapter_detail(request, run_slug, chapter_slug):
         'start': start,
         'end': end
     }
+    # TODO: verify subscription!
     verify_course_dates(start, end)
 
     return render(request, 'courses/chapter_detail.html', context)
