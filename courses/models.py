@@ -37,9 +37,9 @@ from django.db.models import Q
 class Course(models.Model):
     title = models.CharField(max_length=250)
     perex = models.TextField(blank=True, null=True, help_text=_('Short description of the course displayed in the list'
-                                                                ' of all courses.'))
+                                                                ' of all courses. If empty description will be used.'))
     slug = AutoSlugField(populate_from='name', unique=True)
-    description = models.TextField()
+    description = models.TextField(help_text=_('Full description of the course.'))
     state = models.CharField(max_length=1, choices=COURSE_STATE, default='D')
 
     def __str__(self):
@@ -76,7 +76,8 @@ class Chapter(models.Model):
     slug = AutoSlugField(populate_from='title', unique=True)
     perex = models.TextField(blank=True, null=True, help_text=_('Short description of the chapter displayed in the list'
                                                                 ' of all chapters.'))
-    description = models.TextField(help_text=_('Explain what will user learn in this lesson.'))
+    description = models.TextField(help_text=_('Full description of the chapter. Explain what will user learn in this '
+                                               'lesson.'))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     length = models.IntegerField(default=7, help_text=_('Number of days that chapter will be open. If all chapters '
                                                         'length is set to 0 course is considered self-paced.'))
@@ -127,7 +128,9 @@ class Run(models.Model):
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
                                                               "chapter has length set."))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='RunUsers', blank=True)
+    price = models.FloatField(default=0, help_text=_('Price for the course run that will have to be payed by the '
+                                                     'subscriber.'))
     limit = models.IntegerField(default=0, help_text=_('Max number of attendees, after which registration for the Run '
                                                        'will close. If set to 0 the course will have no limit.'))
 
@@ -150,6 +153,16 @@ class Run(models.Model):
             pass
 
         super().save(*args, **kwargs)
+
+
+class RunUsers(models.Model):
+    run = models.ForeignKey(Run, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    payment = models.FloatField(default=0)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
 
 
 class Meeting(models.Model):
