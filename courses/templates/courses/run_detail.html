@@ -22,6 +22,9 @@
                 {% if user.is_authenticated and subscribed %}
                 <div class="btn-group">
                   <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-success{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a>
+                  {% if chapter.passed %}
+                    <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
+                  {% endif %}
                 </div>
                 {% endif %}
                 <small class="text-muted">{{ chapter.start }} - {{ chapter.end }}</small>

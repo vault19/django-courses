@@ -13,7 +13,7 @@
         <p>{{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
           {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}
         </p>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and not run.is_past_due %}
           <p>
             {% if subscribed %}
               <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-primary my-2">{% translate "Unsubscribe" %}</a>

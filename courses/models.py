@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -140,6 +140,10 @@ class Run(models.Model):
     @property
     def length(self):
         return self.course.length
+
+    @property
+    def is_past_due(self):
+        return date.today() > self.end
 
     def self_paced(self):
         return self.course.self_paced()
