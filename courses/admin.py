@@ -27,7 +27,7 @@ class RunInline(admin.TabularInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("name", "state", "view_run_link", "view_chapter_link",)
+    list_display = ("title", "state", "view_run_link", "view_chapter_link",)
     list_filter = ("state",)
     inlines = (RunInline, ChapterInline,)
 

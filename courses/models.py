@@ -29,15 +29,33 @@ SUBMISSION_TYPE = (
     ('E', _('Required to end course')),
 )
 
+import datetime
+
+from django.db.models import Q
+
 
 class Course(models.Model):
-    name = models.CharField(max_length=250)
+    title = models.CharField(max_length=250)
+    perex = models.TextField(blank=True, null=True, help_text=_('Short description of the course displayed in the list'
+                                                                ' of all courses.'))
     slug = AutoSlugField(populate_from='name', unique=True)
     description = models.TextField()
     state = models.CharField(max_length=1, choices=COURSE_STATE, default='D')
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.title}"
+
+    def has_active_runs(self):
+        return len(self.get_active_runs()) > 0
+
+    def get_active_runs(self):
+        if self.state == 'O':
+            return self.run_set\
+                .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
+                .order_by('-start')\
+                .all()
+        else:
+            return []
 
     @property
     def length(self):
@@ -102,9 +120,9 @@ class Lecture(models.Model):
 class Run(models.Model):
     title = models.CharField(max_length=250)
     slug = AutoSlugField(populate_from='title', unique=True)
-    description = models.TextField(blank=True, null=True,
-                                   help_text=_("Short description displayed in course list, use as course perex. If "
-                                               "empty course description will be used."))
+    perex = models.TextField(blank=True, null=True,
+                             help_text=_("Short description displayed in course list, use as course perex. If empty "
+                                         "course perex will be used."))
     start = models.DateField()
     end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
                                                               "chapter has length set."))

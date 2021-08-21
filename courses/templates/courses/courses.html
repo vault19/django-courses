@@ -25,13 +25,15 @@
           <div class="card shadow-sm">
 {#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
             <div class="card-body">
-              <h5 class="card-title">{{ course.name }}</h5>
+              <h5 class="card-title">{{ course.title }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ course_run.title|upper }}</h6>
               <p class="card-text">{{ course.description|markdownify }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="#" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
+                  <a href="{% url 'course_detail' course.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
+                  {% if course.has_active_runs == 0 %}
                   <a href="#" class="btn btn-sm btn-outline-primary">{% translate "Add to waiting list" %}</a>
+                  {% endif %}
                 </div>
               </div>
             </div>

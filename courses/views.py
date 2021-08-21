@@ -21,10 +21,20 @@ def index(request):
 def courses(request):
     courses = Course.objects \
         .filter(state='O') \
-        .order_by('name')
+        .order_by('title')
     context = {'courses': courses}
 
     return render(request, 'courses/courses.html', context)
+
+
+def course_detail(request, course_slug):
+    course = get_object_or_404(Course, slug=course_slug)
+    context = {
+        'course': course,
+        'course_runs': course.run_set.all(),
+    }
+
+    return render(request, 'courses/course_details.html', context)
 
 
 def all_active_runs(request):
