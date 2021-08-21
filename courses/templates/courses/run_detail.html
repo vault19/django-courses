@@ -19,9 +19,11 @@
 {#              <h6 class="card-subtitle mb-2 text-muted">{{ course.title|upper }}</h6>#}
               <p class="card-text">{{ chapter.perex|markdownify }}</p>
               <div class="d-flex justify-content-between align-items-center">
+                {% if user.is_authenticated %}
                 <div class="btn-group">
                   <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-success{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a>
                 </div>
+                {% endif %}
                 <small class="text-muted">{{ chapter.start }} - {{ chapter.end }}</small>
               </div>
             </div>

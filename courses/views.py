@@ -41,6 +41,30 @@ def all_active_runs(request):
     course_runs = Run.objects\
         .filter(course__state='O')\
         .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
+        .order_by('start')
+    context = {'runs': course_runs}
+
+    return render(request, 'courses/runs_list.html', context)
+
+
+@login_required
+def all_subscribed_active_runs(request):
+    course_runs = Run.objects\
+        .filter(course__state='O')\
+        .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None)) \
+        .filter(runusers__user=request.user) \
+        .order_by('start')
+    context = {'runs': course_runs}
+
+    return render(request, 'courses/runs_list.html', context)
+
+
+@login_required
+def all_subscribed_closed_runs(request):
+    course_runs = Run.objects \
+        .filter(Q(course__state='O') | Q(course__state='C')) \
+        .filter(Q(end__lt=datetime.datetime.today())) \
+        .filter(runusers__user=request.user) \
         .order_by('-start')
     context = {'runs': course_runs}
 
@@ -49,6 +73,9 @@ def all_active_runs(request):
 
 @login_required
 def all_closed_runs(request):
+    if not request.user.is_staff:
+        raise PermissionDenied(_("You are not allowed to visit this page."))
+
     course_runs = Run.objects \
         .filter(Q(course__state='O') | Q(course__state='C')) \
         .filter(Q(end__lt=datetime.datetime.today())) \
