@@ -1,11 +1,14 @@
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
+
+from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
 
 COURSE_STATE = (
     ('D', _('Draft')),
@@ -29,10 +32,6 @@ SUBMISSION_TYPE = (
     ('E', _('Required to end course')),
 )
 
-import datetime
-
-from django.db.models import Q
-
 
 class Course(models.Model):
     title = models.CharField(max_length=250)
@@ -46,16 +45,15 @@ class Course(models.Model):
         return f"{self.title}"
 
     def has_active_runs(self):
-        return len(self.get_active_runs()) > 0
+        return self.get_active_runs().count() > 0
 
     def get_active_runs(self):
         if self.state == 'O':
             return self.run_set\
-                .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
-                .order_by('-start')\
-                .all()
+                .filter(Q(end__gte=datetime.today()) | Q(end=None))\
+                .order_by('-start')
         else:
-            return []
+            return self.objects.none()
 
     @property
     def length(self):
@@ -85,7 +83,17 @@ class Chapter(models.Model):
     def __str__(self):
         return f"{self.course}: {self.title}"
 
-    def get_run_dates(self, run):
+    @staticmethod
+    def verify_course_dates(start, end):
+        if date.today() > end:
+            if not COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
+                raise PermissionDenied(
+                    _("Chapter has already ended...") + " " + _("Sorry it is not available any more."))
+
+        if date.today() < start:
+            raise PermissionDenied(_("Chapter hasnt started yet...") + " " + _("Please come back later."))
+
+    def get_run_dates(self, run, raise_wrong_dates=False):
         total_days = 0
         previous_chapter = self.previous
 
@@ -93,7 +101,13 @@ class Chapter(models.Model):
             total_days += previous_chapter.length
             previous_chapter = previous_chapter.previous
 
-        return run.start + timedelta(days=total_days), run.start + timedelta(days=total_days + self.length - 1)
+        start = run.start + timedelta(days=total_days)
+        end = run.start + timedelta(days=total_days + self.length - 1)
+
+        if raise_wrong_dates:
+            self.verify_course_dates(start, end)
+
+        return start, end
 
     def clean(self):
         if self.previous and self.previous.course != self.course:
@@ -148,10 +162,17 @@ class Run(models.Model):
     def self_paced(self):
         return self.course.self_paced()
 
-    def is_subscribed(self, user):
-        return self.users \
+    def is_subscribed(self, user, raise_unsubscribed=False):
+        subscriptions = self.users \
             .filter(runusers__user=user) \
-            .count() > 0
+            .count()
+
+        if subscriptions > 0:
+            return True
+        elif raise_unsubscribed:
+            raise PermissionDenied(_("You are not subscribed to this course!"))
+        else:
+            return False
 
     def save(self, *args, **kwargs):
         if self.length != 0:

@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from courses.forms import SubmissionForm
 from courses.models import Course, Run, Submission
-from courses.utils import get_run_chapter, verify_course_dates
+from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_SHOW_FUTURE_CHAPTERS, \
     COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
 
@@ -115,41 +115,28 @@ def course_run_detail(request, run_slug):
 
 @login_required
 def chapter_detail(request, run_slug, chapter_slug):
-    run, chapter = get_run_chapter(run_slug, chapter_slug)
-    start, end = chapter.get_run_dates(run=run)
-    context = {
-        'run': run,
-        'chapter': chapter,
-        'start': start,
-        'end': end
-    }
-    # TODO: verify subscription!
-    verify_course_dates(start, end)
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
 
     return render(request, 'courses/chapter_detail.html', context)
 
 
 @login_required
 def chapter_submission(request, run_slug, chapter_slug):
-    run, chapter = get_run_chapter(run_slug, chapter_slug)
-    start, end = chapter.get_run_dates(run=run)
-    context = {
-        'run': run,
-        'chapter': chapter,
-        'start': start,
-        'end': end
-    }
-    verify_course_dates(start, end)
-    user_submissions = Submission.objects.filter(author=request.user).filter(run=run).filter(chapter=chapter).all()
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
+    user_submissions = Submission.objects\
+        .filter(author=request.user)\
+        .filter(run=context['run'])\
+        .filter(chapter=context['chapter'])\
+        .all()
 
     if request.method == 'POST':
-        if datetime.date.today() > end and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+        if datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
             raise PermissionDenied(_("Chapter has already ended...") + " " + _("Submission is not allowed."))
 
         if len(user_submissions) == 1:
             submission = user_submissions[0]
         else:
-            submission = Submission(chapter=chapter, run=run, author=request.user)
+            submission = Submission(chapter=context['chapter'], run=context['run'], author=request.user)
 
         form = SubmissionForm(request.POST, request.FILES, instance=submission)
 
@@ -159,7 +146,7 @@ def chapter_submission(request, run_slug, chapter_slug):
             messages.success(request, _('Your submission has been saved.'))
             return redirect('chapter_submission', run_slug=run_slug, chapter_slug=chapter_slug)
     else:
-        if datetime.date.today() > end and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+        if datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
             context['user_submissions'] = user_submissions
             form = None
         elif len(user_submissions) == 1:
@@ -175,21 +162,33 @@ def chapter_submission(request, run_slug, chapter_slug):
 
 @login_required
 def subscribe_to_run(request, run_slug):
+    # TODO: change to POST
     run = get_object_or_404(Run, slug=run_slug)
-    run.users.add(request.user)
-    run.save()
 
-    messages.success(request, _('You have been subscribed to course: %s' % run))
+    if not run.is_subscribed(request.user):
+        run.users.add(request.user)
+        run.save()
+
+        messages.success(request, _('You have been subscribed to course: %s' % run))
+    else:
+        messages.warning(request, _('You are already subscribed to course: %s' % run))
+
     return redirect('course_run_detail', run_slug=run_slug)
 
 
 @login_required
 def unsubscribe_from_run(request, run_slug):
+    # TODO: change to POST
     run = get_object_or_404(Run, slug=run_slug)
-    run.users.remove(request.user)
-    run.save()
 
-    messages.success(request, _('You have been unsubscribed from course: %s' % run))
+    if run.is_subscribed(request.user):
+        run.users.remove(request.user)
+        run.save()
+
+        messages.success(request, _('You have been unsubscribed from course: %s' % run))
+    else:
+        messages.warning(request, _('You are not subscribed to the course: %s' % run))
+
     return redirect('course_run_detail', run_slug=run_slug)
 
 

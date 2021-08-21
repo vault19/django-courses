@@ -31,7 +31,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a href="{% url 'course_detail' course.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
-                  {% if course.has_active_runs == 0 %}
+                  {% if not course.has_active_runs %}
                   <a href="#" class="btn btn-sm btn-outline-primary">{% translate "Add to waiting list" %}</a>
                   {% endif %}
                 </div>
