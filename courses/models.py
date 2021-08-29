@@ -81,7 +81,7 @@ class Chapter(models.Model):
                                                         'length is set to 0 course is considered self-paced.'))
 
     def __str__(self):
-        return f"{self.course}: {self.title}"
+        return f"{self.title}"
 
     @staticmethod
     def verify_course_dates(start, end):
@@ -129,7 +129,7 @@ class Lecture(models.Model):
         'Submission is accepted only after being accepted by a review.'))
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.chapter.title}: {self.title}"
 
 
 class Run(models.Model):
@@ -149,7 +149,7 @@ class Run(models.Model):
                                                        'will close. If set to 0 the course will have no limit.'))
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.course}: {self.title}"
 
     @property
     def length(self):
@@ -200,8 +200,45 @@ class Meeting(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
     start = models.DateTimeField()
     end = models.DateTimeField()
-    link = models.CharField(max_length=250)
+    link = models.URLField(max_length=250)
     description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Meeting: {self.run} {self.lecture}: {self.start} {self.end}"
+
+    def clean(self):
+        if self.start > self.end:
+            raise ValidationError({'end': _('Meeting can not finish before it has started.')})
+
+        # if self.run.start and self.start.date() < self.run.start:
+        #     raise ValidationError({'start': _('Meeting is scheduled before the course run starts.')})
+        #
+        # if self.run.end and self.start.date() > self.run.end:
+        #     raise ValidationError({'start': _('Meeting is scheduled after the course run is already finished.')})
+        #
+        # if self.run.end and self.end.date() > self.run.end:
+        #     raise ValidationError({'end': _('Meeting can not end after the course run is already finished.')})
+
+        if self.run.end and self.run.end < date.today():
+            raise ValidationError(_('You are not allowed to add meeting to run that has already finished.'))
+
+        if self.run not in self.lecture.chapter.course.get_active_runs():
+            raise ValidationError({'lecture': _('Lecture does not belong to this course (and its chapters).')})
+
+        start, end = self.lecture.chapter.get_run_dates(self.run)
+
+        if self.start.date() < start:
+            raise ValidationError(
+                {'start': _(f"Meeting is scheduled before the lecture's chapter starts: {start}.")})
+
+        if self.start.date() > end:
+            raise ValidationError(
+                {'start': _(f"Meeting is scheduled after the lecture's chapter is already finished: {end}.")})
+
+        if self.end.date() > end:
+            raise ValidationError(
+                {'end': _(f"Meeting can not end after the lecture's chapter is already finished: {end}.")})
+
 
 # class Subscription(models.Model):
 #     models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
@@ -220,10 +257,15 @@ class Submission(models.Model):
         return f"{self.lecture}: {self.title}"
 
     def clean(self):
-        if self.chapter and self.chapter not in self.run.course.chapter_set.all():
-            raise ValidationError({'chapter': _('Selected chapter does not belong to submission\'s course.')})
+        if self.chapter:
 
-        if self.lecture:
+            if self.chapter not in self.run.course.chapter_set.all():
+                raise ValidationError({'chapter': _('Selected chapter does not belong to submission\'s course.')})
+
+            if self.lecture and self.lecture not in self.chapter.lecture_set.all():
+                raise ValidationError({'lecture': _('Selected lecture does not belong to selected chapter.')})
+
+        elif self.lecture:
             selected = False
 
             for chapter in self.run.course.chapter_set.all():

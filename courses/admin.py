@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import reverse
+from django.urls import resolve, reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
 from django import forms
@@ -8,16 +8,20 @@ from courses.models import Course, Chapter, Lecture, Run, Submission, Review, Ce
 
 
 class ChapterInlineAdminForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['previous'].queryset = self.instance.previous.all()
+
+        if self.instance.id:
+            self.fields['previous'].queryset = Chapter.objects.filter(course=self.instance.course)
 
 
 class ChapterInline(admin.TabularInline):
     model = Chapter
-    # form = ChapterInlineAdminForm
+    form = ChapterInlineAdminForm
     show_change_link = True
     extra = 0
+    # autocomplete_fields = ['previous']  # Creates select2, but does not respect form queryset filter!
 
 
 class RunInline(admin.TabularInline):
@@ -29,6 +33,7 @@ class RunInline(admin.TabularInline):
 class CourseAdmin(admin.ModelAdmin):
     list_display = ("title", "state", "view_run_link", "view_chapter_link",)
     list_filter = ("state",)
+    search_fields = ['title']
     inlines = (RunInline, ChapterInline,)
 
     def view_run_link(self, obj):
@@ -36,7 +41,7 @@ class CourseAdmin(admin.ModelAdmin):
         url = (
                 reverse("admin:courses_run_changelist")
                 + "?"
-                + urlencode({"courses__id": f"{obj.id}"})
+                + urlencode({"course__id__exact": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Run(s)</a>', url, count)
 
@@ -47,7 +52,7 @@ class CourseAdmin(admin.ModelAdmin):
         url = (
                 reverse("admin:courses_chapter_changelist")
                 + "?"
-                + urlencode({"courses__id": f"{obj.id}"})
+                + urlencode({"course__id__exact": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Chapter(s)</a>', url, count)
 
@@ -59,50 +64,56 @@ class LectureDetailInline(admin.TabularInline):
     extra = 1
 
 
-class MeetingInlineForm(forms.ModelForm):
-    class Meta:
-        model = Meeting
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(MeetingInlineForm, self).__init__(*args, **kwargs)
-
-        # ToDo - Add filtering based on Course as well
-        self.fields['lecture'].queryset = Lecture.objects.filter(lecture_type='L')
-
-
-class MeetingDetailInline(admin.TabularInline):
-    model = Meeting
-    extra = 0
-    form = MeetingInlineForm
-
-
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ("title", "course", "length", "view_details_link")
+    list_display = ("title", "course", "length", "view_lectures_link")
+    list_filter = ("course",)
+    search_fields = ['title']
     inlines = (LectureDetailInline,)
 
-    def view_details_link(self, obj):
+    def render_change_form(self, request, context, *args, **kwargs):
+        context['adminform'].form.fields['previous'].queryset = Chapter.objects.filter(course=kwargs['obj'].course)
+        return super().render_change_form(request, context, *args, **kwargs)
+
+    def view_lectures_link(self, obj):
         count = obj.lecture_set.count()
+        return format_html('{} Lecture(s)', count)
 
-        return format_html('{} Detail(s)', count)
-
-    view_details_link.short_description = "Details"
+    view_lectures_link.short_description = "Lectures"
 
 
 class SubmissionInline(admin.TabularInline):
     model = Submission
     fields = ("lecture", "author", "title", "description", "data")
     readonly_fields = ("lecture", "author", "title", "description", "data")
-    show_change_link = True
+    show_change_link = False
     can_delete = False
+    can_add = False
     extra = 0
+
+
+class MeetingInlineAdminForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance.id:
+            self.fields['lecture'].queryset = Lecture.objects\
+                .filter(lecture_type='L')\
+                .filter(chapter__chapter__course=self.instance.run.course)
+
+
+class MeetingDetailInline(admin.TabularInline):
+    model = Meeting
+    extra = 0
+    form = MeetingInlineAdminForm
 
 
 @admin.register(Run)
 class RunAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "start", "end", "view_submissions_link")
-    list_filter = ("start",)
+    list_filter = ("start", "course")
+    search_fields = ['title']
     inlines = (SubmissionInline, MeetingDetailInline,)
 
     def view_submissions_link(self, obj):
@@ -110,7 +121,7 @@ class RunAdmin(admin.ModelAdmin):
         url = (
                 reverse("admin:courses_submission_changelist")
                 + "?"
-                + urlencode({"run__id": f"{obj.id}"})
+                + urlencode({"run__id__exact": f"{obj.id}"})
         )
         return format_html('<a href="{}">{} Submission(s)</a>', url, count)
 
@@ -127,7 +138,21 @@ class ReviewInline(admin.TabularInline):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ("title", "author", "lecture", "run", "view_reviews_link")
     list_filter = ("run",)
+    search_fields = ['title']
     inlines = (ReviewInline,)
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        submission = kwargs['obj']
+
+        context['adminform'].form.fields['chapter'].queryset = Chapter.objects.filter(course=submission.run.course)
+
+        if submission.chapter:
+            context['adminform'].form.fields['lecture'].queryset = Lecture.objects.filter(chapter=submission.chapter)
+        else:
+            context['adminform'].form.fields['lecture'].queryset = Lecture.objects\
+                .filter(chapter__chapter__course=submission.run.course)
+
+        return super().render_change_form(request, context, *args, **kwargs)
 
     def view_reviews_link(self, obj):
         count = obj.review_set.count()
