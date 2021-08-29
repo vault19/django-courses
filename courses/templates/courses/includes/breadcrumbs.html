@@ -1,0 +1,20 @@
+
+{% if breadcrumbs %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb" class="mt-2">
+        <ol class="breadcrumb">
+          {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item{% if not breadcrumb.url %} active{% endif %}">
+            {% if breadcrumb.url %}<a href="{{ breadcrumb.url }}">{% endif %}
+              {{ breadcrumb.title }}
+            {% if breadcrumb.url %}</a>{% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endif %}

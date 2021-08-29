@@ -4,21 +4,9 @@
 {% load courses_extra %}
 
 {% block content %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'all_active_runs' %}">Kurzy</a></li>
-          <li class="breadcrumb-item active">{{ run.course.title }} - {{ run.title|upper }}</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-</div>
-
-  {% include "courses/includes/detail_header.html" with course=run.course run=run subscribed=subscribed %}
+  {% include "courses/includes/course_detail_header.html" with course=run.course run=run subscribed=subscribed %}
 
   <div class="album py-5 bg-light">
     <div class="container">
@@ -35,7 +23,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 {% if user.is_authenticated and subscribed %}
                 <div class="btn-group">
-                  <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-success{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a>
+                  <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-primary{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a>
                   {% if chapter.passed %}
                     <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
                   {% endif %}

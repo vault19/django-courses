@@ -6,46 +6,9 @@
 
 
 {% block content %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'all_active_runs' %}">Kurzy</a></li>
-          <li class="breadcrumb-item active"><a href="{% url 'course_run_detail' run.slug %}">{{ run.course.title }} - {{ run.title|upper }}</a></li>
-          <li class="breadcrumb-item active"><a href="{% url 'chapter_detail' run.slug chapter.slug %}">{{ chapter.title }}</a></li>
-          <li class="breadcrumb-item active">{% translate "Submission" %}</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-</div>
-
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h2 class="fw-light">{{ chapter.title|upper }}</h2>
-        {% if chapter.length %}
-        <p class="lead text-muted">{{ start }} - {{ end }}</p>
-        {% endif %}
-        <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-outline-secondary">{% translate "Course Chapters" %}</a>
-      </div>
-    </div>
-  </section>
-
-  {% if chapter.description %}
-  <section class="bg-light">
-    <div class="py-5 container">
-      <div class="row">
-        <div class="col-12 mx-auto">
-          <p>{{ chapter.description|markdownify }}</p>
-          <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-outline-secondary">{% translate "Lectures" %}</a>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endif %}
+  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end %}
 
   {% if chapter.lecture_set.all %}
   <div class="py-5 container">

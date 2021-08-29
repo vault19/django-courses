@@ -4,63 +4,27 @@
 {% load courses_extra %}
 
 {% block content %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'all_active_runs' %}">Kurzy</a></li>
-          <li class="breadcrumb-item active"><a href="{% url 'course_run_detail' run.slug %}">{{ run.course.title }} - {{ run.title|upper }}</a></li>
-          <li class="breadcrumb-item active">{{ chapter.title }}</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-</div>
-
-
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h2 class="fw-light">{{ chapter.title|upper }}</h2>
-        {% if chapter.length %}
-        <p class="lead text-muted">{{ start }} - {{ end }}</p>
-        {% endif %}
-        <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-outline-secondary">{% translate "Course Chapters" %}</a>
-      </div>
-    </div>
-  </section>
-
-  {% if chapter.description %}
-  <section class="bg-light">
-    <div class="py-5 container">
-      <div class="row">
-        <div class="col-12 mx-auto">
-          <p>{{ chapter.description|markdownify }}</p>
-          <a href="{% url 'chapter_submission' run.slug chapter.slug %}" class="btn btn-outline-secondary">{% translate "Submission" %}</a>
-        </div>
-      </div>
-    </div>
-  </section>
-  {% endif %}
+  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end filter_lecture_type=filter_lecture_type %}
 
   {% if chapter.lecture_set.all %}
   <div class="py-5 container">
     <div class="row py-lg-5">
 
       <ul class="nav nav-tabs" id="myTab" role="tablist">
-        {% for lecture in chapter.lecture_set.all %}
+        {% for lecture in lectures %}
         <li class="nav-item" role="presentation">
           <button class="nav-link{% if forloop.first %} active{% endif %}" id="tab-{{ lecture.id }}" data-bs-toggle="tab" data-bs-target="#tab-id-{{ lecture.id }}" type="button" role="tab" aria-controls="tab-id-{{ lecture.id }}" aria-selected="true">
-          {{ lecture.title }}
+            {{ lecture.lecture_type|lecture_type_icon }}
+            {{ lecture.title }}
           </button>
         </li>
         {% endfor %}
       </ul>
 
       <div class="tab-content" id="myTabContent">
-        {% for lecture in chapter.lecture_set.all %}
+        {% for lecture in lectures %}
         <div class="py-3 tab-pane fade show{% if forloop.first %} active{% endif %}" id="tab-id-{{ lecture.id }}" role="tabpanel" aria-labelledby="tab-{{ lecture.id }}">
           {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
           <p>{{ lecture.description|markdownify }}</p>

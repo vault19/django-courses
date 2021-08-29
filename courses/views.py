@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.urls import reverse
 
 from courses.forms import SubmissionForm
 from courses.models import Course, Run, Submission
@@ -32,6 +33,15 @@ def course_detail(request, course_slug):
     context = {
         'course': course,
         'course_runs': course.run_set.all(),
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'title': course.title,
+            },
+        ]
     }
 
     return render(request, 'courses/course_detail.html', context)
@@ -42,7 +52,18 @@ def all_active_runs(request):
         .filter(course__state='O')\
         .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None))\
         .order_by('start')
-    context = {'runs': course_runs}
+    context = {
+        'runs': course_runs,
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'title': _('Open courses'),
+            },
+        ]
+    }
 
     return render(request, 'courses/runs_list.html', context)
 
@@ -54,7 +75,22 @@ def all_subscribed_active_runs(request):
         .filter(Q(end__gte=datetime.datetime.today()) | Q(end=None)) \
         .filter(runusers__user=request.user) \
         .order_by('start')
-    context = {'runs': course_runs}
+    context = {
+        'runs': course_runs,
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'url': reverse('all_active_runs'),
+                'title': _('Open courses'),
+            },
+            {
+                'title': _('Subscribed courses'),
+            },
+        ]
+    }
 
     return render(request, 'courses/runs_list.html', context)
 
@@ -66,7 +102,18 @@ def all_subscribed_closed_runs(request):
         .filter(Q(end__lt=datetime.datetime.today())) \
         .filter(runusers__user=request.user) \
         .order_by('-start')
-    context = {'runs': course_runs}
+    context = {
+        'runs': course_runs,
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'title': _('Subscribed closed courses'),
+            },
+        ]
+    }
 
     return render(request, 'courses/runs_list.html', context)
 
@@ -80,7 +127,18 @@ def all_closed_runs(request):
         .filter(Q(course__state='O') | Q(course__state='C')) \
         .filter(Q(end__lt=datetime.datetime.today())) \
         .order_by('-start')
-    context = {'runs': course_runs}
+    context = {
+        'runs': course_runs,
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'title': _('Closed courses'),
+            },
+        ]
+    }
 
     return render(request, 'courses/runs_list.html', context)
 
@@ -90,7 +148,20 @@ def course_run_detail(request, run_slug):
     context = {
         'run': run,
         'chapters': [],
-        'subscribed': run.is_subscribed(request.user)
+        'subscribed': run.is_subscribed(request.user),
+        'breadcrumbs': [
+            {
+                'url': reverse('courses'),
+                'title': _('Courses'),
+            },
+            {
+                'url': reverse('course_detail', args=(run.course.slug,)),
+                'title': run.course.title,
+            },
+            {
+                'title': run.title.upper(),
+            },
+        ]
     }
 
     for chapter in run.course.chapter_set.all():
@@ -123,6 +194,9 @@ def chapter_detail(request, run_slug, chapter_slug):
 @login_required
 def chapter_submission(request, run_slug, chapter_slug):
     context = get_run_chapter_context(request, run_slug, chapter_slug)
+    context['breadcrumbs'][3]['url'] = reverse('chapter_detail', args=(run_slug, chapter_slug))
+    context['breadcrumbs'].append({'title': _("Chapter submission")})
+
     user_submissions = Submission.objects\
         .filter(author=request.user)\
         .filter(run=context['run'])\
@@ -158,6 +232,17 @@ def chapter_submission(request, run_slug, chapter_slug):
     context['form'] = form
 
     return render(request, 'courses/chapter_submission.html', context)
+
+
+@login_required
+def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
+    context['breadcrumbs'][3]['url'] = reverse('chapter_detail', args=(run_slug, chapter_slug))
+    context['breadcrumbs'].append({'title': _("Videos")})
+    context['lectures'] = context['chapter'].lecture_set.filter(lecture_type=lecture_type).all()
+    context['filter_lecture_type'] = lecture_type
+
+    return render(request, 'courses/chapter_detail.html', context)
 
 
 @login_required

@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h2 class="fw-light">{{ chapter.title|upper }}</h2>
+      {% if chapter.length %}
+      <p class="lead text-muted">{{ start }} - {{ end }}</p>
+      {% endif %}
+      <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-outline-secondary">{% translate "Course Chapters" %}</a>
+
+      <div class="btn-group">
+        {% url 'chapter_detail' run.slug chapter.slug as detail_page %}
+        {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
+
+        {% if request.path == detail_page %}
+          <a href="{{ submission_page }}" class="btn btn-outline-success">{% translate "Submission" %}</a>
+        {% else %}
+          <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Lectures" %}</a>
+        {% endif %}
+
+        {% for lecture_type in chapter.lecture_types %}
+          <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% if chapter.description %}
+  <section class="bg-light">
+    <div class="py-5 container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <p>{{ chapter.description|markdownify }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}

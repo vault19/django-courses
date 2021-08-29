@@ -83,6 +83,15 @@ class Chapter(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+    @property
+    def lecture_types(self):
+        lecture_types = set()
+
+        for lecture in self.lecture_set.all():
+            lecture_types.update(lecture.lecture_type)
+
+        return lecture_types
+
     @staticmethod
     def verify_course_dates(start, end):
         if date.today() > end:

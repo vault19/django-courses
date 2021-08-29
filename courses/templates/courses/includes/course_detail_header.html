@@ -24,9 +24,9 @@
         {% if user.is_authenticated and not run.is_past_due %}
           <p>
             {% if subscribed %}
-              <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-primary my-2">{% translate "Unsubscribe" %}</a>
+              <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-outline-danger my-2">{% translate "Unsubscribe" %}</a>
             {% else %}
-              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-primary my-2">{% translate "Subscribe" %}</a>
+              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-outline-success my-2">{% translate "Subscribe" %}</a>
             {% endif %}
           </p>
         {% endif %}
