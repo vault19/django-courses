@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta
 
 from django.conf import settings
 from django.core.exceptions import ValidationError, PermissionDenied
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -128,7 +129,12 @@ class Lecture(models.Model):
     subtitle = models.CharField(blank=True, null=True, max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Introduce the study material, explain what data '
                                                                       'are uploaded.'))
-    data = models.FileField(blank=True, null=True, help_text=_('Upload study material (document, video, image).'))
+    data = models.FileField(blank=True, null=True, upload_to='lectures', help_text=_('Upload study material (document, '
+                                                                                     'video, image).'),
+                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg', 'pdf',
+                                                                'mkv', 'avi', 'mp4', 'mov'])],)
+    data_metadata = models.JSONField(blank=True, null=True, help_text=_('Metadata about uploaded data to use in '
+                                                                        'template generator.'))
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default='V')
 
@@ -256,7 +262,9 @@ class Meeting(models.Model):
 class Submission(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
-    data = models.FileField(blank=True, null=True, help_text=_('Upload proof of your work (document, video, image).'))
+    data = models.FileField(blank=True, null=True, upload_to='submissions', help_text=_('Upload proof of your work '
+                                                                                        '(document, video, image).'),
+                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])],)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
@@ -305,7 +313,7 @@ class Review(models.Model):
 
 
 class Certificate(models.Model):
-    data = models.FileField()
+    data = models.FileField(upload_to='certificates', validators=[FileExtensionValidator(['pdf'])],)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 

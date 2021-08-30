@@ -27,7 +27,41 @@
         {% for lecture in lectures %}
         <div class="py-3 tab-pane fade show{% if forloop.first %} active{% endif %}" id="tab-id-{{ lecture.id }}" role="tabpanel" aria-labelledby="tab-{{ lecture.id }}">
           {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
+          {% if lecture.require_submission %}<div class="text-end"><span class="badge rounded-pill {% if lecture.require_submission == "N" %}bg-success{% else %}bg-danger{% endif %}">{{ lecture.get_require_submission_display }}</span></div>{% endif %}
           <p>{{ lecture.description|markdownify }}</p>
+          <p>
+            {% if lecture.data|is_pdf %}
+              <embed
+                src="{{ MEDIA_URL }}{{ lecture.data }}"
+                type="application/pdf"
+                frameBorder="0"
+                scrolling="auto"
+                height="{% if lecture.data_metadata.height %}{{ lecture.data_metadata.height }}{% else %}100%{% endif %}"
+                width="{% if lecture.data_metadata.width %}{{ lecture.data_metadata.width }}{% else %}100%{% endif %}"
+              ></embed>
+
+            {% elif lecture.data|is_image %}
+              <img src="{{ MEDIA_URL }}{{ lecture.data }}" class="mw-100" alt="{{ lecture.data_metadata.alt }}" />
+
+            {% elif lecture.data|is_video %}
+              <video
+                id="{% if lecture.data_metadata.id %}{{ lecture.data_metadata.id }}{% else %}{{ lecture.data|slugify }}{% endif %}"
+                class="video-js mw-100"
+                controls
+                preload="{% if lecture.data_metadata.preload %}{{ lecture.data_metadata.preload }}{% else %}auto{% endif %}"
+                {% if lecture.data_metadata.poster %}poster="{{ lecture.data_metadata.poster }}"{% endif %}
+                {% if lecture.data_metadata.width %}width="{{ lecture.data_metadata.width }}"{% endif %}
+                {% if lecture.data_metadata.height %}height="{{ lecture.data_metadata.height }}"{% endif %}
+                data-setup="{}"
+              >
+                <source src="{{ MEDIA_URL }}{{ lecture.data }}" {% if lecture.data_metadata.type %}type="{{ lecture.data_metadata.type }}"{% endif %}/>
+                {% if lecture.data_metadata.width %}
+                  <source src="{{ MEDIA_URL }}{{ lecture.data_metadata.alt_source }}" {% if lecture.data_metadata.alt_source_type %}type="{{ lecture.data_metadata.alt_source_type }}"{% endif %}/>
+                {% endif %}
+              </video>
+            {% endif %}
+
+          </p>
         </div>
         {% endfor %}
       </div>

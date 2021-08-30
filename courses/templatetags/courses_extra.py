@@ -35,3 +35,26 @@ def lecture_type_icon(lecture_type):
         icon = '<i class="fas fa-phone"></i>'
 
     return mark_safe(icon)
+
+
+def _check_file_extension(data, alloed_extensions):
+    extension = data.name.split('.')[1:]
+
+    if len(extension) == 1 and extension[0].lower() in alloed_extensions:
+        return True
+    return False
+
+
+@register.filter
+def is_pdf(data):
+    return _check_file_extension(data, alloed_extensions=('pdf',))
+
+
+@register.filter
+def is_image(data):
+    return _check_file_extension(data, alloed_extensions=('jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg',))
+
+
+@register.filter
+def is_video(data):
+    return _check_file_extension(data, alloed_extensions=('mkv', 'avi', 'mp4', 'mov',))
