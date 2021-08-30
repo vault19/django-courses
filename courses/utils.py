@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
 from courses.models import Chapter, Run
+from courses.settings import COURSES_ALLOW_SUBMISSION_TO_CHAPTERS, \
+    COURSES_ALLOW_SUBMISSION_TO_LECTURES
 
 
 def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=True, raise_wrong_dates=True):
@@ -39,6 +41,8 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
         'start': start,
         'end': end,
         'breadcrumbs': breadcrumbs,
+        'COURSES_ALLOW_SUBMISSION_TO_CHAPTERS': COURSES_ALLOW_SUBMISSION_TO_CHAPTERS,
+        'COURSES_ALLOW_SUBMISSION_TO_LECTURES': COURSES_ALLOW_SUBMISSION_TO_LECTURES,
     }
 
     return context

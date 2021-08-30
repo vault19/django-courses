@@ -1,7 +1,8 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from courses.models import LECTURE_TYPE
+from courses.models import Lecture, LECTURE_TYPE
+from courses.settings import EXTENSION_VIDEO, EXTENSION_IMAGE
 
 register = template.Library()
 
@@ -37,24 +38,16 @@ def lecture_type_icon(lecture_type):
     return mark_safe(icon)
 
 
-def _check_file_extension(data, alloed_extensions):
-    extension = data.name.split('.')[1:]
-
-    if len(extension) == 1 and extension[0].lower() in alloed_extensions:
-        return True
-    return False
-
-
 @register.filter
 def is_pdf(data):
-    return _check_file_extension(data, alloed_extensions=('pdf',))
+    return Lecture.check_file_extension(data, alloed_extensions=('pdf',))
 
 
 @register.filter
 def is_image(data):
-    return _check_file_extension(data, alloed_extensions=('jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg',))
+    return Lecture.check_file_extension(data, alloed_extensions=EXTENSION_IMAGE)
 
 
 @register.filter
 def is_video(data):
-    return _check_file_extension(data, alloed_extensions=('mkv', 'avi', 'mp4', 'mov',))
+    return Lecture.check_file_extension(data, alloed_extensions=EXTENSION_VIDEO)

@@ -9,7 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
 
-from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
+from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, EXTENSION_VIDEO, EXTENSION_IMAGE, \
+    EXTENSION_DOCUMENT
+
 
 COURSE_STATE = (
     ('D', _('Draft')),
@@ -145,6 +147,26 @@ class Lecture(models.Model):
 
     def __str__(self):
         return f"{self.chapter.title}: {self.title}"
+
+    @staticmethod
+    def check_file_extension(data, alloed_extensions):
+        extension = data.name.split('.')[1:]
+
+        if len(extension) == 1 and extension[0].lower() in alloed_extensions:
+            return True
+        return False
+
+    def clean(self):
+        if self.data:
+            if self.lecture_type == LECTURE_TYPE[0][0] and not self.check_file_extension(self.data, EXTENSION_VIDEO):
+                raise ValidationError({'data': _('Lecture type is "%s" but you are not uploading such file. Allowed '
+                                                 'extensions: %s' % (LECTURE_TYPE[0][1], EXTENSION_VIDEO))})
+
+            if self.lecture_type == LECTURE_TYPE[1][0] and \
+                    not self.check_file_extension(self.data, EXTENSION_IMAGE + EXTENSION_DOCUMENT):
+                raise ValidationError({'data': _('Lecture type is "%s" but you are not uploading such file. Allowed '
+                                                 'extensions: %s' % (LECTURE_TYPE[1][1],
+                                                                     EXTENSION_IMAGE + EXTENSION_DOCUMENT))})
 
 
 class Run(models.Model):
