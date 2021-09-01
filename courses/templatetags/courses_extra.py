@@ -1,5 +1,7 @@
+from datetime import date
 from django import template
 from django.utils.safestring import mark_safe
+from django.utils.timesince import timesince
 
 from courses.models import Lecture, LECTURE_TYPE
 from courses.settings import EXTENSION_VIDEO, EXTENSION_IMAGE
@@ -11,6 +13,22 @@ register = template.Library()
 def get_run_dates(chapter, run):
     start, end = chapter.get_run_dates(run=run)
     return f"{start} - {end}"
+
+
+@register.filter
+def timedelta(value, arg=None):
+    if not value:
+        return ''
+
+    if arg:
+        cmp = arg
+    else:
+        cmp = date.today()
+
+    if value > cmp:
+        return "in %s" % timesince(cmp, value)
+    else:
+        return "%s ago" % timesince(value, cmp)
 
 
 @register.filter
