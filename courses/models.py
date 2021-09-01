@@ -200,9 +200,13 @@ class Run(models.Model):
         return self.course.self_paced()
 
     def is_subscribed(self, user, raise_unsubscribed=False):
-        subscriptions = self.users \
-            .filter(runusers__user=user) \
-            .count()
+        if user.id is None:
+            # AnonymousUser, a.k.a. not logged in...
+            subscriptions = 0
+        else:
+            subscriptions = self.users \
+                .filter(runusers__user=user) \
+                .count()
 
         if subscriptions > 0:
             return True
