@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+
+{% block content %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+
+  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end lecture=lecture filter_lecture_type=filter_lecture_type %}
+
+<div class="album py-5 {# bg-light #}">
+  <div class="container">
+    <div class="row row-cols-1 g-3">
+
+      <h3 class="fw-light">{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.title }}</h3>
+
+        {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
+        {% if lecture.require_submission %}<div class="text-end"><span class="badge rounded-pill {% if lecture.require_submission == "N" %}bg-success{% else %}bg-danger{% endif %}">{{ lecture.get_require_submission_display }}</span></div>{% endif %}
+        <p>{{ lecture.description|markdownify }}</p>
+        <p>
+          {% if lecture.data|is_pdf %}
+            <embed
+              src="{{ MEDIA_URL }}{{ lecture.data }}"
+              type="application/pdf"
+              frameBorder="0"
+              scrolling="auto"
+              height="{% if lecture.data_metadata.height %}{{ lecture.data_metadata.height }}{% else %}100%{% endif %}"
+              width="{% if lecture.data_metadata.width %}{{ lecture.data_metadata.width }}{% else %}100%{% endif %}"
+            ></embed>
+
+          {% elif lecture.data|is_image %}
+            <img src="{{ MEDIA_URL }}{{ lecture.data }}" class="mw-100" alt="{{ lecture.data_metadata.alt }}" />
+
+          {% elif lecture.data|is_video %}
+            <video
+              id="{% if lecture.data_metadata.id %}{{ lecture.data_metadata.id }}{% else %}{{ lecture.data|slugify }}{% endif %}"
+              class="video-js mw-100"
+              controls
+              preload="{% if lecture.data_metadata.preload %}{{ lecture.data_metadata.preload }}{% else %}auto{% endif %}"
+              {% if lecture.data_metadata.poster %}poster="{{ lecture.data_metadata.poster }}"{% endif %}
+              {% if lecture.data_metadata.width %}width="{{ lecture.data_metadata.width }}"{% endif %}
+              {% if lecture.data_metadata.height %}height="{{ lecture.data_metadata.height }}"{% endif %}
+              data-setup="{}"
+            >
+              <source src="{{ MEDIA_URL }}{{ lecture.data }}" {% if lecture.data_metadata.type %}type="{{ lecture.data_metadata.type }}"{% endif %}/>
+              {% if lecture.data_metadata.width %}
+                <source src="{{ MEDIA_URL }}{{ lecture.data_metadata.alt_source }}" {% if lecture.data_metadata.alt_source_type %}type="{{ lecture.data_metadata.alt_source_type }}"{% endif %}/>
+              {% endif %}
+            </video>
+          {% endif %}
+        </p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6 text-center">
+
+      {% if lecture %}
+        <div class="btn-group">
+        {% for lctr in lectures %}
+          {% if lctr.order|subtract:lecture.order == -1 %}
+              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
+                {% translate "Previous lecture" %} {# <br/> {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }} #}
+              </a>
+          {% elif lctr.order|subtract:lecture.order == 1 %}
+              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
+                {% translate "Next lecture" %} {# <br/> {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }}  #}
+              </a>
+          {% endif %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

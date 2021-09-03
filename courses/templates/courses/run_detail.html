@@ -8,13 +8,17 @@
 
   {% include "courses/includes/course_detail_header.html" with course=run.course run=run subscribed=subscribed %}
 
-  {% include "courses/includes/course_run_detail.html" with chapters=chapters run=run %}
+  {% if COURSES_DISPLAY_CHAPTER_DETAILS %}
+    {% include "courses/includes/course_run_detail.html" with chapters=chapters run=run %}
+<div class="album py-5">
+  {% else %}
+<div class="album py-5 bg-light">
+  {% endif %}
 
-<div class="album py-5 {# bg-light #}">
   <div class="container">
     <div class="row row-cols-1 g-3">
 
-    <div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion" id="accordionPanelsStayOpen">
       {% for chapter in chapters %}
       <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-heading{{ forloop.counter }}">
@@ -32,33 +36,33 @@
             {% endif %}
           </button>
         </h2>
+        {% if user.is_authenticated %}
         <div id="panelsStayOpen-collapse{{ forloop.counter }}" class="accordion-collapse collapse {% if chapter.active %}show{% endif %}" aria-labelledby="panelsStayOpen-heading{{ forloop.counter }}">
           <div class="accordion-body">
             {{ chapter.perex|markdownify }}
 
             {% if user.is_authenticated and subscribed and chapter.active or chapter.passed %}
             <div class="d-flex justify-content-between align-items-center">
-                <table class="table table-hover">
-                  <tbody>
-                  {% for lecture in chapter.lecture_set.all %}
-                    <tr>
-                      <th scope="row">{{ lecture.lecture_type|lecture_type_icon }}</th>
-                      <td colspan="2">{{ lecture.title }}</td>
-                      <td>-</td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              <div class="btn-group">
-                <a href="{% url 'chapter_detail' run.slug chapter.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-primary{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a>
-              </div>
+              <table class="table table-hover">
+                <tbody>
+                {% for lecture in chapter.lecture_set.all %}
+                  <tr>
+                    <th scope="row">{{ lecture.lecture_type|lecture_type_icon }}</th>
+                    <td colspan="2">{{ lecture.title }}</td>
+                    <td><a href="{% url 'lecture_detail' run.slug chapter.slug lecture.slug %}" class="btn btn-sm{% if chapter.active %} btn-outline-primary{% elif chapter.passed %} btn-outline-secondary{% else %} btn-outline-secondary disabled{% endif %}">{% translate "View" %}</a></td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
             </div>
             {% endif %}
 
           </div>
         </div>
+        {% endif %}
       </div>
       {% endfor %}
+    </div>
 
     </div>
   </div>

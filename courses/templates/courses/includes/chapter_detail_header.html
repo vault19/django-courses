@@ -16,14 +16,25 @@
         {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
 
         {% if request.path == detail_page %}
-          <a href="{{ submission_page }}" class="btn btn-outline-success">{% translate "Submission" %}</a>
-        {% else %}
+          <a href="{{ submission_page }}" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
+        {% elif COURSES_DISPLAY_CHAPTER_DETAILS %}
           <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Lectures" %}</a>
         {% endif %}
 
-        {% for lecture_type in chapter.lecture_types %}
-          <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
-        {% endfor %}
+        {% if lecture %}
+          {% for lctr in lectures %}
+            {% if lctr.order|subtract:lecture.order == -1 %}
+              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Previous lecture" %}</a>
+            {% elif lctr.order|subtract:lecture.order == 1 %}
+              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Next lecture" %}</a>
+            {% endif %}
+          {% endfor %}
+
+        {% else %}
+          {% for lecture_type in chapter.lecture_types %}
+            <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
+          {% endfor %}
+        {% endif %}
       </div>
 
     </div>

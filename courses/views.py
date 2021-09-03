@@ -9,10 +9,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
 from courses.forms import SubmissionForm
-from courses.models import Course, Run, Submission
+from courses.models import Course, Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_SHOW_FUTURE_CHAPTERS, \
-    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
+    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, \
+    COURSES_DISPLAY_CHAPTER_DETAILS
 
 
 def index(request):
@@ -149,6 +150,7 @@ def course_run_detail(request, run_slug):
         'run': run,
         'chapters': [],
         'subscribed': run.is_subscribed(request.user),
+        'COURSES_DISPLAY_CHAPTER_DETAILS': COURSES_DISPLAY_CHAPTER_DETAILS,
         'breadcrumbs': [
             {
                 'url': reverse('courses'),
@@ -170,7 +172,7 @@ def course_run_detail(request, run_slug):
         if (COURSES_SHOW_FUTURE_CHAPTERS or start <= datetime.date.today()) \
                 and (COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS or end > datetime.date.today()):
             context['chapters'].append({
-                'lecture_set': chapter.lecture_set,
+                'lecture_set': chapter.lecture_set.order_by('order', 'title'),
                 'start': start,
                 'end': end,
                 'title': chapter.title,
@@ -279,10 +281,17 @@ def unsubscribe_from_run(request, run_slug):
     return redirect('course_run_detail', run_slug=run_slug)
 
 
-# @login_required
-# def lecture_detail(request, course_id, lecture_id):
-#     try:
-#         course = Run.objects.get(pk=course_id)
-#     except Run.DoesNotExist:
-#         raise Http404("Question does not exist")
-#     return render(request, 'courses/detail.html', {'course': course})
+@login_required
+def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
+    lecture = get_object_or_404(Lecture, slug=lecture_slug)
+    # TODO: verify url mix and match of run and course
+    # TODO: verify url mix and match of lecture and course
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
+
+    if COURSES_DISPLAY_CHAPTER_DETAILS:
+        context['breadcrumbs'][3]['url'] = reverse('chapter_detail', args=(run_slug, chapter_slug))
+
+    context['breadcrumbs'].append({'title': lecture.title})
+    context['lecture'] = lecture
+
+    return render(request, 'courses/lecture_detail.html', context)

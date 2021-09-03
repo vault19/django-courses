@@ -77,8 +77,8 @@ class Chapter(models.Model):
     slug = AutoSlugField(populate_from='title', unique=True)
     perex = models.TextField(blank=True, null=True, help_text=_('Short description of the chapter displayed in the list'
                                                                 ' of all chapters.'))
-    description = models.TextField(help_text=_('Full description of the chapter. Explain what will user learn in this '
-                                               'lesson.'))
+    description = models.TextField(blank=True, null=True, help_text=_('Full description of the chapter. Explain what '
+                                                                      'will user learn in this lesson.'))
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     length = models.IntegerField(default=7, help_text=_('Number of days that chapter will be open. If all chapters '
                                                         'length is set to 0 course is considered self-paced.'))
@@ -128,6 +128,7 @@ class Chapter(models.Model):
 
 class Lecture(models.Model):
     title = models.CharField(max_length=250)
+    slug = AutoSlugField(populate_from='title', unique=True)
     subtitle = models.CharField(blank=True, null=True, max_length=250)
     description = models.TextField(blank=True, null=True, help_text=_('Introduce the study material, explain what data '
                                                                       'are uploaded.'))
@@ -144,6 +145,7 @@ class Lecture(models.Model):
         'A submission can be required either for continuing to the next chapter or to finish the course.'))
     require_submission_review = models.CharField(max_length=1, choices=SUBMISSION_TYPE, default='N', help_text=_(
         'Submission is accepted only after being accepted by a review.'))
+    order = models.IntegerField(default=0, help_text=_('Order number for the lecture in the chapter.'))
 
     def __str__(self):
         return f"{self.chapter.title}: {self.title}"

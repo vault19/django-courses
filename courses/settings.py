@@ -8,6 +8,9 @@ EXTENSION_VIDEO = ['mkv', 'avi', 'mp4', 'mov']
 # Default redirect from index page
 COURSES_LANDING_PAGE_URL = getattr(settings, 'COURSES_LANDING_PAGE_URL', 'all_active_runs')
 
+# Wheather to dispaly link to chapter detail page (page will still be accessible, but it might be too much views)
+COURSES_DISPLAY_CHAPTER_DETAILS = getattr(settings, 'COURSES_DISPLAY_CHAPTER_DETAILS', True)
+
 # Whether to allow submission for the whole chapter.
 COURSES_ALLOW_SUBMISSION_TO_CHAPTERS = getattr(settings, 'COURSES_ALLOW_SUBMISSION_TO_CHAPTERS', True)
 # Whether to allow submission for specific lecture.

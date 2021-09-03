@@ -32,6 +32,11 @@ def timedelta(value, arg=None):
 
 
 @register.filter
+def subtract(value, arg):
+    return value - arg
+
+
+@register.filter
 def is_subscribed(run, user):
     return run.is_subscribed(user)
 
