@@ -8,7 +8,7 @@
     <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
 
       {% for course_run in runs %}
-        {% include "courses/includes/list.html" with course=course_run.course run=course_run %}
+        {% include "courses/includes/courses_runs_list.html" with course=course_run.course run=course_run %}
       {% endfor %}
 
     </div>

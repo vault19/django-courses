@@ -12,7 +12,7 @@ from courses.forms import SubmissionForm
 from courses.models import Course, Run, Submission
 from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_SHOW_FUTURE_CHAPTERS, \
-    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS
+    COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS, COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS
 
 
 def index(request):
@@ -167,8 +167,10 @@ def course_run_detail(request, run_slug):
     for chapter in run.course.chapter_set.all():
         start, end = chapter.get_run_dates(run=run)
 
-        if COURSES_SHOW_FUTURE_CHAPTERS or start <= datetime.date.today():
+        if (COURSES_SHOW_FUTURE_CHAPTERS or start <= datetime.date.today()) \
+                and (COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS or end > datetime.date.today()):
             context['chapters'].append({
+                'lecture_set': chapter.lecture_set,
                 'start': start,
                 'end': end,
                 'title': chapter.title,

@@ -8,13 +8,14 @@
 
   {% include "courses/includes/course_detail_header.html" with course=course %}
 
-  <div class="album py-5 bg-light">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+  {% include "courses/includes/course_run_detail.html" with chapters=course.chapter_set.all %}
 
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-3">
         {% for course_run in course_runs %}
         <div class="col">
-          <div class="card shadow-sm">
+          <div class="card shadow-sm h-100">
 {#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
             <div class="card-body">
               <h5 class="card-title">{{ course_run.course.title }}</h5>
