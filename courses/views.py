@@ -223,15 +223,15 @@ def chapter_submission(request, run_slug, chapter_slug):
 
             messages.success(request, _('Your submission has been saved.'))
             return redirect('chapter_submission', run_slug=run_slug, chapter_slug=chapter_slug)
+
+    elif datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+        context['user_submissions'] = user_submissions
+        form = None
+    elif len(user_submissions) == 1:
+        submission = user_submissions[0]
+        form = SubmissionForm(instance=submission)
     else:
-        if datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
-            context['user_submissions'] = user_submissions
-            form = None
-        elif len(user_submissions) == 1:
-            submission = user_submissions[0]
-            form = SubmissionForm(instance=submission)
-        else:
-            form = SubmissionForm()
+        form = SubmissionForm()
 
     context['form'] = form
 
@@ -293,5 +293,56 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 
     context['breadcrumbs'].append({'title': lecture.title})
     context['lecture'] = lecture
+
+    return render(request, 'courses/lecture_detail.html', context)
+
+
+@login_required
+def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
+    lecture = get_object_or_404(Lecture, slug=lecture_slug)
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
+
+    if COURSES_DISPLAY_CHAPTER_DETAILS:
+        context['breadcrumbs'][3]['url'] = reverse('chapter_detail', args=(run_slug, chapter_slug))
+
+    context['breadcrumbs'].append({'title': lecture.title, 'url': '#'})
+    context['breadcrumbs'].append({'title': _("Lecture submission")})
+
+    context['lecture'] = lecture
+
+    user_submissions = Submission.objects \
+        .filter(author=request.user) \
+        .filter(run=context['run']) \
+        .filter(lecture=lecture) \
+        .all()
+
+    if request.method == 'POST':
+        if datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+            raise PermissionDenied(_("Chapter has already ended...") + " " + _("Submission is not allowed."))
+
+        if len(user_submissions) == 1:
+            submission = user_submissions[0]
+        else:
+            submission = Submission(lecture=lecture, run=context['run'], author=request.user)
+
+        form = SubmissionForm(request.POST, request.FILES, instance=submission)
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, _('Your submission has been saved.'))
+            return redirect('lecture_submission', run_slug=run_slug, chapter_slug=chapter_slug,
+                            lecture_slug=lecture_slug)
+
+    elif datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
+        context['user_submissions'] = user_submissions
+        form = None
+    elif len(user_submissions) == 1:
+        submission = user_submissions[0]
+        form = SubmissionForm(instance=submission)
+    else:
+        form = SubmissionForm()
+
+    context['form'] = form
 
     return render(request, 'courses/lecture_detail.html', context)

@@ -18,6 +18,8 @@ urlpatterns = [
     path('course/<str:run_slug>/<str:chapter_slug>/filter/<str:lecture_type>/', views.chapter_lecture_types,
          name='chapter_lecture_types'),
     path('course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/', views.lecture_detail, name='lecture_detail'),
+    path('course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/', views.lecture_submission,
+         name='lecture_submission'),
 
     # path('<int:question_id>/results/', views.results, name='results'),
     # path('<int:question_id>/vote/', views.vote, name='vote'),

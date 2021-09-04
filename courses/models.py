@@ -9,8 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
 
+from courses.validators import FileSizeValidator
 from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, EXTENSION_VIDEO, EXTENSION_IMAGE, \
-    EXTENSION_DOCUMENT
+    EXTENSION_DOCUMENT, MAX_FILE_SIZE_UPLOAD, MAX_FILE_SIZE_UPLOAD_FRONTEND
 
 
 COURSE_STATE = (
@@ -135,7 +136,8 @@ class Lecture(models.Model):
     data = models.FileField(blank=True, null=True, upload_to='lectures', help_text=_('Upload study material (document, '
                                                                                      'video, image).'),
                             validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg', 'pdf',
-                                                                'mkv', 'avi', 'mp4', 'mov'])],)
+                                                                'mkv', 'avi', 'mp4', 'mov']),
+                                        FileSizeValidator(MAX_FILE_SIZE_UPLOAD)])
     data_metadata = models.JSONField(blank=True, null=True, help_text=_('Metadata about uploaded data to use in '
                                                                         'template generator.'))
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
@@ -292,7 +294,8 @@ class Submission(models.Model):
     description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
     data = models.FileField(blank=True, null=True, upload_to='submissions', help_text=_('Upload proof of your work '
                                                                                         '(document, video, image).'),
-                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])],)
+                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt']),
+                                        FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],)
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
@@ -341,7 +344,8 @@ class Review(models.Model):
 
 
 class Certificate(models.Model):
-    data = models.FileField(upload_to='certificates', validators=[FileExtensionValidator(['pdf'])],)
+    data = models.FileField(upload_to='certificates', validators=[FileExtensionValidator(['pdf']),
+                                                                  FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)])
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 

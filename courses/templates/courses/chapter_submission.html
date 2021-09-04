@@ -1,9 +1,4 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load markdownify %}
-{% load courses_extra %}
-{% load bootstrap_tags %}
-
 
 {% block content %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
@@ -11,28 +6,6 @@
   {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end %}
 
   {% if chapter.lecture_set.all %}
-  <div class="py-5 container">
-    <div class="row py-lg-5">
-      {% if user_submissions %}
-        {% for submission in user_submissions %}
-          <div class="col-12 mx-auto">
-            <b>{{ submission.title }}</b>
-          </div>
-          <div class="col-12 mx-auto">
-            <p>{{ submission.description|markdownify }}</p>
-          </div>
-        {% endfor %}
-      {% elif form %}
-      <form method="post">
-        <legend>{% translate "My Submission" %}</legend>
-        {% csrf_token %}
-        {{ form|as_bootstrap }}
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
-        </div>
-      </form>
-      {% endif %}
-    </div>
-  </div>
+    {% include "courses/includes/submission.html" with user_submissions=user_submissions form=form %}
   {% endif %}
 {% endblock %}

@@ -1,9 +1,11 @@
 from django.conf import settings
 
 EXTENSION_IMAGE = ['jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg']
-EXTENSION_DOCUMENT = ['pdf']
+EXTENSION_DOCUMENT = ['pdf',]
 EXTENSION_VIDEO = ['mkv', 'avi', 'mp4', 'mov']
 
+MAX_FILE_SIZE_UPLOAD = getattr(settings, 'MAX_FILE_SIZE_UPLOAD', 50)
+MAX_FILE_SIZE_UPLOAD_FRONTEND = getattr(settings, 'MAX_FILE_SIZE_UPLOAD_FRONTEND', 2)
 
 # Default redirect from index page
 COURSES_LANDING_PAGE_URL = getattr(settings, 'COURSES_LANDING_PAGE_URL', 'all_active_runs')

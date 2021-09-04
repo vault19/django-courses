@@ -50,26 +50,53 @@
           {% endif %}
         </p>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-6 text-center">
 
-      {% if lecture %}
-        <div class="btn-group">
-        {% for lctr in lectures %}
-          {% if lctr.order|subtract:lecture.order == -1 %}
-              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
-                {% translate "Previous lecture" %} {# <br/> {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }} #}
-              </a>
-          {% elif lctr.order|subtract:lecture.order == 1 %}
-              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
-                {% translate "Next lecture" %} {# <br/> {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }}  #}
-              </a>
-          {% endif %}
-        {% endfor %}
+    {% if form %}
+      {% include "courses/includes/submission.html" with user_submissions=user_submissions form=form %}
+    {% else %}
+      <div class="row justify-content-center">
+        <div class="col-4 text-center">
+
+          <a href="{% url 'lecture_submission' run.slug chapter.slug lecture.slug %}#submission-form" class="btn btn-lg btn-outline-success">
+            {% translate "Submission" %}
+          </a>
+
         </div>
-      {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="row justify-content-center py-3">
+      <div class="col text-center">
+
+        <div class="btn-group">
+          {% for lctr in lectures %}
+            <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-sm btn-{% if lctr.slug != lecture.slug %}outline-{% endif %}primary">
+              {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }}
+            </a>
+          {% endfor %}
+        </div>
+
       </div>
     </div>
+{#    <div class="row justify-content-center">#}
+{#      <div class="col-6 text-center">#}
+{##}
+{#        <div class="btn-group">#}
+{#        {% for lctr in lectures %}#}
+{#          {% if lctr.order|subtract:lecture.order == -1 %}#}
+{#              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">#}
+{#                {% translate "Previous lecture" %}#}
+{#              </a>#}
+{#          {% elif lctr.order|subtract:lecture.order == 1 %}#}
+{#              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">#}
+{#                {% translate "Next lecture" %}#}
+{#              </a>#}
+{#          {% endif %}#}
+{#        {% endfor %}#}
+{#        </div>#}
+{##}
+{#      </div>#}
+{#    </div>#}
 
   </div>
 </div>
