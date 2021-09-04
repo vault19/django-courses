@@ -27,6 +27,13 @@ class ChapterInline(admin.TabularInline):
 class RunInline(admin.TabularInline):
     model = Run
     extra = 0
+    autocomplete_fields = ['manager']
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['manager'] = request.user.pk
+
+        return get_data
 
 
 @admin.register(Course)
@@ -34,6 +41,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ("title", "state", "view_run_link", "view_chapter_link",)
     list_filter = ("state",)
     search_fields = ['title']
+    autocomplete_fields = ['creator']
     inlines = (RunInline, ChapterInline,)
 
     def view_run_link(self, obj):
@@ -57,6 +65,12 @@ class CourseAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{} Chapter(s)</a>', url, count)
 
     view_chapter_link.short_description = "Chapter"
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['creator'] = request.user.pk
+
+        return get_data
 
 
 class LectureDetailInline(admin.TabularInline):
@@ -106,7 +120,14 @@ class MeetingInlineAdminForm(forms.ModelForm):
 class MeetingDetailInline(admin.TabularInline):
     model = Meeting
     extra = 0
+    autocomplete_fields = ['leader', 'organizer']
     form = MeetingInlineAdminForm
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['organizer'] = request.user.pk
+
+        return get_data
 
 
 @admin.register(Run)

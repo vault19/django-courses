@@ -44,6 +44,8 @@ class Course(models.Model):
     slug = AutoSlugField(populate_from='name', unique=True)
     description = models.TextField(help_text=_('Full description of the course.'))
     state = models.CharField(max_length=1, choices=COURSE_STATE, default='D')
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                help_text=_('Creaator of the course, mainly responsible for the content'))
 
     def __str__(self):
         return f"{self.title}"
@@ -188,6 +190,8 @@ class Run(models.Model):
                                                      'subscriber.'))
     limit = models.IntegerField(default=0, help_text=_('Max number of attendees, after which registration for the Run '
                                                        'will close. If set to 0 the course will have no limit.'))
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='manager',
+                                help_text=_('Manager of the course run, responsible for the smoothness of the run.'))
 
     def __str__(self):
         return f"{self.course}: {self.title}"
@@ -247,6 +251,10 @@ class Meeting(models.Model):
     end = models.DateTimeField()
     link = models.URLField(max_length=250)
     description = models.TextField(blank=True, null=True)
+    leader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='leader', blank=True,
+                               null=True, help_text=_('Leader of the meeting, eg. lecturer, vip...'))
+    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='organizer',
+                                  help_text=_('Organizer of the meeting, responsible for the meeting.'))
 
     def __str__(self):
         return f"Meeting: {self.run} {self.lecture}: {self.start} {self.end}"
