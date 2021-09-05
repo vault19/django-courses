@@ -4,7 +4,7 @@ from django.utils.http import urlencode
 from django.utils.html import format_html
 from django import forms
 
-from courses.models import Course, Chapter, Lecture, Run, Submission, Review, Certificate, Meeting
+from courses.models import Course, Chapter, Lecture, Run, RunUsers, Submission, Review, Certificate, Meeting
 
 
 class ChapterInlineAdminForm(forms.ModelForm):
@@ -130,12 +130,22 @@ class MeetingDetailInline(admin.TabularInline):
         return get_data
 
 
+class RunUsersDetailInline(admin.TabularInline):
+    model = RunUsers
+    extra = 2
+    readonly_fields = ['timestamp']
+    autocomplete_fields = ['user']
+    classes = ['collapse']
+
+
 @admin.register(Run)
 class RunAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "start", "end", "view_submissions_link")
-    list_filter = ("start", "course")
+    list_filter = ("start", "manager", "course")
     search_fields = ['title']
-    inlines = (SubmissionInline, MeetingDetailInline,)
+    autocomplete_fields = ['manager']
+    readonly_fields = ('end',)
+    inlines = (MeetingDetailInline, RunUsersDetailInline, SubmissionInline,)
 
     def view_submissions_link(self, obj):
         count = obj.submission_set.count()
@@ -147,6 +157,12 @@ class RunAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{} Submission(s)</a>', url, count)
 
     view_submissions_link.short_description = "Submissions"
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['manager'] = request.user.pk
+
+        return get_data
 
 
 class ReviewInline(admin.TabularInline):
