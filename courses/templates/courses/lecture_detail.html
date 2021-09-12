@@ -137,3 +137,31 @@
   </div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript">
+
+  var iframe = document.querySelector('iframe');
+  var player = new Vimeo.Player(iframe);
+  player.setColor('#1da1f2');
+
+
+  var prev_time = new Date().getTime();
+  var current_time = new Date().getTime();
+
+  player.on('timeupdate', function(data) {
+      player.getPlayed().then(function(played) {
+          var current_time = new Date().getTime();
+          if((current_time - prev_time) > 10000) {
+            console.log('Time range:', played);
+            prev_time = new Date().getTime();
+          }
+      }).catch(function(error) {
+          console.log('Some error....');
+      });
+  });
+
+
+</script>
+{% endblock %}
