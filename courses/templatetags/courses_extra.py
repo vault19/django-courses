@@ -26,7 +26,7 @@ def timedelta(value, arg=None):
         cmp = date.today()
 
     if value > cmp:
-        return "in %s" % timesince(cmp, value)
+        return "unlocks in %s" % timesince(cmp, value)
     else:
         return "%s ago" % timesince(value, cmp)
 

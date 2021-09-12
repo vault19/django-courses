@@ -142,6 +142,7 @@ class Lecture(models.Model):
                                         FileSizeValidator(MAX_FILE_SIZE_UPLOAD)])
     data_metadata = models.JSONField(blank=True, null=True, help_text=_('Metadata about uploaded data to use in '
                                                                         'template generator.'))
+    video = models.CharField(blank=True, null=True, max_length=100)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default='V')
 
