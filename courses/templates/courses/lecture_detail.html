@@ -6,16 +6,52 @@
 {% block content %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 
-  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end lecture=lecture filter_lecture_type=filter_lecture_type %}
 
-<div class="album py-5 {# bg-light #}">
+<div class="album py-1 {# bg-light #}">
   <div class="container">
+
+    <div class="row py-lg-2">
+      <div class="col-lg-6 col-md-8 mr-auto">
+
+        <div class="btn-group">
+          {% url 'chapter_detail' run.slug chapter.slug as detail_page %}
+          {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
+
+          {% if request.path == detail_page %}
+            <a href="{{ submission_page }}#submission-form" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
+          {% elif COURSES_DISPLAY_CHAPTER_DETAILS %}
+            <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
+          {% endif %}
+
+          {% if lecture %}
+            {% for lctr in lectures %}
+              {% if lctr.order|subtract:lecture.order == -1 %}
+                <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Previous lecture" %}</a>
+              {% elif lctr.order|subtract:lecture.order == 1 %}
+                <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Next lecture" %}</a>
+              {% endif %}
+            {% endfor %}
+
+          {% else %}
+            {% for lecture_type in chapter.lecture_types %}
+              <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+
     <div class="row row-cols-1 g-3">
 
       <h3 class="fw-light">{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.title }}</h3>
 
         {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
         {% if lecture.require_submission %}<div class="text-end"><span class="badge rounded-pill {% if lecture.require_submission == "N" %}bg-success{% else %}bg-danger{% endif %}">{{ lecture.get_require_submission_display }}</span></div>{% endif %}
+        {% if lecture.video %}
+          <iframe src="{{ lecture.video}}" width="720" height="405" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        {% endif %}
         <p>{{ lecture.description|markdownify }}</p>
         <p>
           {% if lecture.data|is_pdf %}
@@ -100,4 +136,32 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript">
+
+  var iframe = document.querySelector('iframe');
+  var player = new Vimeo.Player(iframe);
+  player.setColor('#1da1f2');
+
+
+  var prev_time = new Date().getTime();
+  var current_time = new Date().getTime();
+
+  player.on('timeupdate', function(data) {
+      player.getPlayed().then(function(played) {
+          var current_time = new Date().getTime();
+          if((current_time - prev_time) > 10000) {
+            console.log('Time range:', played);
+            prev_time = new Date().getTime();
+          }
+      }).catch(function(error) {
+          console.log('Some error....');
+      });
+  });
+
+
+</script>
 {% endblock %}
