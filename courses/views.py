@@ -223,6 +223,8 @@ def chapter_submission(request, run_slug, chapter_slug):
 
             messages.success(request, _('Your submission has been saved.'))
             return redirect('chapter_submission', run_slug=run_slug, chapter_slug=chapter_slug)
+        else:
+            messages.error(request, _('Please correct form errors.'))
 
     elif datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
         context['user_submissions'] = user_submissions
@@ -333,6 +335,8 @@ def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
             messages.success(request, _('Your submission has been saved.'))
             return redirect('lecture_submission', run_slug=run_slug, chapter_slug=chapter_slug,
                             lecture_slug=lecture_slug)
+        else:
+            messages.error(request, _('Please correct form errors.'))
 
     elif datetime.date.today() > context['end'] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
         context['user_submissions'] = user_submissions

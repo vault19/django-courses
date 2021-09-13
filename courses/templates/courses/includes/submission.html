@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load markdownify %}
+{% load bootstrap5 %}
 {% load courses_extra %}
-{% load bootstrap_tags %}
 
 <div class="py-5 container">
   <div class="row py-lg-5">
@@ -18,7 +18,7 @@
     <form method="post" enctype="multipart/form-data" id="submission-form">
       <legend>{% translate "My Submission" %}</legend>
       {% csrf_token %}
-      {{ form|as_bootstrap }}
+      {% bootstrap_form form %}
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
       </div>

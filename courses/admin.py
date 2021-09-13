@@ -16,24 +16,19 @@ class ChapterInlineAdminForm(forms.ModelForm):
             self.fields['previous'].queryset = Chapter.objects.filter(course=self.instance.course)
 
 
-class ChapterInline(admin.TabularInline):
+class ChapterInline(admin.StackedInline):
     model = Chapter
     form = ChapterInlineAdminForm
     show_change_link = True
     extra = 0
     # autocomplete_fields = ['previous']  # Creates select2, but does not respect form queryset filter!
+    classes = ['collapse']
 
 
 class RunInline(admin.TabularInline):
     model = Run
     extra = 0
     autocomplete_fields = ['manager']
-
-    def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
-        get_data['manager'] = request.user.pk
-
-        return get_data
 
 
 @admin.register(Course)
@@ -42,7 +37,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ("state",)
     search_fields = ['title']
     autocomplete_fields = ['creator']
-    inlines = (RunInline, ChapterInline,)
+    inlines = (ChapterInline, RunInline,)
 
     def view_run_link(self, obj):
         count = obj.run_set.count()
@@ -73,7 +68,7 @@ class CourseAdmin(admin.ModelAdmin):
         return get_data
 
 
-class LectureDetailInline(admin.TabularInline):
+class LectureDetailInline(admin.StackedInline):
     model = Lecture
     extra = 1
 
@@ -104,6 +99,7 @@ class SubmissionInline(admin.TabularInline):
     can_delete = False
     can_add = False
     extra = 0
+    classes = ['collapse']
 
 
 class MeetingInlineAdminForm(forms.ModelForm):
@@ -117,17 +113,12 @@ class MeetingInlineAdminForm(forms.ModelForm):
                 .filter(chapter__chapter__course=self.instance.run.course)
 
 
-class MeetingDetailInline(admin.TabularInline):
+class MeetingDetailInline(admin.StackedInline):
     model = Meeting
     extra = 0
     autocomplete_fields = ['leader', 'organizer']
+    classes = ['collapse']
     form = MeetingInlineAdminForm
-
-    def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
-        get_data['organizer'] = request.user.pk
-
-        return get_data
 
 
 class RunUsersDetailInline(admin.TabularInline):
@@ -140,7 +131,7 @@ class RunUsersDetailInline(admin.TabularInline):
 
 @admin.register(Run)
 class RunAdmin(admin.ModelAdmin):
-    list_display = ("title", "course", "start", "end", "view_submissions_link")
+    list_display = ("title", "course", "start", "end", "view_users_link", "view_submissions_link")
     list_filter = ("start", "manager", "course")
     search_fields = ['title']
     autocomplete_fields = ['manager']
@@ -157,6 +148,12 @@ class RunAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{} Submission(s)</a>', url, count)
 
     view_submissions_link.short_description = "Submissions"
+
+    def view_users_link(self, obj):
+        count = obj.users.count()
+        return format_html('{} User(s)', count)
+
+    view_users_link.short_description = "Users"
 
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
