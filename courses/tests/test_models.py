@@ -6,7 +6,7 @@ from courses.models import Run
 
 
 class RunTest(TestCase):
-    fixtures = ['test_data.json']
+    fixtures = ["test_data.json"]
 
     def test_clean_method(self):
         """

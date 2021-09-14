@@ -3,8 +3,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
 from courses.models import Chapter, Run
-from courses.settings import COURSES_ALLOW_SUBMISSION_TO_CHAPTERS, \
-    COURSES_ALLOW_SUBMISSION_TO_LECTURES, COURSES_DISPLAY_CHAPTER_DETAILS
+from courses.settings import (
+    COURSES_ALLOW_SUBMISSION_TO_CHAPTERS,
+    COURSES_ALLOW_SUBMISSION_TO_LECTURES,
+    COURSES_DISPLAY_CHAPTER_DETAILS,
+)
 
 
 def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=True, raise_wrong_dates=True):
@@ -18,33 +21,33 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
 
     breadcrumbs = [
         {
-            'url': reverse('courses'),
-            'title': _('Courses'),
+            "url": reverse("courses"),
+            "title": _("Courses"),
         },
         {
-            'url': reverse('course_detail', args=(run.course.slug,)),
-            'title': run.course.title,
+            "url": reverse("course_detail", args=(run.course.slug,)),
+            "title": run.course.title,
         },
         {
-            'url': reverse('course_run_detail', args=(run_slug,)),
-            'title': run.title.upper(),
+            "url": reverse("course_run_detail", args=(run_slug,)),
+            "title": run.title.upper(),
         },
         {
-            'title': chapter.title,
+            "title": chapter.title,
         },
     ]
 
     context = {
-        'run': run,
-        'chapter': chapter,
-        'lectures': chapter.lecture_set.all().order_by('order', 'title'),
-        'start': start,
-        'end': end,
-        'subscribed': run.is_subscribed(request.user),
-        'breadcrumbs': breadcrumbs,
-        'COURSES_DISPLAY_CHAPTER_DETAILS': COURSES_DISPLAY_CHAPTER_DETAILS,
-        'COURSES_ALLOW_SUBMISSION_TO_CHAPTERS': COURSES_ALLOW_SUBMISSION_TO_CHAPTERS,
-        'COURSES_ALLOW_SUBMISSION_TO_LECTURES': COURSES_ALLOW_SUBMISSION_TO_LECTURES,
+        "run": run,
+        "chapter": chapter,
+        "lectures": chapter.lecture_set.all().order_by("order", "title"),
+        "start": start,
+        "end": end,
+        "subscribed": run.is_subscribed(request.user),
+        "breadcrumbs": breadcrumbs,
+        "COURSES_DISPLAY_CHAPTER_DETAILS": COURSES_DISPLAY_CHAPTER_DETAILS,
+        "COURSES_ALLOW_SUBMISSION_TO_CHAPTERS": COURSES_ALLOW_SUBMISSION_TO_CHAPTERS,
+        "COURSES_ALLOW_SUBMISSION_TO_LECTURES": COURSES_ALLOW_SUBMISSION_TO_LECTURES,
     }
 
     return context

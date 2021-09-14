@@ -15,15 +15,15 @@ try:
         },
         TEMPLATES=[
             {
-                'BACKEND': 'django.template.backends.django.DjangoTemplates',
-                'DIRS': ['courses.templates'],
-                'APP_DIRS': True,
-                'OPTIONS': {
-                    'context_processors': [
-                        'django.template.context_processors.debug',
-                        'django.template.context_processors.request',
-                        'django.contrib.auth.context_processors.auth',
-                        'django.contrib.messages.context_processors.messages',
+                "BACKEND": "django.template.backends.django.DjangoTemplates",
+                "DIRS": ["courses.templates"],
+                "APP_DIRS": True,
+                "OPTIONS": {
+                    "context_processors": [
+                        "django.template.context_processors.debug",
+                        "django.template.context_processors.request",
+                        "django.contrib.auth.context_processors.auth",
+                        "django.contrib.messages.context_processors.messages",
                     ],
                 },
             },
@@ -38,13 +38,14 @@ try:
         ],
         SITE_ID=1,
         MIDDLEWARE_CLASSES=(
-            'django.contrib.sessions.middleware.SessionMiddleware',
-            'django.contrib.messages.middleware.MessageMiddleware',
+            "django.contrib.sessions.middleware.SessionMiddleware",
+            "django.contrib.messages.middleware.MessageMiddleware",
         ),
     )
 
     try:
         import django
+
         setup = django.setup
     except AttributeError:
         pass
@@ -53,6 +54,7 @@ try:
 
 except ImportError:
     import traceback
+
     traceback.print_exc()
     msg = "To fix this error, run: pip install -r requirements.txt"
     raise ImportError(msg)
@@ -69,5 +71,5 @@ def run_tests():
         sys.exit(bool(failures))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_tests()

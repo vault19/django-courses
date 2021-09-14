@@ -10,42 +10,57 @@ from django.utils.translation import ugettext_lazy as _
 from autoslug import AutoSlugField
 
 from courses.validators import FileSizeValidator
-from courses.settings import COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS, EXTENSION_VIDEO, EXTENSION_IMAGE, \
-    EXTENSION_DOCUMENT, MAX_FILE_SIZE_UPLOAD, MAX_FILE_SIZE_UPLOAD_FRONTEND
+from courses.settings import (
+    COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS,
+    EXTENSION_VIDEO,
+    EXTENSION_IMAGE,
+    EXTENSION_DOCUMENT,
+    MAX_FILE_SIZE_UPLOAD,
+    MAX_FILE_SIZE_UPLOAD_FRONTEND,
+)
 
 
 COURSE_STATE = (
-    ('D', _('Draft')),
-    ('O', _('Open')),
-    ('C', _('Closed')),
-    ('P', _('Private')),
+    ("D", _("Draft")),
+    ("O", _("Open")),
+    ("C", _("Closed")),
+    ("P", _("Private")),
 )
 
 LECTURE_TYPE = (
-    ('V', _('Video Lesson')),
-    ('T', _('Text to read')),
-    ('PF', _('Peer Feedback')),
-    ('P', _('Project')),
-    ('F', _('Feedback')),
-    ('L', _('Live lesson')),
+    ("V", _("Video Lesson")),
+    ("T", _("Text to read")),
+    ("PF", _("Peer Feedback")),
+    ("P", _("Project")),
+    ("F", _("Feedback")),
+    ("L", _("Live lesson")),
 )
 
 SUBMISSION_TYPE = (
-    ('N', _('Not required')),
-    ('C', _('Required for next chapter')),
-    ('E', _('Required to end course')),
+    ("N", _("Not required")),
+    ("C", _("Required for next chapter")),
+    ("E", _("Required to end course")),
 )
 
 
 class Course(models.Model):
     title = models.CharField(max_length=250)
-    perex = models.TextField(blank=True, null=True, help_text=_('Short description of the course displayed in the list'
-                                                                ' of all courses. If empty description will be used.'))
-    slug = AutoSlugField(populate_from='name', unique=True)
-    description = models.TextField(help_text=_('Full description of the course.'))
-    state = models.CharField(max_length=1, choices=COURSE_STATE, default='D')
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                help_text=_('Creaator of the course, mainly responsible for the content'))
+    perex = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "Short description of the course displayed in the list"
+            " of all courses. If empty description will be used."
+        ),
+    )
+    slug = AutoSlugField(populate_from="name", unique=True)
+    description = models.TextField(help_text=_("Full description of the course."))
+    state = models.CharField(max_length=1, choices=COURSE_STATE, default="D")
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        help_text=_("Creaator of the course, mainly responsible for the content"),
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -54,10 +69,8 @@ class Course(models.Model):
         return self.get_active_runs().count() > 0
 
     def get_active_runs(self):
-        if self.state == 'O':
-            return self.run_set\
-                .filter(Q(end__gte=datetime.today()) | Q(end=None))\
-                .order_by('-start')
+        if self.state == "O":
+            return self.run_set.filter(Q(end__gte=datetime.today()) | Q(end=None)).order_by("-start")
         else:
             return self.objects.none()
 
@@ -77,14 +90,23 @@ class Course(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=250)
     previous = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
-    slug = AutoSlugField(populate_from='title', unique=True)
-    perex = models.TextField(blank=True, null=True, help_text=_('Short description of the chapter displayed in the list'
-                                                                ' of all chapters.'))
-    description = models.TextField(blank=True, null=True, help_text=_('Full description of the chapter. Explain what '
-                                                                      'will user learn in this lesson.'))
+    slug = AutoSlugField(populate_from="title", unique=True)
+    perex = models.TextField(
+        blank=True, null=True, help_text=_("Short description of the chapter displayed in the list" " of all chapters.")
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("Full description of the chapter. Explain what " "will user learn in this lesson."),
+    )
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    length = models.IntegerField(default=7, help_text=_('Number of days that chapter will be open. If all chapters '
-                                                        'length is set to 0 course is considered self-paced.'))
+    length = models.IntegerField(
+        default=7,
+        help_text=_(
+            "Number of days that chapter will be open. If all chapters "
+            "length is set to 0 course is considered self-paced."
+        ),
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -103,7 +125,8 @@ class Chapter(models.Model):
         if date.today() > end:
             if not COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
                 raise PermissionDenied(
-                    _("Chapter has already ended...") + " " + _("Sorry it is not available any more."))
+                    _("Chapter has already ended...") + " " + _("Sorry it is not available any more.")
+                )
 
         if date.today() < start:
             raise PermissionDenied(_("Chapter hasnt started yet...") + " " + _("Please come back later."))
@@ -126,38 +149,53 @@ class Chapter(models.Model):
 
     def clean(self):
         if self.previous and self.previous.course != self.course:
-            raise ValidationError({'previous': _('You can not link to chapter in different course!')})
+            raise ValidationError({"previous": _("You can not link to chapter in different course!")})
 
 
 class Lecture(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from='title', unique=True)
+    slug = AutoSlugField(populate_from="title", unique=True)
     subtitle = models.CharField(blank=True, null=True, max_length=250)
-    description = models.TextField(blank=True, null=True, help_text=_('Introduce the study material, explain what data '
-                                                                      'are uploaded.'))
-    data = models.FileField(blank=True, null=True, upload_to='lectures', help_text=_('Upload study material (document, '
-                                                                                     'video, image).'),
-                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'gif', 'png', 'tiff', 'svg', 'pdf',
-                                                                'mkv', 'avi', 'mp4', 'mov']),
-                                        FileSizeValidator(MAX_FILE_SIZE_UPLOAD)])
-    data_metadata = models.JSONField(blank=True, null=True, help_text=_('Metadata about uploaded data to use in '
-                                                                        'template generator.'))
+    description = models.TextField(
+        blank=True, null=True, help_text=_("Introduce the study material, explain what data " "are uploaded.")
+    )
+    data = models.FileField(
+        blank=True,
+        null=True,
+        upload_to="lectures",
+        help_text=_("Upload study material (document, " "video, image)."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "gif", "png", "tiff", "svg", "pdf", "mkv", "avi", "mp4", "mov"]),
+            FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
+        ],
+    )
+    data_metadata = models.JSONField(
+        blank=True, null=True, help_text=_("Metadata about uploaded data to use in " "template generator.")
+    )
     video = models.CharField(blank=True, null=True, max_length=100)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default='V')
+    lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default="V")
 
-    require_submission = models.CharField(max_length=1, choices=SUBMISSION_TYPE, default='N', help_text=_(
-        'A submission can be required either for continuing to the next chapter or to finish the course.'))
-    require_submission_review = models.CharField(max_length=1, choices=SUBMISSION_TYPE, default='N', help_text=_(
-        'Submission is accepted only after being accepted by a review.'))
-    order = models.IntegerField(default=0, help_text=_('Order number for the lecture in the chapter.'))
+    require_submission = models.CharField(
+        max_length=1,
+        choices=SUBMISSION_TYPE,
+        default="N",
+        help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
+    )
+    require_submission_review = models.CharField(
+        max_length=1,
+        choices=SUBMISSION_TYPE,
+        default="N",
+        help_text=_("Submission is accepted only after being accepted by a review."),
+    )
+    order = models.IntegerField(default=0, help_text=_("Order number for the lecture in the chapter."))
 
     def __str__(self):
         return f"{self.chapter.title}: {self.title}"
 
     @staticmethod
     def check_file_extension(data, alloed_extensions):
-        extension = data.name.split('.')[1:]
+        extension = data.name.split(".")[1:]
 
         if len(extension) == 1 and extension[0].lower() in alloed_extensions:
             return True
@@ -166,33 +204,62 @@ class Lecture(models.Model):
     def clean(self):
         if self.data:
             if self.lecture_type == LECTURE_TYPE[0][0] and not self.check_file_extension(self.data, EXTENSION_VIDEO):
-                raise ValidationError({'data': _('Lecture type is "%s" but you are not uploading such file. Allowed '
-                                                 'extensions: %s' % (LECTURE_TYPE[0][1], EXTENSION_VIDEO))})
+                raise ValidationError(
+                    {
+                        "data": _(
+                            'Lecture type is "%s" but you are not uploading such file. Allowed '
+                            "extensions: %s" % (LECTURE_TYPE[0][1], EXTENSION_VIDEO)
+                        )
+                    }
+                )
 
-            if self.lecture_type == LECTURE_TYPE[1][0] and \
-                    not self.check_file_extension(self.data, EXTENSION_IMAGE + EXTENSION_DOCUMENT):
-                raise ValidationError({'data': _('Lecture type is "%s" but you are not uploading such file. Allowed '
-                                                 'extensions: %s' % (LECTURE_TYPE[1][1],
-                                                                     EXTENSION_IMAGE + EXTENSION_DOCUMENT))})
+            if self.lecture_type == LECTURE_TYPE[1][0] and not self.check_file_extension(
+                self.data, EXTENSION_IMAGE + EXTENSION_DOCUMENT
+            ):
+                raise ValidationError(
+                    {
+                        "data": _(
+                            'Lecture type is "%s" but you are not uploading such file. Allowed '
+                            "extensions: %s" % (LECTURE_TYPE[1][1], EXTENSION_IMAGE + EXTENSION_DOCUMENT)
+                        )
+                    }
+                )
 
 
 class Run(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from='title', unique=True)
-    perex = models.TextField(blank=True, null=True,
-                             help_text=_("Short description displayed in course list, use as course perex. If empty "
-                                         "course perex will be used."))
+    slug = AutoSlugField(populate_from="title", unique=True)
+    perex = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "Short description displayed in course list, use as course perex. If empty " "course perex will be used."
+        ),
+    )
     start = models.DateField()
-    end = models.DateField(blank=True, null=True, help_text=_("Date will be calculated automatically if any of the "
-                                                              "chapter has length set."))
+    end = models.DateField(
+        blank=True,
+        null=True,
+        help_text=_("Date will be calculated automatically if any of the " "chapter has length set."),
+    )
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='RunUsers', blank=True)
-    price = models.FloatField(default=0, help_text=_('Price for the course run that will have to be payed by the '
-                                                     'subscriber.'))
-    limit = models.IntegerField(default=0, help_text=_('Max number of attendees, after which registration for the Run '
-                                                       'will close. If set to 0 the course will have no limit.'))
-    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='manager',
-                                help_text=_('Manager of the course run, responsible for the smoothness of the run.'))
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through="RunUsers", blank=True)
+    price = models.FloatField(
+        default=0, help_text=_("Price for the course run that will have to be payed by the " "subscriber.")
+    )
+    limit = models.IntegerField(
+        default=0,
+        help_text=_(
+            "Max number of attendees, after which registration for the Run "
+            "will close. If set to 0 the course will have no limit."
+        ),
+    )
+    manager = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="manager",
+        help_text=_("Manager of the course run, responsible for the smoothness of the run."),
+    )
 
     def __str__(self):
         return f"{self.course}: {self.title}"
@@ -213,9 +280,7 @@ class Run(models.Model):
             # AnonymousUser, a.k.a. not logged in...
             subscriptions = 0
         else:
-            subscriptions = self.users \
-                .filter(runusers__user=user) \
-                .count()
+            subscriptions = self.users.filter(runusers__user=user).count()
 
         if subscriptions > 0:
             return True
@@ -254,17 +319,27 @@ class Meeting(models.Model):
     end = models.DateTimeField()
     link = models.URLField(max_length=250)
     description = models.TextField(blank=True, null=True)
-    leader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='leader', blank=True,
-                               null=True, help_text=_('Leader of the meeting, eg. lecturer, vip...'))
-    organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='organizer',
-                                  help_text=_('Organizer of the meeting, responsible for the meeting.'))
+    leader = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="leader",
+        blank=True,
+        null=True,
+        help_text=_("Leader of the meeting, eg. lecturer, vip..."),
+    )
+    organizer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="organizer",
+        help_text=_("Organizer of the meeting, responsible for the meeting."),
+    )
 
     def __str__(self):
         return f"Meeting: {self.run} {self.lecture}: {self.start} {self.end}"
 
     def clean(self):
         if self.start > self.end:
-            raise ValidationError({'end': _('Meeting can not finish before it has started.')})
+            raise ValidationError({"end": _("Meeting can not finish before it has started.")})
 
         # if self.run.start and self.start.date() < self.run.start:
         #     raise ValidationError({'start': _('Meeting is scheduled before the course run starts.')})
@@ -276,24 +351,25 @@ class Meeting(models.Model):
         #     raise ValidationError({'end': _('Meeting can not end after the course run is already finished.')})
 
         if self.run.end and self.run.end < date.today():
-            raise ValidationError(_('You are not allowed to add meeting to run that has already finished.'))
+            raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
 
         if self.run not in self.lecture.chapter.course.get_active_runs():
-            raise ValidationError({'lecture': _('Lecture does not belong to this course (and its chapters).')})
+            raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
 
         start, end = self.lecture.chapter.get_run_dates(self.run)
 
         if self.start.date() < start:
-            raise ValidationError(
-                {'start': _(f"Meeting is scheduled before the lecture's chapter starts: {start}.")})
+            raise ValidationError({"start": _(f"Meeting is scheduled before the lecture's chapter starts: {start}.")})
 
         if self.start.date() > end:
             raise ValidationError(
-                {'start': _(f"Meeting is scheduled after the lecture's chapter is already finished: {end}.")})
+                {"start": _(f"Meeting is scheduled after the lecture's chapter is already finished: {end}.")}
+            )
 
         if self.end.date() > end:
             raise ValidationError(
-                {'end': _(f"Meeting can not end after the lecture's chapter is already finished: {end}.")})
+                {"end": _(f"Meeting can not end after the lecture's chapter is already finished: {end}.")}
+            )
 
 
 # class Subscription(models.Model):
@@ -302,11 +378,17 @@ class Meeting(models.Model):
 
 class Submission(models.Model):
     title = models.CharField(max_length=250)
-    description = models.TextField(blank=True, null=True, help_text=_('Describe what you have learned.'))
-    data = models.FileField(blank=True, null=True, upload_to='submissions', help_text=_('Upload proof of your work '
-                                                                                        '(document, video, image).'),
-                            validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt']),
-                                        FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],)
+    description = models.TextField(blank=True, null=True, help_text=_("Describe what you have learned."))
+    data = models.FileField(
+        blank=True,
+        null=True,
+        upload_to="submissions",
+        help_text=_("Upload proof of your work " "(document, video, image)."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]),
+            FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND),
+        ],
+    )
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
@@ -319,10 +401,10 @@ class Submission(models.Model):
         if self.chapter:
 
             if self.chapter not in self.run.course.chapter_set.all():
-                raise ValidationError({'chapter': _('Selected chapter does not belong to submission\'s course.')})
+                raise ValidationError({"chapter": _("Selected chapter does not belong to submission's course.")})
 
             if self.lecture and self.lecture not in self.chapter.lecture_set.all():
-                raise ValidationError({'lecture': _('Selected lecture does not belong to selected chapter.')})
+                raise ValidationError({"lecture": _("Selected lecture does not belong to selected chapter.")})
 
         elif self.lecture:
             selected = False
@@ -332,36 +414,47 @@ class Submission(models.Model):
                     selected = True
 
             if not selected:
-                raise ValidationError({'lecture': _('Selected lecture does not belong to submission\'s course.')})
+                raise ValidationError({"lecture": _("Selected lecture does not belong to submission's course.")})
 
 
 class Review(models.Model):
     title = models.CharField(max_length=250)
-    description = models.TextField(blank=True, null=True, help_text=_('Describe your opinion about the submission.'))
+    description = models.TextField(blank=True, null=True, help_text=_("Describe your opinion about the submission."))
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    accepted = models.BooleanField(help_text=_('Check if the submission if acceptable. If not, the reviewee will have '
-                                               'to submit a new submission.'))
+    accepted = models.BooleanField(
+        help_text=_(
+            "Check if the submission if acceptable. If not, the reviewee will have " "to submit a new submission."
+        )
+    )
 
     class Meta:
-        unique_together = ("submission", "author",)
+        unique_together = (
+            "submission",
+            "author",
+        )
 
     def __str__(self):
         return f"{self.title}"
 
     def clean(self):
         if self.author == self.submission.author:
-            raise ValidationError({'author': _('You can not review your own submission!')})
+            raise ValidationError({"author": _("You can not review your own submission!")})
 
 
 class Certificate(models.Model):
-    data = models.FileField(upload_to='certificates', validators=[FileExtensionValidator(['pdf']),
-                                                                  FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)])
+    data = models.FileField(
+        upload_to="certificates",
+        validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+    )
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ("run", "user",)
+        unique_together = (
+            "run",
+            "user",
+        )
 
     def __str__(self):
         return f"Certificate: {self.run} - {self.user}"

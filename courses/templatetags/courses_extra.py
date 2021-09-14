@@ -18,7 +18,7 @@ def get_run_dates(chapter, run):
 @register.filter
 def timedelta(value, arg=None):
     if not value:
-        return ''
+        return ""
 
     if arg:
         cmp = arg
@@ -43,7 +43,7 @@ def is_subscribed(run, user):
 
 @register.filter()
 def lecture_type_icon(lecture_type):
-    icon = ''
+    icon = ""
 
     if lecture_type == LECTURE_TYPE[0][0]:
         icon = '<i class="fas fa-film"></i>'
@@ -63,7 +63,7 @@ def lecture_type_icon(lecture_type):
 
 @register.filter
 def is_pdf(data):
-    return Lecture.check_file_extension(data, alloed_extensions=('pdf',))
+    return Lecture.check_file_extension(data, alloed_extensions=("pdf",))
 
 
 @register.filter
