@@ -224,13 +224,15 @@ class Run(models.Model):
         else:
             return False
 
+    def clean(self):
+        if self.limit != 0 and self.limit < self.users.count():
+            raise ValidationError({"limit": "Subscribed user's limit has been reached."})
+
     def save(self, *args, **kwargs):
+        self.full_clean()
+
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
-
-        if self.limit > 0:
-            # TODO: validate number of subscribed users
-            pass
 
         super().save(*args, **kwargs)
 

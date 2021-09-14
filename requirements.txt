@@ -1,0 +1,4 @@
+django
+django-autoslug
+django-bootstrap-v5
+django-markdownify

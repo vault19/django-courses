@@ -1,0 +1,1075 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "---",
+        "last_login": "2021-09-13T21:28:32.520Z",
+        "is_superuser": true,
+        "username": "superman",
+        "first_name": "Super",
+        "last_name": "Man",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2021-07-18T17:30:34.827Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "---",
+        "last_login": "2021-09-12T19:22:20.945Z",
+        "is_superuser": true,
+        "username": "superwoman",
+        "first_name": "Super",
+        "last_name": "Woman",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2021-08-01T15:19:51Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "---",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "tester1",
+        "first_name": "",
+        "last_name": "",
+        "email": "tester1@example.com",
+        "is_staff": false,
+        "is_active": false,
+        "date_joined": "2021-09-13T21:02:15.192Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "---",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "tester2",
+        "first_name": "",
+        "last_name": "",
+        "email": "tester2@example.com",
+        "is_staff": false,
+        "is_active": false,
+        "date_joined": "2021-09-13T21:02:15.192Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "---",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "tester3",
+        "first_name": "",
+        "last_name": "",
+        "email": "tester3@example.com",
+        "is_staff": false,
+        "is_active": false,
+        "date_joined": "2021-09-13T21:02:15.192Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "courses.course",
+    "pk": 1,
+    "fields": {
+        "title": "Kurz BBC micro:bit & MakeCode I.",
+        "perex": "Tento kurz vás prevedie základmi práce s micro:bitmi. Začneme úplne **od základov** -- čo je to BBC micro:bit, ako ho pripojiť k počítaču; a dostaneme sa až **po bezdrôtovú komunikáciu, prehrávanie hudby či tvorbu elektrických obvodov z krokosvorkových kablikov.**\r\n\r\nV kurze budeme využívať hardvér zo [Základnej sady Učíme s Hardvérom](https://edutronik.sk/).\r\n\r\nTento kurz vznikol zlúčením kurzov **Blok 1** a **Blok 2** (staré označenia kurzov zo školského roku 2020/2021).",
+        "slug": "kurz-bbc-micro-bit-makecode-i",
+        "description": "Tento kurz vás prevedie základmi práce s micro:bitmi. Začneme úplne **od základov** -- čo je to BBC micro:bit, ako ho pripojiť k počítaču; a dostaneme sa až **po bezdrôtovú komunikáciu, prehrávanie hudby či tvorbu elektrických obvodov z krokosvorkových kablikov.** Kurz bude prebiehať výhradne v grafickom (blokovom) programovacom prostredí [**Microsoft MakeCode**](https://makecode.microbit.org/) a využívať budeme hardvér zo [Základnej sady Učíme s Hardvérom](https://edutronik.sk/).\r\n\r\nTento kurz vznikol zlúčením kurzov **Blok 1** a **Blok 2** (staré označenia kurzov zo školského roku 2020/2021).\r\n\r\n<div markdown=\"1\" class=\"text-center\">\r\n<iframe src=\"https://player.vimeo.com/video/597233330?h=1c3941ba24\" width=\"640\" height=\"360\" frameborder=\"0\" allow=\"autoplay; fullscreen; picture-in-picture\" allowfullscreen></iframe>\r\n</div>\r\n\r\nKurz je primárne určený pre učiteľov a učiteľky informatiky na základných a stredných školách, a tak v ňom nájdete mnoho rád, ako pracovať s micro:bitmi v škole. Ak ale neučíte v škole, vôbec to nevadí, tento kurz Vám dá veľmi dobrý základ pre prácu s micro:bitmi a všeobecne programovanie micro:bitov.\r\n\r\n## Štruktúra kurzu\r\nKurz má dĺžku **6 týždňov** a obsahuje 6 kapitol, ktoré sa v jednotlivých týždňoch budú preberať. Takto sme kurz navrhli preto, aby všetci účastníci postupovali plus mínus rovnakým tempom. Na začiatku máte odomknutú iba prvú kapitolu, a zvyšné sú zamknuté. Následne sa v jednotlivých týždňoch odomykajú postupne ďalšie a ďalšie kapitoly. Dôležité je, že **ak sa Vám raz kapitola odomkne, zostane už odomknutá navždy – budete tak mať k nej prístup nie len počas trvania celého kurzu, ale aj po jeho skončení.**\r\n\r\nNa odomknutie niektorých kapitol je ale potrebné splniť všetky úlohy v tej predchádzajúcej. Napríklad si budete musieť pozrieť všetky video lekcie a odovzdať všetky projekty v danej kapitole, aby sa vám odomkla ďalšia kapitola s novými video lekciami. Preto odporúčame poctivo dodržiavať termíny, ktoré sú pri jednotlivých video lekciách či projektoch.\r\n\r\nCieľom tohto kurzu je, aby bol čo najviac praktický, a preto si budete jednotlivé aktivity programovať a zapájať spoločne s nami.\r\n\r\n---\r\n\r\n## ZOOM stretnutia\r\n\r\nTento kurz neprebieha iba samotnou formou video lekcií, no obsahuje aj **dve spoločné online stretnutia v druhom a šiestom týždni kurzu**, najčastejšie cez platformu ZOOM. Na tie je potrebné byť pripravený a mať prejdené a odskúšané predchádzajúce video lekcie. Online stretnutia majú tri časti:\r\n\r\n* V prvej časti Vám lektor predstaví nejaké rozširujúce aktivity či informácie, ktoré sa nenachádzajú vo video lekciách.\r\n* V druhej časti bude priestor na Vaše otázky, na ktoré sa lektor alebo lektori pokúsia odpovedať. Ak Vám nefunguje niečo z video lekcií alebo si neviete dať rady s nejakým micro:bit projektom, toto jeten správny čas pýtať sa.\r\n* No a v tretej časti zostane priestor na zdieľanie Vašich skúseností s micro:bit aktivitami. Môžete sa tak niečo zaujímavé či užitočné dozvedieť nie len od nás lektorov, ale aj od ďalších desiatok učiteľov a učiteliek. Cieľom je, aby sme sa vzájomne inšpirovali a podporovali.\r\n\r\n\r\n---\r\n\r\n## O lektoroch\r\n\r\nVo videách sa k vám budú prihovárať [Marek Mansell](https://www.linkedin.com/in/marekmansell) a [Nika Kvaššayová](https://www.linkedin.com/in/nikaklimova), ktorí majú niekoľkoročné skúsenosti s micro:bitmi.\r\n\r\nNa tvorbe obsahu sa podieľali dve občianske združenia. Prvým je združenie Slovak Python User Group, skrátene SPy, ktoré združuje Python komunitu na Slovensku a v roku 2018 spustilo vzdelávací projekt Učíme s Hardvérom. Druhým je nitrianske združenie eTeacher, ktoré organizuje vzdelávanie pre učiteľov informatiky nie len v Nitre. Na realizácií týchto kurzov sa podieľala spoločnosť BTSGroup.\r\n\r\n---\r\n\r\nTento videokurz vznikol vďaka podpore Nadačného fondu Telekom v rámci projektu ENTER, ktorým sa spoločnosť Slovak Telekom snaží podporovať školy v inovatívnej výučbe digitálnych zručností.\r\n\r\n---\r\n\r\n# Časté otázky\r\n\r\n#### Dostanem po ukončení kurzu certifikát?\r\nÁno, po ukončení kurzu vám systém vygeneruje certifikát s vašim menom a detailmi o absolvovanom kurze.\r\n\r\n#### Aké pomôcky potrebujem na basolvovanie kurzu?\r\nV kurze budeme využívať komponenty zo [Základnej sady Učíme s Hardvérom](https://edutronik.sk/). Samozrejme, nemusíte mať presne tú istú sadu, no odporúčame mať k dispozícii:\r\n\r\n* BBC micro:bit (ideálne 2ks na bezdrôtovú komunikáciu, no postačuje aj 1ks -- na verzii nezáleží)\r\n* micro USB kábel\r\n* držiak na batérie k micro:bitu a AAA batérie\r\n* krokosvorkové káble\r\n* reproduktor s JACK vstupom\r\n\r\n#### Budem pri aktivitách s bezdrôtovou komunikáciou potrebovať dva micro:bity?\r\nAk máte k dispozícii dva micro:bity, bude to pre vás určite veľká výhoda a aktivity s bezdrôtovou komunikáciou si môžete vyskúsať aj na reálnych micro:bitoch. Ak nie, väčšina aktivít na bezdrôtovú komunikáciu si viete odskúšať aj v simulátore.\r\n\r\n#### Je tento kurz spoplatnený?\r\nNie, vďaka financovaniu projektu ENTER Nadačným fondom Telekom môžeme tento kurz pre učiteľov a učiteľky informatiky organizovať bezplatne.\r\n\r\n#### Čo ak som v školskom roku 2020/2021 absolvoval(a) školenie *Blok 1*?\r\nBývalé školenie *Blok 1* je obsiahnuté v prvej polovici tohto nového kurzu. Odporúčame vám teda absolvovať si celý tento kurz s tým, že prvé 2 týždne si vedomosti z *Bloku 1*  obnovíte a následne už prejdeme k témam, ktoré v *Bloku 1* neboli obsaihnuté.\r\n\r\n#### Čo ak som v školskom roku 2020/2021 absolvoval(a) školenie *Blok 1* a *Blok 2*?\r\nV tom prípade ste si absolvovali celý obsah tohto školenia a odporúčame sa vám registrovať na pokročilejšie kurzy.\r\n\r\n#### Na koho sa počas kurzu budem môcť obrátiť s prípradnými problémami?\r\nAk vám čokoľvek počas kurzu nebude jasné či nebude fungovať, budete mať dve možnosti, ako riešiť problémy:\r\n\r\n* Spýtať sa v uzavretej Facebook skupine, kam vás spolu s ďalšími účastníkmi a účastníčkami kurzu pridáme po registrácii na kurz.\r\n* Napísať našim lektorom email.",
+        "state": "O",
+        "creator": 2
+    }
+},
+{
+    "model": "courses.course",
+    "pk": 2,
+    "fields": {
+        "title": "MINI ENTER výzva (jeseň 2021)",
+        "perex": "Radi by ste obohatili hodiny informatiky o nové technológie? Chcete vzbudiť u študentov väčší záujem o informatiku a podporiť ich v získavaní digitálnych zručností, ktoré sú nevyhnutné pre 21. storočie? Zapojte sa do mini výzvy projektu ENTER a získajte pre svoju školu základnú sadu micro:bitov a školenie k nim úplne zadarmo.",
+        "slug": "mini-vyzva",
+        "description": "Radi by ste obohatili hodiny informatiky o nové technológie? Chcete vzbudiť u študentov väčší záujem o informatiku a podporiť ich v získavaní digitálnych zručností, ktoré sú nevyhnutné pre 21. storočie? Zapojte sa do mini výzvy projektu ENTER a získajte pre svoju školu základnú sadu micro:bitov a školenie k nim úplne zadarmo.\r\n\r\n## Kto môže žiadať o grant?\r\n\r\nO grant môžu žiadať učitelia základných a stredných škôl. Podmienkou je, aby škola nevlastnila žiadne sady micro:bitov. Za jednu školu sa môžu prihlásiť max. 2 učitelia. V prípade veľkého záujmu bude za každú prihlásenú školu vybraný jeden učiteľ/učiteľka.\r\n\r\n## Čo získate:\r\n\r\nZákladnú sadu micro:bit „Učíme s Hardvérom“ 1 ks v hodnote 36 €:\r\n\r\n* 1x BBC micro:bit verzia 2,\r\n* 1x USB kábel,\r\n* 1x držiak na batérie k micro:bitu,\r\n* 2x AAA batéria,\r\n* 10x krokosvorkový kábel,\r\n* 1x LED pásik,\r\n* 1x reproduktor,\r\n* 5x LED diódy s rezistormi.\r\n* Školenie k práci s micro:bitmi: online, 6 týždňov po 2 hodiny, kombinácia samoštúdia a ZOOM stretnutí. K dispozícii bude viacero termínov, zvyčajne v poobedných hodinách.\r\n\r\n## Ako sa zapojiť do výzvy?\r\n\r\nDo výzvy sa môžete zapojiť prihlásením na tento kurz. Prihlásiť sa je možné do naplnenia kapacity.\r\n\r\n## Harmonogram:\r\n\r\nZáujemcov o školenia a sady micro:bitov budeme kontaktovať v priebehu septembra 2021. Školenia prebehnú na jeseň 2021. Krátky záverečný formulár (spätnú väzbu) spolu s fotkou prezentácie BBC micro:bitu žiakom a žiačkam je potrebné vyplniť do decembra 2021.\r\n\r\n## Kto bude zabezpečovať školenia?\r\n\r\nŠkolenia bude zabezpečovať SPy o.z. s spolupráci so združením eTeacher. Ich cieľom je poskytovať pomoc a podporu úplným začiatočníkom a ľuďom, ktorí s programovaním začínajú. Spolupracujú so školami a inými vzdelávacími inštitúciami a propagujú programovanie (nezávislé od programovacieho jazyka) u detí a mladých ľudí od čo najskoršieho možného veku. Pre viac informácii ohľadom školení kontaktujte: microbit@pycon.sk.\r\n\r\n## Čo je to BBC micro:bit?\r\n\r\nJe to mikropočítač menší ako mobil. Ide o najjednoduchšie programovateľné teliesko na trhu a je vhodné aj pre úplných začiatočníkov. Dajú sa s ním vytvárať jednoduché hry, merať teplota, ovládať zvuk či svetelnosť iných zariadení. V roku 2016 ho vyvinula televízia BBC na podporu výučby programovania na hodinách informatiky vo Veľkej Británii. Až 90 % žiakov sa po projekte vyjadrilo, že naučiť sa programovať môže naozaj každý. V Dánsku v roku 2018 získali 65 000 kusov micro:bitu takmer všetky školy a v krajinách, kde sa projekty realizovali, žiaci výrazne zlepšili svoje digitálne zručnosti.\r\n\r\n## Čo povedali o ochutnávke micro:bitov učitelia a učiteľky informatiky:\r\n\r\n> > „MINI grant považujem za takú ochutnávku micro:bitov. Vďaka školeniam sme mali možnosť vyskúšať si prácu s nimi a mňa osobne to len utvrdilo v tom, že micro:bity na školu nevyhnutne potrebujeme. Pri prezentácii micro:bitov na hodinách som videla obrovský záujem aj zo strany žiakov, dokonca aj u takých, ktorých doteraz informatika až tak nezaujala.“ (ZŠ Brehy)\r\n\r\n> > „V on-line prostredí sa pracovalo bez problémov, ale bez darovanej sady by som si nedokázala prakticky vyskúšať prácu s microbitom. Takže za mňa veľká pomoc.“ (ZŠ Čáry)\r\n\r\n> > „Deťom sa to veľmi páči, už trom žiakom rodičia zakúpili vlastné micro:bity.“ (ZŠ Komenského, Michalovce)\r\n\r\n---\r\n\r\nTáto výzva je súčasťou projektu ENTER.",
+        "state": "O",
+        "creator": 1
+    }
+},
+{
+    "model": "courses.course",
+    "pk": 3,
+    "fields": {
+        "title": "[TEST] Blok 1: Základy na BBC micro:bit (displej, tlačidlá a senzor pohybu)",
+        "perex": "",
+        "slug": "blok-1-zaklady-na-bbc-micro-bit-displej-tlacidla-a",
+        "description": "Prvý kurz sa skladá z 2 online stretnutí, v ktorých si prejdeme základy práce s micro:bitmi - zobrazovanie obrázkov, využívanie tlačidiel a senzoru naklonenia/akcelerácie a prostredia Microsoft Makecode a micro:bit classroom. **Nie sú potrebné žiadne predchádzajúce znalosti.**\r\n\r\n\r\n*Pre plnohodnotné absolvovanie kurzu je potrebné mať k dispozícii BBC micro:bit a micro USB kábel (prípadne držiak na batérie a 2x AAA batérie, ale nie je to nevyhnutné).*",
+        "state": "D",
+        "creator": 1
+    }
+},
+{
+    "model": "courses.course",
+    "pk": 4,
+    "fields": {
+        "title": "[TEST] Blok 2: Bezdrôtová komunikácia, hudba a elektrické obvody s BBC micro:bit",
+        "perex": "",
+        "slug": "blok-2-bezdrotova-komunikacia-hudba-a-elektricke-o",
+        "description": "Druhý kurz sa skladá z 3 online stretnutí, ktoré sa zameriavajú na bezdrôtovú komunikáciu medzi micro:bitmi, prehrávanie hudby na reproduktoroch a rozpoznávaním uzatvorenia elektrických obvodov pomocou kolíkov. **Sú potrebné predchádzajúce znalosti na úrovni Bloku 1.**\r\n\r\n*Pre plnohodnotné absolvovanie kurzu je potrebné mať k dispozícii 2x BBC micro:bit (pre bezdrôtovú komunikáciu, ale ak nemáte druhý micro:bit k dispozícii viete kurz absolvovať aj s jedným micro:bitom), micro USB kábel, reproduktor s 3,5mm JACK vstupom a krokosvorkové káble.*",
+        "state": "D",
+        "creator": 1
+    }
+},
+{
+    "model": "courses.course",
+    "pk": 5,
+    "fields": {
+        "title": "[TEST] Blok 3: LED diódy a LED pásiky s BBC micro:bit",
+        "perex": "",
+        "slug": "blok-3-led-diody-a-led-pasiky-s-bbc-micro-bit",
+        "description": "Tretí kurz sa skladá z 2 online stretnutí - v prvom sa budeme venovať pripájaniu LED diód a v druhom NeoPixel LED pásikov. **Sú potrebné predchádzajúce znalosti na úrovni Bloku 2.**",
+        "state": "D",
+        "creator": 1
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 1,
+    "fields": {
+        "title": "Týždeň 1 - Zoznámenie sa s BBC micro:bit, displej a tlačidlá",
+        "previous": null,
+        "slug": "lekcia-1",
+        "perex": "",
+        "description": "Nejaké dôležité info...",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 2,
+    "fields": {
+        "title": "Týždeň 2 - tlačidlá a senzor pohybu",
+        "previous": 1,
+        "slug": "lekcia-2",
+        "perex": "",
+        "description": "Dôležité info...",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 3,
+    "fields": {
+        "title": "Týždeň 3 - Bezdrôtová komunikácia",
+        "previous": 2,
+        "slug": "lekcia-3",
+        "perex": "",
+        "description": "Dôležité info",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 4,
+    "fields": {
+        "title": "Týždeň 4 - Hudba",
+        "previous": 3,
+        "slug": "tyzden-4-bezdrotova-komunikacia",
+        "perex": "",
+        "description": "x",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 5,
+    "fields": {
+        "title": "Týždeň 5 - Obvody",
+        "previous": 4,
+        "slug": "tyzden-5-hudba",
+        "perex": "",
+        "description": "x",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 6,
+    "fields": {
+        "title": "Týždeň 6 - Záverečné stretnutie a ďalšia inšpirácia",
+        "previous": 5,
+        "slug": "tyzden-6-obvody",
+        "perex": "",
+        "description": "x",
+        "course": 1,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 11,
+    "fields": {
+        "title": "Prvé stretnutie",
+        "previous": null,
+        "slug": "prve-stretnutie",
+        "perex": "PEREX: Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 3,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 12,
+    "fields": {
+        "title": "Druhé stretnutie",
+        "previous": 11,
+        "slug": "druhe-stretnutie",
+        "perex": "PEREX: Druhé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 3,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 13,
+    "fields": {
+        "title": "Prvé stretnutie",
+        "previous": null,
+        "slug": "prve-stretnutie-2",
+        "perex": "PEREX: Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 4,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 14,
+    "fields": {
+        "title": "Druhé online stretnutie",
+        "previous": 13,
+        "slug": "druhe-online-stretnutie",
+        "perex": "PEREX: Druhé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Druhé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 4,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 15,
+    "fields": {
+        "title": "Tretie online stretnutie",
+        "previous": 14,
+        "slug": "tretie-online-stretnutie",
+        "perex": "PEREX: Tretie online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Tretie online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 4,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 16,
+    "fields": {
+        "title": "Prvé stretnutie",
+        "previous": null,
+        "slug": "prve-stretnutie-3",
+        "perex": "PEREX: Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 5,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 17,
+    "fields": {
+        "title": "Druhé stretnutie",
+        "previous": 16,
+        "slug": "druhe-stretnutie-2",
+        "perex": "PEREX: Druhé online stretnutie bude v MakeCode pre ZŠ/SŠ.",
+        "description": "Prvé online stretnutie bude v MakeCode pre ZŠ/SŠ.\r\n\r\n\r\n**Detailnejsi popis stretnuia...**",
+        "course": 5,
+        "length": 7
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 18,
+    "fields": {
+        "title": "Žiadosť",
+        "previous": null,
+        "slug": "ziadost",
+        "perex": "",
+        "description": "",
+        "course": 2,
+        "length": 0
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 19,
+    "fields": {
+        "title": "Darovacia Zmluva",
+        "previous": 18,
+        "slug": "darovacia-zmluva",
+        "perex": "",
+        "description": "",
+        "course": 2,
+        "length": 0
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 20,
+    "fields": {
+        "title": "Absolvovanie si kurzu",
+        "previous": 19,
+        "slug": "absolvovanie-si-kurzu",
+        "perex": "",
+        "description": "",
+        "course": 2,
+        "length": 0
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 21,
+    "fields": {
+        "title": "Názorná prezentácia žiakom a žiačkam",
+        "previous": 20,
+        "slug": "nazorna-prezentacia-ziakom-a-ziackam",
+        "perex": "",
+        "description": "",
+        "course": 2,
+        "length": 0
+    }
+},
+{
+    "model": "courses.chapter",
+    "pk": 22,
+    "fields": {
+        "title": "Čo ďalej pokurze?",
+        "previous": 21,
+        "slug": "co-dalej-pokurze",
+        "perex": "",
+        "description": "",
+        "course": 2,
+        "length": 0
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 1,
+    "fields": {
+        "title": "Úvod do kurzu",
+        "slug": "uvod-do-kurzu",
+        "subtitle": "Zistite, ako bude tento kurz prebiehať :-)",
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 1
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 2,
+    "fields": {
+        "title": "Predstavenie BBC micro:bit",
+        "slug": "predstavenie-bbc-micro-bit-a-prostredia-makecode",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 3
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 4,
+    "fields": {
+        "title": "Uvolnenie na koniec",
+        "slug": "Uvolnenie-na-koniec",
+        "subtitle": null,
+        "description": "",
+        "data": "DB_model_C0luTnE.png",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 3,
+        "lecture_type": "V",
+        "require_submission": "0",
+        "require_submission_review": "0",
+        "order": 0
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 5,
+    "fields": {
+        "title": "Zoznamovací program",
+        "slug": "prvy-program-digitalna-menovka",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 4
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 6,
+    "fields": {
+        "title": "Digitálna menovka",
+        "slug": "tvorba-animacii",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 5
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 7,
+    "fields": {
+        "title": "Obrázky a animácie",
+        "slug": "praca-s-tlacidlami",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 6
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 8,
+    "fields": {
+        "title": "Tlačidlá",
+        "slug": "projekt-vytvor-vlastnu-animaciu",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "E",
+        "require_submission_review": "N",
+        "order": 7
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 15,
+    "fields": {
+        "title": "Prvé ZOOM stretnutie",
+        "slug": "prve-zoom-stretnutie",
+        "subtitle": null,
+        "description": "Link na prvé online stretnutie cez ZOOM dostnete do mailu.\r\n\r\n**Pred prvým stretnutím je potrebné mať prejdený prvý týždeň kurzu!**\r\n\r\nProsím, dopredu si pripravte otázky, prípadne popis próblémov, s ktorými ste sa stretli za predchádzajúci týždeň pri programovaní micro:bit aktivít. Počas ZOOM strenutia budete môcť zdieľať aj obrazovku.",
+        "data": "",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 2,
+        "lecture_type": "L",
+        "require_submission": "E",
+        "require_submission_review": "N",
+        "order": 1
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 17,
+    "fields": {
+        "title": "Predstavenie kurzovej platformy",
+        "slug": "predstavenie-kurozvej-platformy",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 1,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 2
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 18,
+    "fields": {
+        "title": "Projekt: Vytvor vlastnú animáciu",
+        "slug": "projekt-vytvor-vlastnu-animaciu-2",
+        "subtitle": null,
+        "description": "Vytvor vlastnú animáciu do konca prvého týždňa a pošli nám ju na ohodnotenie :-)",
+        "data": "",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 1,
+        "lecture_type": "P",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 8
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 19,
+    "fields": {
+        "title": "Základné info o MINI výzve",
+        "slug": "zakladne-info-o-mini-vyzve",
+        "subtitle": null,
+        "description": "Sme radi, že ste sa rozhodli zapojiť do MINI ENTER výzvy :-)\r\n\r\nPostup je nasledovný:\r\n\r\n1. Podáte žiadosť\r\n2. Zúčastníte sa školení\r\n3. blah vlah blah",
+        "data": "",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 18,
+        "lecture_type": "T",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 1
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 20,
+    "fields": {
+        "title": "Odoslanie žiadosti",
+        "slug": "odoslanie-ziadosti",
+        "subtitle": null,
+        "description": "Prosím, stiahnite si [túto zmluvu](xxx), vyplnte údaje, oscanujte ju a pošlite nám ju kliknutín na tlačidlo \"Odovzdať\" nižšie.",
+        "data": "",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 18,
+        "lecture_type": "P",
+        "require_submission": "C",
+        "require_submission_review": "C",
+        "order": 2
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 21,
+    "fields": {
+        "title": "Senzor pohybu",
+        "slug": "senzor-pohybu",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 2
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 22,
+    "fields": {
+        "title": "Počítadlo ľudí",
+        "slug": "pocitadlo-ludi",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 3
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 23,
+    "fields": {
+        "title": "Krokomer",
+        "slug": "krokomer",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 4
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 24,
+    "fields": {
+        "title": "Kameň, paier, nožnice",
+        "slug": "kamen-paier-noznice",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 5
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 25,
+    "fields": {
+        "title": "Poslušne hlásim",
+        "slug": "poslusne-hlasim",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 6
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 26,
+    "fields": {
+        "title": "Update firmnvéru",
+        "slug": "update-firmnveru",
+        "subtitle": null,
+        "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
+        "data": "",
+        "data_metadata": null,
+        "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
+        "chapter": 2,
+        "lecture_type": "V",
+        "require_submission": "N",
+        "require_submission_review": "N",
+        "order": 7
+    }
+},
+{
+    "model": "courses.lecture",
+    "pk": 27,
+    "fields": {
+        "title": "Projekt so senzorom pohybu",
+        "slug": "projekt-so-senzorom-pohybu",
+        "subtitle": null,
+        "description": "",
+        "data": "",
+        "data_metadata": null,
+        "video": null,
+        "chapter": 2,
+        "lecture_type": "P",
+        "require_submission": "C",
+        "require_submission_review": "N",
+        "order": 8
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 1,
+    "fields": {
+        "title": "Beh Október A 2021",
+        "slug": "septembrovy-kurz",
+        "perex": "Stretnutia 4.10.2021 15.00-17.00 a 2.11.2021 15.00-17.00",
+        "start": "2021-09-13",
+        "end": "2021-10-24",
+        "course": 1,
+        "price": 0.0,
+        "limit": 30,
+        "manager": 2
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 2,
+    "fields": {
+        "title": "Beh Október B 2021",
+        "slug": "decembrovy-kurz",
+        "perex": "Stretnutia 4.10.2021 17.00-19.00 a 2.11.2021 17.00-19.00",
+        "start": "2021-09-27",
+        "end": "2021-11-07",
+        "course": 1,
+        "price": 0.0,
+        "limit": 30,
+        "manager": 2
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 3,
+    "fields": {
+        "title": "Augustová MINI ENTER výzva (2021)",
+        "slug": "jesenna-mini-vyzva",
+        "perex": "Prvé kolo mini výzvy, registrovať sa môžete do 31.8.2021, školenia prebehnú v období September až Október.",
+        "start": "2021-09-01",
+        "end": "2021-12-31",
+        "course": 2,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 2
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 4,
+    "fields": {
+        "title": "Online stretnutie",
+        "slug": "online-stretnutie",
+        "perex": "Vzdy v pondelok od 17.00 do 19.00",
+        "start": "2021-06-07",
+        "end": "2021-06-20",
+        "course": 3,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 1
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 5,
+    "fields": {
+        "title": "Online stretnutie v stredy",
+        "slug": "online-stretnutie-2",
+        "perex": "Vzdy v stredu od 17.00 do 19.00",
+        "start": "2021-06-02",
+        "end": "2021-06-22",
+        "course": 4,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 1
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 6,
+    "fields": {
+        "title": "Online stretnutie v stvrtky",
+        "slug": "online-stretnutie-3",
+        "perex": "Vzdy v stvrtok od 17.00 do 19.00",
+        "start": "2021-06-03",
+        "end": "2021-06-23",
+        "course": 4,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 1
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 7,
+    "fields": {
+        "title": "Online stretnutie",
+        "slug": "online-stretnutie-4",
+        "perex": "Vzdy v utorok od 17.00 do 19.00",
+        "start": "2021-06-08",
+        "end": "2021-06-21",
+        "course": 5,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 1
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 8,
+    "fields": {
+        "title": "Októbrová MINI ENTER výzva (2021)",
+        "slug": "oktobrova-mini-enter-vyzva-2021",
+        "perex": "Druhé kolo mini výzvy, registrovať sa môžete do 31.10.2021, školenia prebehnú v období November až December.",
+        "start": "2021-10-01",
+        "end": "2022-01-31",
+        "course": 2,
+        "price": 0.0,
+        "limit": 0,
+        "manager": 2
+    }
+},
+{
+    "model": "courses.run",
+    "pk": 9,
+    "fields": {
+        "title": "[Test] Beh September A 2021",
+        "slug": "test-september-a-2021",
+        "perex": "Stretnutia X.X.2021 17.00-19.00 a X.X.2021 17.00-19.00",
+        "start": "2021-09-04",
+        "end": "2021-10-15",
+        "course": 1,
+        "price": 0.0,
+        "limit": 30,
+        "manager": 2
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 1,
+    "fields": {
+        "run": 1,
+        "user": 1,
+        "payment": 0.0,
+        "timestamp": "2021-09-03T11:59:43.200Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 2,
+    "fields": {
+        "run": 4,
+        "user": 1,
+        "payment": 0.0,
+        "timestamp": "2021-09-03T11:59:43.206Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 3,
+    "fields": {
+        "run": 5,
+        "user": 1,
+        "payment": 0.0,
+        "timestamp": "2021-09-03T11:59:43.209Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 4,
+    "fields": {
+        "run": 6,
+        "user": 1,
+        "payment": 0.0,
+        "timestamp": "2021-09-03T11:59:43.211Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 5,
+    "fields": {
+        "run": 7,
+        "user": 1,
+        "payment": 0.0,
+        "timestamp": "2021-09-03T11:59:43.214Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 7,
+    "fields": {
+        "run": 1,
+        "user": 2,
+        "payment": 0.0,
+        "timestamp": "2021-09-12T13:29:07.588Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 8,
+    "fields": {
+        "run": 9,
+        "user": 2,
+        "payment": 0.0,
+        "timestamp": "2021-09-12T13:39:50.868Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 9,
+    "fields": {
+        "run": 3,
+        "user": 2,
+        "payment": 0.0,
+        "timestamp": "2021-09-12T15:02:15.310Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 10,
+    "fields": {
+        "run": 2,
+        "user": 2,
+        "payment": 0.0,
+        "timestamp": "2021-09-12T15:44:12.458Z"
+    }
+},
+{
+    "model": "courses.runusers",
+    "pk": 11,
+    "fields": {
+        "run": 8,
+        "user": 2,
+        "payment": 0.0,
+        "timestamp": "2021-09-12T16:25:19.864Z"
+    }
+},
+{
+    "model": "courses.meeting",
+    "pk": 1,
+    "fields": {
+        "run": 1,
+        "lecture": 15,
+        "start": "2021-09-21T15:00:00Z",
+        "end": "2021-09-21T17:00:00Z",
+        "link": "http://zoom.us",
+        "description": "",
+        "leader": null,
+        "organizer": 2
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 1,
+    "fields": {
+        "title": "DISPLEJ A TLAČIDLÁ",
+        "description": "Display je OK.",
+        "data": "",
+        "lecture": null,
+        "chapter": 1,
+        "run": 1,
+        "author": 1
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 4,
+    "fields": {
+        "title": "submission 1 late",
+        "description": "",
+        "data": "",
+        "lecture": null,
+        "chapter": 2,
+        "run": 2,
+        "author": 1
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 6,
+    "fields": {
+        "title": "TLAČIDLÁ A SENZOR POHYBU",
+        "description": "Ked sa pohne tak sa **hybe**.\r\n\r\n* je to fajn\r\n* je to ok",
+        "data": "",
+        "lecture": null,
+        "chapter": 2,
+        "run": 1,
+        "author": 1
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 7,
+    "fields": {
+        "title": "XXX",
+        "description": "XXX DDD",
+        "data": "",
+        "lecture": null,
+        "chapter": 3,
+        "run": 1,
+        "author": 1
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 8,
+    "fields": {
+        "title": "aaa",
+        "description": "asdasdasd",
+        "data": "",
+        "lecture": 8,
+        "chapter": null,
+        "run": 9,
+        "author": 2
+    }
+},
+{
+    "model": "courses.submission",
+    "pk": 9,
+    "fields": {
+        "title": "aaa",
+        "description": "a",
+        "data": "submissions/unnamed_2WCrl59.jpg",
+        "lecture": 18,
+        "chapter": null,
+        "run": 9,
+        "author": 2
+    }
+},
+{
+    "model": "courses.review",
+    "pk": 1,
+    "fields": {
+        "title": "Impressive",
+        "description": "I like",
+        "submission": 1,
+        "author": 2,
+        "accepted": true
+    }
+},
+{
+    "model": "courses.certificate",
+    "pk": 1,
+    "fields": {
+        "data": "DB_model_bZj4TCk.png",
+        "run": 1,
+        "user": 1
+    }
+}
+]
