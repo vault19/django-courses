@@ -27,12 +27,15 @@
                   <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
                   {% if course_run|is_subscribed:request.user %}
                     <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-success disabled">{% translate "Subscribed" %}</a>
+                  {% elif course_run.limit|subtract:course_run.users.count < 10 %}
+                    <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm {% if course_run.limit|subtract:course_run.users.count == 0 %}btn-danger {% else %}btn-warning {% endif %}disabled">{% translate "Remains" %} {{ course_run.limit|subtract:course_run.users.count }} <i class="fas fa-user"></i></span></a>
                   {% endif %}
                   {% if course_run.is_past_due %}
                     <a href="{% url 'course_run_detail' course_run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
                   {% endif %}
                 </div>
-                <small class="text-muted"><i class="fas fa-calendar-alt"></i> {{ course_run.start }}{% if course_run.end %} - {{ course_run.end }}{% endif %}
+                <small class="text-muted">
+                  <i class="fas fa-calendar-alt"></i> {{ course_run.start }}{% if course_run.end %} - {{ course_run.end }}{% endif %}
                 {% if course_run.self_paced %} - {% translate "Self-paced" %}{% endif %}</small>
               </div>
             </div>

@@ -266,16 +266,10 @@ def subscribe_to_run(request, run_slug):
     # TODO: change to POST
     run = get_object_or_404(Run, slug=run_slug)
 
-    if not run.is_subscribed(request.user):
+    if run.limit != 0 and run.limit <= run.users.count():
+        messages.error(request, _("Subscribed user's limit has been reached."))
+    elif not run.is_subscribed(request.user):
         run.users.add(request.user)
-
-        try:
-            run.clean()
-        except ValidationError as e:
-            messages.error(request, "There was an error during save.")
-            return redirect("course_run_detail", run_slug=run_slug)
-
-        print("aaabbb")
         run.save()
         messages.success(request, _("You have been subscribed to course: %s" % run))
     else:
@@ -291,13 +285,7 @@ def unsubscribe_from_run(request, run_slug):
 
     if run.is_subscribed(request.user):
         run.users.remove(request.user)
-
-        try:
-            run.save()
-        except ValidationError as e:
-            messages.error(request, "There was an error during save.")
-            return redirect("course_run_detail", run_slug=run_slug)
-
+        run.save()
         messages.success(request, _("You have been unsubscribed from course: %s" % run))
     else:
         messages.warning(request, _("You are not subscribed to the course: %s" % run))

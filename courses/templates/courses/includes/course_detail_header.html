@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load markdownify %}
+{% load courses_extra %}
 
 <section class="py-5 container">
   <div class="row {#py-lg-5#}">
@@ -26,7 +27,12 @@
         {% if user.is_authenticated and not run.is_past_due %}
           <p>
             {% if not subscribed %}
-              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-outline-success my-2">{% translate "Subscribe" %}</a>
+              {% if run.limit|subtract:run.users.count != 0 %}
+              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-outline-success my-2">{% translate "Subscribe" %}</a><br/>
+              {% endif %}
+              {% if run.limit|subtract:run.users.count < 10 %}
+                <span class="badge {% if run.limit|subtract:run.users.count == 0 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{% translate "Remains" %} {{ run.limit|subtract:run.users.count }} <i class="fas fa-user"></i></span>
+              {% endif %}
 {#            {% else %}#}
 {#              <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-outline-danger my-2">{% translate "Unsubscribe" %}</a>#}
             {% endif %}

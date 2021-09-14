@@ -291,7 +291,7 @@ class Run(models.Model):
 
     def clean(self):
         if self.limit != 0 and self.limit < self.users.count():
-            raise ValidationError({"limit": "Subscribed user's limit has been reached."})
+            raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
 
     def save(self, *args, **kwargs):
         self.full_clean()
