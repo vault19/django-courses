@@ -14,13 +14,19 @@
       {% if run %}<h6 class="card-subtitle mb-2 text-muted">{{ run.title|upper }}</h6>{% endif %}
 
       <p class="card-text">
-      <p class="card-text">
         {% if run and run.perex %}
           {{ run.perex|markdownify }}
         {% elif course.perex %}
           {{ course.perex|markdownify }}
         {% else %}
           {{ course.description|markdownify }}
+        {% endif %}
+
+        {% if run.meeting_set.all %}
+          {% translate "Meetings" %}:<br />
+          {% for meeting in run.meeting_set.all %}
+            {{ meeting.lecture.lecture_type|lecture_type_icon }} {{ meeting.start }} - {{ meeting.end|date:'H:i' }}<br/>
+          {% endfor %}
         {% endif %}
       </p>
 
