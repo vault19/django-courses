@@ -2,6 +2,11 @@
 {% load markdownify %}
 {% load courses_extra %}
 
+{% if run %}
+  {% include "courses/includes/modal_subscribe.html" with form=form run=run %}
+  {% include "courses/includes/modal_subscribe.html" with form=form run=run unsubscribe=True %}
+{% endif %}
+
 <section class="py-5 container">
   <div class="row {#py-lg-5#}">
     <div class="col-lg-8 col-md-10 mx-auto text-center">
@@ -21,20 +26,24 @@
   <div class="row">
     <div class="col text-center">
       {% if run %}
-        <p>{{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
+        <p><i class="fas fa-calendar-alt"></i> {{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
           {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}
         </p>
         {% if user.is_authenticated and not run.is_past_due %}
           <p>
             {% if not subscribed %}
               {% if run.limit|subtract:run.users.count != 0 %}
-              <a href="{% url "subscribe_to_run" run.slug %}" class="btn btn-outline-success my-2">{% translate "Subscribe" %}</a><br/>
+                <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#SubscribeModal">
+                  {% translate "Subscribe" %}
+                </button>
               {% endif %}
               {% if run.limit|subtract:run.users.count < 10 %}
                 <span class="badge {% if run.limit|subtract:run.users.count == 0 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{% translate "Remains" %} {{ run.limit|subtract:run.users.count }} <i class="fas fa-user"></i></span>
               {% endif %}
 {#            {% else %}#}
-{#              <a href="{% url "unsubscribe_from_run" run.slug %}" class="btn btn-outline-danger my-2">{% translate "Unsubscribe" %}</a>#}
+{#                <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#UnsubscribeModal">#}
+{#                  {% translate "Unsubscribe" %}#}
+{#                </button>#}
             {% endif %}
           </p>
         {% endif %}
