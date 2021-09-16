@@ -2,6 +2,8 @@ from datetime import date
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
+from django.utils.translation import ugettext_lazy as _
+
 
 from courses.models import Lecture, LECTURE_TYPE
 from courses.settings import EXTENSION_VIDEO, EXTENSION_IMAGE
@@ -26,7 +28,7 @@ def timedelta(value, arg=None):
         cmp = date.today()
 
     if value > cmp:
-        return "unlocks in %s" % timesince(cmp, value)
+        return _("unlocks in") + " %s" % timesince(cmp, value)
     else:
         return "%s ago" % timesince(value, cmp)
 

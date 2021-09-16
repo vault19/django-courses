@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-15 06:10+0000\n"
+"POT-Creation-Date: 2021-09-16 20:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,15 +59,15 @@ msgstr ""
 
 #: django-courses/courses/models.py:40
 msgid "Not required"
-msgstr ""
+msgstr "Nepovinné"
 
 #: django-courses/courses/models.py:41
 msgid "Required for next chapter"
-msgstr ""
+msgstr "Povinné pre odomknutie ďalšej kapitoly"
 
 #: django-courses/courses/models.py:42
 msgid "Required to end course"
-msgstr ""
+msgstr "Povinné pre ukončenie kurzu"
 
 #: django-courses/courses/models.py:52
 msgid ""
@@ -224,11 +224,11 @@ msgstr ""
 
 #: django-courses/courses/models.py:381
 msgid "Describe what you have learned."
-msgstr ""
+msgstr "Popis k odovzdaniu."
 
 #: django-courses/courses/models.py:386
 msgid "Upload proof of your work (document, video, image)."
-msgstr ""
+msgstr "Nahrajte prílohy k odovzdaniu (dokument, video alebo obrázok)"
 
 #: django-courses/courses/models.py:404
 msgid "Selected chapter does not belong to submission's course."
@@ -267,17 +267,17 @@ msgstr ""
 
 #: django-courses/courses/templates/courses/course_detail.html:15
 msgid "Course Runs"
-msgstr ""
+msgstr "Termíny kurzu"
 
 #: django-courses/courses/templates/courses/course_detail.html:34
 #: django-courses/courses/templates/courses/includes/courses_runs_list.html:26
 msgid "Meetings"
-msgstr ""
+msgstr "Spoločné stretnutia"
 
 #: django-courses/courses/templates/courses/course_detail.html:44
 #: django-courses/courses/templates/courses/includes/courses_runs_list.html:40
 msgid "Subscribed"
-msgstr ""
+msgstr "Registrovaný"
 
 #: django-courses/courses/templates/courses/course_detail.html:46
 #: django-courses/courses/templates/courses/includes/course_detail_header.html:34
@@ -289,18 +289,18 @@ msgstr ""
 #: django-courses/courses/templates/courses/includes/courses_runs_list.html:44
 #: django-courses/courses/templates/courses/run_detail.html:31
 msgid "Ended"
-msgstr ""
+msgstr "Ukončené"
 
 #: django-courses/courses/templates/courses/course_detail.html:54
 #: django-courses/courses/templates/courses/includes/course_detail_header.html:25
 #: django-courses/courses/templates/courses/includes/courses_runs_list.html:56
 msgid "Self-paced"
-msgstr ""
+msgstr "Vlastné tempo"
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:12
 #: django-courses/courses/templates/courses/includes/course_run_detail.html:7
 msgid "Course Chapters"
-msgstr ""
+msgstr "Kapitoly kurzu"
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:19
 msgid "Chapter Submission"
@@ -312,11 +312,11 @@ msgstr ""
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:27
 msgid "Previous lecture"
-msgstr ""
+msgstr "Predchádzajúca lekcia"
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:29
 msgid "Next lecture"
-msgstr ""
+msgstr "Ďalšia lekcia"
 
 #: django-courses/courses/templates/courses/includes/course_detail_header.html:31
 msgid "Subscribe"
@@ -328,22 +328,26 @@ msgstr ""
 
 #: django-courses/courses/templates/courses/includes/submission.html:19
 msgid "My Submission"
-msgstr ""
+msgstr "Moje odovzdanie"
 
 #: django-courses/courses/templates/courses/includes/submission.html:23
 msgid "Submit"
-msgstr ""
+msgstr "Odovzdať"
 
 #: django-courses/courses/templates/courses/lecture_detail.html:61
 msgid "Submission"
-msgstr ""
+msgstr "Odovzdanie"
+
+#: django-courses/courses/templatetags/courses_extra.py:31
+msgid "unlocks in"
+msgstr "kapitola sa odomkne o"
 
 #: django-courses/courses/utils.py:25 django-courses/courses/views.py:42
 #: django-courses/courses/views.py:64 django-courses/courses/views.py:88
 #: django-courses/courses/views.py:116 django-courses/courses/views.py:142
 #: django-courses/courses/views.py:163
 msgid "Courses"
-msgstr ""
+msgstr "Kurzy"
 
 #: django-courses/courses/validators.py:6
 #, python-format
@@ -352,15 +356,15 @@ msgstr ""
 
 #: django-courses/courses/views.py:67 django-courses/courses/views.py:92
 msgid "Open courses"
-msgstr ""
+msgstr "Prebiehajúce kurzy"
 
 #: django-courses/courses/views.py:95
 msgid "Subscribed courses"
-msgstr ""
+msgstr "Registrované kurzy"
 
 #: django-courses/courses/views.py:119
 msgid "Subscribed closed courses"
-msgstr ""
+msgstr "Registrované ukončené kurzy"
 
 #: django-courses/courses/views.py:130
 msgid "You are not allowed to visit this page."
@@ -368,7 +372,7 @@ msgstr ""
 
 #: django-courses/courses/views.py:145
 msgid "Closed courses"
-msgstr ""
+msgstr "Ukončené kurzy"
 
 #: django-courses/courses/views.py:211
 msgid "Chapter submission"
