@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
-from courses.forms import SubmissionForm
+from courses.forms import SubmissionForm, SubscribeForm
 from courses.models import Course, Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
 from courses.settings import (
@@ -155,6 +155,7 @@ def course_run_detail(request, run_slug):
     context = {
         "run": run,
         "chapters": [],
+        "form": SubscribeForm(initial={"sender": request.user.username, "run_slug": run_slug}),
         "subscribed": run.is_subscribed(request.user),
         "COURSES_DISPLAY_CHAPTER_DETAILS": COURSES_DISPLAY_CHAPTER_DETAILS,
         "breadcrumbs": [
@@ -263,32 +264,36 @@ def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
 
 @login_required
 def subscribe_to_run(request, run_slug):
-    # TODO: change to POST
-    run = get_object_or_404(Run, slug=run_slug)
+    if request.method == "POST":
+        run = get_object_or_404(Run, slug=run_slug)
 
-    if run.limit != 0 and run.limit <= run.users.count():
-        messages.error(request, _("Subscribed user's limit has been reached."))
-    elif not run.is_subscribed(request.user):
-        run.users.add(request.user)
-        run.save()
-        messages.success(request, _("You have been subscribed to course: %s" % run))
+        if run.limit != 0 and run.limit <= run.users.count():
+            messages.error(request, _("Subscribed user's limit has been reached."))
+        elif not run.is_subscribed(request.user):
+            run.users.add(request.user)
+            run.save()
+            messages.success(request, _("You have been subscribed to course: %s" % run))
+        else:
+            messages.warning(request, _("You are already subscribed to course: %s" % run))
     else:
-        messages.warning(request, _("You are already subscribed to course: %s" % run))
+        messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
 
     return redirect("course_run_detail", run_slug=run_slug)
 
 
 @login_required
 def unsubscribe_from_run(request, run_slug):
-    # TODO: change to POST
-    run = get_object_or_404(Run, slug=run_slug)
+    if request.method == "POST":
+        run = get_object_or_404(Run, slug=run_slug)
 
-    if run.is_subscribed(request.user):
-        run.users.remove(request.user)
-        run.save()
-        messages.success(request, _("You have been unsubscribed from course: %s" % run))
+        if run.is_subscribed(request.user):
+            run.users.remove(request.user)
+            run.save()
+            messages.success(request, _("You have been unsubscribed from course: %s" % run))
+        else:
+            messages.warning(request, _("You are not subscribed to the course: %s" % run))
     else:
-        messages.warning(request, _("You are not subscribed to the course: %s" % run))
+        messages.warning(request, _("You need to submit subscription form in order to unsubscribe!"))
 
     return redirect("course_run_detail", run_slug=run_slug)
 

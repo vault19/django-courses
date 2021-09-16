@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load bootstrap5 %}
+
+<div class="modal fade" id="{% if unsubscribe %}UnsubscribeModal{% else %}SubscribeModal{% endif %}" tabindex="-1" aria-labelledby="{% if unsubscribe %}UnsubscribeModal{% else %}SubscribeModal{% endif %}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" enctype="multipart/form-data" id="submission-form" action="{% if unsubscribe %}{% url 'unsubscribe_from_run' run.slug %}{% else %}{% url 'subscribe_to_run' run.slug %}{% endif %}">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {% if unsubscribe %}
+              {% translate "You are going to unsubscribe from the course:" %}
+            {% else %}
+              {% translate "You are going to subscribe to the course:" %}
+            {% endif %}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate "Close" %}"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">
+            {{ course.title }}<br />
+            <strong>{{ run.title|upper }}</strong>
+          </p>
+          <p class="text-center">
+            <i class="fas fa-calendar-alt"></i> {{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
+            {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}
+          </p>
+          {% csrf_token %}
+          {% bootstrap_form form %}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">{% if unsubscribe %}{% translate "Unsubscribe" %}{% else %}{% translate "Subscribe" %}{% endif %}</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
