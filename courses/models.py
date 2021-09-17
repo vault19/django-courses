@@ -54,7 +54,7 @@ class Course(models.Model):
             " of all courses. If empty description will be used."
         ),
     )
-    slug = AutoSlugField(populate_from="name", unique=True)
+    slug = AutoSlugField(populate_from="name", editable=True, unique=True)
     description = models.TextField(help_text=_("Full description of the course."))
     state = models.CharField(max_length=1, choices=COURSE_STATE, default="D")
     creator = models.ForeignKey(
@@ -91,7 +91,7 @@ class Course(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=250)
     previous = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     perex = models.TextField(
         blank=True, null=True, help_text=_("Short description of the chapter displayed in the list" " of all chapters.")
     )
@@ -155,7 +155,7 @@ class Chapter(models.Model):
 
 class Lecture(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     subtitle = models.CharField(blank=True, null=True, max_length=250)
     description = models.TextField(
         blank=True, null=True, help_text=_("Introduce the study material, explain what data " "are uploaded.")
@@ -229,7 +229,7 @@ class Lecture(models.Model):
 
 class Run(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     perex = models.TextField(
         blank=True,
         null=True,
