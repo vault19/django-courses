@@ -155,7 +155,7 @@ def course_run_detail(request, run_slug):
     context = {
         "run": run,
         "chapters": [],
-        "form": SubscribeForm(initial={'sender': request.user.username, 'run_slug': run_slug}),
+        "form": SubscribeForm(initial={"sender": request.user.username, "run_slug": run_slug}),
         "subscribed": run.is_subscribed(request.user),
         "COURSES_DISPLAY_CHAPTER_DETAILS": COURSES_DISPLAY_CHAPTER_DETAILS,
         "breadcrumbs": [

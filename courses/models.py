@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
+from embed_video.fields import EmbedVideoField
 
 from courses.validators import FileSizeValidator
 from courses.settings import (
@@ -172,7 +173,7 @@ class Lecture(models.Model):
     data_metadata = models.JSONField(
         blank=True, null=True, help_text=_("Metadata about uploaded data to use in " "template generator.")
     )
-    video = models.CharField(blank=True, null=True, max_length=100)
+    video = EmbedVideoField(blank=True, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default="V")
 
@@ -297,10 +298,11 @@ class Run(models.Model):
             return False
 
     def is_subscribed_in_different_active_run(self, user):
-        for run in self.course.run_set\
-                .filter(Q(end__gte=datetime.today()) | Q(end=None))\
-                .filter(~Q(id=self.id))\
-                .order_by("-start"):
+        for run in (
+            self.course.run_set.filter(Q(end__gte=datetime.today()) | Q(end=None))
+            .filter(~Q(id=self.id))
+            .order_by("-start")
+        ):
             for other_run_user in run.users.all():
                 if other_run_user == user:
                     return True
@@ -326,7 +328,6 @@ class RunUsers(models.Model):
         raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
 
     def save(self, *args, **kwargs):
-        print('xxx-eeee')
         super().save(*args, **kwargs)
 
 
