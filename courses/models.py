@@ -325,7 +325,10 @@ class RunUsers(models.Model):
         return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
 
     def clean(self):
-        raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
+        pass
+        # Causes error in admin, when limit is one and we want to subscribe one user...
+        # if self.run.is_full:
+        #     raise ValidationError({"user": _("Subscribed user's limit has been reached.")})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
