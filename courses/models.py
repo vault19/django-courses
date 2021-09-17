@@ -272,6 +272,13 @@ class Run(models.Model):
     def is_past_due(self):
         return date.today() > self.end
 
+    @property
+    def is_full(self):
+        if self.limit != 0 and self.limit <= self.users.count():
+            return True
+        return False
+
+    @property
     def self_paced(self):
         return self.course.self_paced()
 
@@ -289,13 +296,17 @@ class Run(models.Model):
         else:
             return False
 
-    def clean(self):
-        if self.limit != 0 and self.limit < self.users.count():
-            raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
+    def is_subscribed_in_different_active_run(self, user):
+        for run in self.course.run_set\
+                .filter(Q(end__gte=datetime.today()) | Q(end=None))\
+                .filter(~Q(id=self.id))\
+                .order_by("-start"):
+            for other_run_user in run.users.all():
+                if other_run_user == user:
+                    return True
+        return False
 
     def save(self, *args, **kwargs):
-        self.full_clean()
-
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
 
@@ -310,6 +321,13 @@ class RunUsers(models.Model):
 
     def __str__(self):
         return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
+
+    def clean(self):
+        raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
+
+    def save(self, *args, **kwargs):
+        print('xxx-eeee')
+        super().save(*args, **kwargs)
 
 
 class Meeting(models.Model):

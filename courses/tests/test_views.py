@@ -97,7 +97,7 @@ class TestSubscribeUnsubscribePage(TestCase):
         self.assertEqual(str(messages[0]), "You are already subscribed to course: %s" % run)
         self.assertEqual(run.users.count(), 3)
 
-    def test_subscribe_with_limit_full(self):
+    def test_subscribe_to_course_run_with_limit_full(self):
         run_slug = "septembrovy-kurz"
         run = Run.objects.get(slug=run_slug)
         run.limit = 2
@@ -113,6 +113,37 @@ class TestSubscribeUnsubscribePage(TestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Subscribed user's limit has been reached.")
         self.assertEqual(run.users.count(), 2)
+
+    def test_subscribe_in_multiple_runs_of_the_same_course(self):
+        run_slug = "septembrovy-kurz"
+        run = Run.objects.get(slug=run_slug)
+        self.assertEqual(self.user in run.users.all(), False)
+
+        response = self.client.post(
+            f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You have been subscribed to course: %s" % run)
+
+        run = Run.objects.get(slug=run_slug)
+        self.assertEqual(self.user in run.users.all(), True)
+
+        run_slug = "decembrovy-kurz"
+        run = Run.objects.get(slug=run_slug)
+        self.assertEqual(self.user in run.users.all(), False)
+
+        response = self.client.post(
+            f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context["messages"])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You are already subscribed in different course run.")
+
+        run = Run.objects.get(slug=run_slug)
+        self.assertEqual(self.user in run.users.all(), False)
 
     def test_subscribe_unknown_run(self):
         run_slug = "unknown-course-run"
