@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from autoslug import AutoSlugField
+from embed_video.fields import EmbedVideoField
 
 from courses.validators import FileSizeValidator
 from courses.settings import (
@@ -53,7 +54,7 @@ class Course(models.Model):
             " of all courses. If empty description will be used."
         ),
     )
-    slug = AutoSlugField(populate_from="name", unique=True)
+    slug = AutoSlugField(populate_from="name", editable=True, unique=True)
     description = models.TextField(help_text=_("Full description of the course."))
     state = models.CharField(max_length=1, choices=COURSE_STATE, default="D")
     creator = models.ForeignKey(
@@ -90,7 +91,7 @@ class Course(models.Model):
 class Chapter(models.Model):
     title = models.CharField(max_length=250)
     previous = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     perex = models.TextField(
         blank=True, null=True, help_text=_("Short description of the chapter displayed in the list" " of all chapters.")
     )
@@ -154,7 +155,7 @@ class Chapter(models.Model):
 
 class Lecture(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     subtitle = models.CharField(blank=True, null=True, max_length=250)
     description = models.TextField(
         blank=True, null=True, help_text=_("Introduce the study material, explain what data " "are uploaded.")
@@ -172,7 +173,7 @@ class Lecture(models.Model):
     data_metadata = models.JSONField(
         blank=True, null=True, help_text=_("Metadata about uploaded data to use in " "template generator.")
     )
-    video = models.CharField(blank=True, null=True, max_length=100)
+    video = EmbedVideoField(blank=True, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default="V")
 
@@ -228,7 +229,7 @@ class Lecture(models.Model):
 
 class Run(models.Model):
     title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", unique=True)
+    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
     perex = models.TextField(
         blank=True,
         null=True,
@@ -272,6 +273,13 @@ class Run(models.Model):
     def is_past_due(self):
         return date.today() > self.end
 
+    @property
+    def is_full(self):
+        if self.limit != 0 and self.limit <= self.users.count():
+            return True
+        return False
+
+    @property
     def self_paced(self):
         return self.course.self_paced()
 
@@ -289,13 +297,18 @@ class Run(models.Model):
         else:
             return False
 
-    def clean(self):
-        if self.limit != 0 and self.limit < self.users.count():
-            raise ValidationError({"limit": _("Subscribed user's limit has been reached.")})
+    def is_subscribed_in_different_active_run(self, user):
+        for run in (
+            self.course.run_set.filter(Q(end__gte=datetime.today()) | Q(end=None))
+            .filter(~Q(id=self.id))
+            .order_by("-start")
+        ):
+            for other_run_user in run.users.all():
+                if other_run_user == user:
+                    return True
+        return False
 
     def save(self, *args, **kwargs):
-        self.full_clean()
-
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
 
@@ -310,6 +323,15 @@ class RunUsers(models.Model):
 
     def __str__(self):
         return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
+
+    def clean(self):
+        pass
+        # Causes error in admin, when limit is one and we want to subscribe one user...
+        # if self.run.is_full:
+        #     raise ValidationError({"user": _("Subscribed user's limit has been reached.")})
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
 
 class Meeting(models.Model):
