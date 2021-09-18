@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-18 20:46+0000\n"
+"POT-Creation-Date: 2021-09-18 21:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -355,14 +355,14 @@ msgid "Submission"
 msgstr "Zadanie"
 
 #: django-courses/courses/templatetags/courses_extra.py:31
-#, python-brace-format
-msgid "unlocks in %{time}s"
-msgstr "odomkne sa o %{time}s"
+#, python-format
+msgid "unlocks in %(time)s"
+msgstr "odomkne sa o %(time)s"
 
 #: django-courses/courses/templatetags/courses_extra.py:33
-#, python-brace-format
-msgid "%{time}s ago"
-msgstr "pred %{time}s"
+#, python-format
+msgid "%(time)s ago"
+msgstr "pred %(time)s"
 
 #: django-courses/courses/utils.py:25 django-courses/courses/views.py:50
 #: django-courses/courses/views.py:72 django-courses/courses/views.py:96

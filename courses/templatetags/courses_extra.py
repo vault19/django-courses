@@ -28,9 +28,9 @@ def timedelta(value, arg=None):
         cmp = date.today()
 
     if value > cmp:
-        return _("unlocks in %{time}s") % {'time': timesince(cmp, value)}
+        return _("unlocks in %(time)s") % {'time': timesince(cmp, value)}
     else:
-        return _("%{time}s ago") % {'time': timesince(value, cmp)}
+        return _("%(time)s ago") % {'time': timesince(value, cmp)}
 
 
 @register.filter
