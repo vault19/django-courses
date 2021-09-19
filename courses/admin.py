@@ -107,7 +107,7 @@ class MeetingInlineAdminForm(forms.ModelForm):
 
         if self.instance.id:
             self.fields["lecture"].queryset = Lecture.objects.filter(lecture_type="L").filter(
-                chapter__chapter__course=self.instance.run.course
+                chapter__course=self.instance.run.course
             )
 
 
