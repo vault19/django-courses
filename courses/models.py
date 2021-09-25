@@ -38,6 +38,7 @@ LECTURE_TYPE = (
 )
 
 SUBMISSION_TYPE = (
+    ("D", _("Disabled")),
     ("N", _("Not required")),
     ("C", _("Required for next chapter")),
     ("E", _("Required to end course")),
@@ -107,6 +108,18 @@ class Chapter(models.Model):
             "Number of days that chapter will be open. If all chapters "
             "length is set to 0 course is considered self-paced."
         ),
+    )
+    require_submission = models.CharField(
+        max_length=1,
+        choices=SUBMISSION_TYPE,
+        default="D",
+        help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
+    )
+    require_submission_review = models.CharField(
+        max_length=1,
+        choices=SUBMISSION_TYPE,
+        default="D",
+        help_text=_("Submission is accepted only after being accepted by a review."),
     )
 
     def __str__(self):
