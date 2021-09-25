@@ -392,7 +392,7 @@
         "subtitle": "Zistite, ako bude tento kurz prebiehať :-)",
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -410,7 +410,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -428,7 +428,7 @@
         "subtitle": null,
         "description": "",
         "data": "DB_model_C0luTnE.png",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 3,
         "lecture_type": "V",
@@ -446,7 +446,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -464,7 +464,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -482,7 +482,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -500,7 +500,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -518,7 +518,7 @@
         "subtitle": null,
         "description": "Link na prvé online stretnutie cez ZOOM dostnete do mailu.\r\n\r\n**Pred prvým stretnutím je potrebné mať prejdený prvý týždeň kurzu!**\r\n\r\nProsím, dopredu si pripravte otázky, prípadne popis próblémov, s ktorými ste sa stretli za predchádzajúci týždeň pri programovaní micro:bit aktivít. Počas ZOOM strenutia budete môcť zdieľať aj obrazovku.",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 2,
         "lecture_type": "L",
@@ -536,7 +536,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 1,
         "lecture_type": "V",
@@ -554,7 +554,7 @@
         "subtitle": null,
         "description": "Vytvor vlastnú animáciu do konca prvého týždňa a pošli nám ju na ohodnotenie :-)",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 1,
         "lecture_type": "P",
@@ -572,7 +572,7 @@
         "subtitle": null,
         "description": "Sme radi, že ste sa rozhodli zapojiť do MINI ENTER výzvy :-)\r\n\r\nPostup je nasledovný:\r\n\r\n1. Podáte žiadosť\r\n2. Zúčastníte sa školení\r\n3. blah vlah blah",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 18,
         "lecture_type": "T",
@@ -590,7 +590,7 @@
         "subtitle": null,
         "description": "Prosím, stiahnite si [túto zmluvu](xxx), vyplnte údaje, oscanujte ju a pošlite nám ju kliknutín na tlačidlo \"Odovzdať\" nižšie.",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 18,
         "lecture_type": "P",
@@ -608,7 +608,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -626,7 +626,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -644,7 +644,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -662,7 +662,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -680,7 +680,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -698,7 +698,7 @@
         "subtitle": null,
         "description": "Poznámky z videa:\r\n\r\n* makecode.microbit.org\r\n* microbit.org\r\n* ucimeshardverom.sk\r\n* enter.study",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": "https://player.vimeo.com/video/597233330?h=1c3941ba24",
         "chapter": 2,
         "lecture_type": "V",
@@ -716,7 +716,7 @@
         "subtitle": null,
         "description": "",
         "data": "",
-        "data_metadata": null,
+        "metadata": null,
         "video": null,
         "chapter": 2,
         "lecture_type": "P",
@@ -867,7 +867,8 @@
         "run": 1,
         "user": 1,
         "payment": 0.0,
-        "timestamp": "2021-09-03T11:59:43.200Z"
+        "timestamp_added": "2021-09-03T11:59:43.200Z",
+        "timestamp_modified": "2021-09-03T11:59:43.200Z"
     }
 },
 {
@@ -877,7 +878,8 @@
         "run": 4,
         "user": 1,
         "payment": 0.0,
-        "timestamp": "2021-09-03T11:59:43.206Z"
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -887,7 +889,8 @@
         "run": 1,
         "user": 2,
         "payment": 0.0,
-        "timestamp": "2021-09-12T13:29:07.588Z"
+        "timestamp_added": "2021-09-12T13:29:07.588Z",
+        "timestamp_modified": "2021-09-12T13:29:07.588Z"
     }
 },
 {
@@ -914,7 +917,9 @@
         "lecture": null,
         "chapter": 1,
         "run": 1,
-        "author": 1
+        "author": 1,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -927,7 +932,9 @@
         "lecture": null,
         "chapter": 2,
         "run": 2,
-        "author": 1
+        "author": 1,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -940,7 +947,9 @@
         "lecture": null,
         "chapter": 2,
         "run": 1,
-        "author": 1
+        "author": 1,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -953,7 +962,9 @@
         "lecture": null,
         "chapter": 3,
         "run": 1,
-        "author": 1
+        "author": 1,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -966,7 +977,9 @@
         "lecture": 8,
         "chapter": null,
         "run": 9,
-        "author": 2
+        "author": 2,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -979,7 +992,9 @@
         "lecture": 18,
         "chapter": null,
         "run": 9,
-        "author": 2
+        "author": 2,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -990,7 +1005,9 @@
         "description": "I like",
         "submission": 1,
         "author": 2,
-        "accepted": true
+        "accepted": true,
+        "timestamp_added": "2021-09-03T11:59:43.206Z",
+        "timestamp_modified": "2021-09-03T11:59:43.206Z"
     }
 },
 {
@@ -999,7 +1016,8 @@
     "fields": {
         "data": "DB_model_bZj4TCk.png",
         "run": 1,
-        "user": 1
+        "user": 1,
+        "timestamp_added": "2021-09-03T11:59:43.206Z"
     }
 }
 ]
