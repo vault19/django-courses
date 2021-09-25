@@ -21,7 +21,7 @@ from courses.settings import (
 )
 
 
-COURSE_STATE = (
+STATE = (
     ("D", _("Draft")),
     ("O", _("Open")),
     ("C", _("Closed")),
@@ -56,7 +56,7 @@ class Course(models.Model):
     )
     slug = AutoSlugField(populate_from="name", editable=True, unique=True)
     description = models.TextField(help_text=_("Full description of the course."))
-    state = models.CharField(max_length=1, choices=COURSE_STATE, default="D")
+    state = models.CharField(max_length=1, choices=STATE, default="D")
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -170,8 +170,8 @@ class Lecture(models.Model):
             FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
         ],
     )
-    data_metadata = models.JSONField(
-        blank=True, null=True, help_text=_("Metadata about uploaded data to use in " "template generator.")
+    metadata = models.JSONField(
+        blank=True, null=True, help_text=_("Metadata about uploaded data.")
     )
     video = EmbedVideoField(blank=True, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
@@ -244,6 +244,7 @@ class Run(models.Model):
         help_text=_("Date will be calculated automatically if any of the " "chapter has length set."),
     )
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    state = models.CharField(max_length=1, choices=STATE, default="D")
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through="RunUsers", blank=True)
     price = models.FloatField(
         default=0, help_text=_("Price for the course run that will have to be payed by the " "subscriber.")
@@ -319,7 +320,8 @@ class RunUsers(models.Model):
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment = models.FloatField(default=0)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp_added = models.DateTimeField(auto_now_add=True)
+    timestamp_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
@@ -415,6 +417,11 @@ class Submission(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    metadata = models.JSONField(
+        blank=True, null=True, help_text=_("Metadata about submission.")
+    )
+    timestamp_added = models.DateTimeField(auto_now_add=True)
+    timestamp_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.lecture}: {self.title}"
@@ -446,9 +453,11 @@ class Review(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(
         help_text=_(
-            "Check if the submission if acceptable. If not, the reviewee will have " "to submit a new submission."
+            "Check if the submission if acceptable. If not, the reviewee will have to submit a new submission."
         )
     )
+    timestamp_added = models.DateTimeField(auto_now_add=True)
+    timestamp_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = (
@@ -471,6 +480,7 @@ class Certificate(models.Model):
     )
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    timestamp_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = (

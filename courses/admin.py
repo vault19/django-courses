@@ -122,7 +122,7 @@ class MeetingDetailInline(admin.StackedInline):
 class RunUsersDetailInline(admin.TabularInline):
     model = RunUsers
     extra = 2
-    readonly_fields = ["timestamp"]
+    # readonly_fields = ["timestamp"]
     autocomplete_fields = ["user"]
     classes = ["collapse"]
 
