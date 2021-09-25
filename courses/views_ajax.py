@@ -30,11 +30,20 @@ def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
         if len(user_submissions) == 1:
             submission = user_submissions[0]
         else:
-            submission = Submission(lecture=lecture, run=context["run"], author=request.user, description='[[0,0]]')
+            submission = Submission(lecture=lecture, run=context["run"], author=request.user)
 
         # time range from one session is nicely merged with javascript
         data = json.loads(request.body)
-        submission.description = json.dumps(array_merge(data['time_range'] + json.loads(submission.description)))
+
+        if not submission.metadata:
+            submission.metadata = data
+        elif 'watched_video_time_range' in submission.metadata:
+            submission.metadata['watched_video_time_range'] = array_merge(
+                data['watched_video_time_range'] + submission.metadata['watched_video_time_range']
+            )
+        else:
+            submission.metadata['watched_video_time_range'] = data['watched_video_time_range']
+
         submission.save()
 
         return HttpResponse('{"Data": "Saved"}', content_type="application/json")

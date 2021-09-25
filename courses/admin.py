@@ -168,7 +168,7 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "lecture", "run", "view_reviews_link")
+    list_display = ("author", "title", "lecture", "run", "view_reviews_link")
     list_filter = ("run",)
     search_fields = ["title"]
     inlines = (ReviewInline,)

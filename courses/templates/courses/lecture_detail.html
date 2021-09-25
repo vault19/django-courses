@@ -67,27 +67,27 @@
               type="application/pdf"
               frameBorder="0"
               scrolling="auto"
-              height="{% if lecture.data_metadata.height %}{{ lecture.data_metadata.height }}{% else %}100%{% endif %}"
-              width="{% if lecture.data_metadata.width %}{{ lecture.data_metadata.width }}{% else %}100%{% endif %}"
+              height="{% if lecture.metadata.height %}{{ lecture.metadata.height }}{% else %}100%{% endif %}"
+              width="{% if lecture.metadata.width %}{{ lecture.metadata.width }}{% else %}100%{% endif %}"
             ></embed>
 
           {% elif lecture.data|is_image %}
-            <img src="{{ MEDIA_URL }}{{ lecture.data }}" class="mw-100" alt="{{ lecture.data_metadata.alt }}" />
+            <img src="{{ MEDIA_URL }}{{ lecture.data }}" class="mw-100" alt="{{ lecture.metadata.alt }}" />
 
           {% elif lecture.data|is_video %}
             <video
-              id="{% if lecture.data_metadata.id %}{{ lecture.data_metadata.id }}{% else %}{{ lecture.data|slugify }}{% endif %}"
+              id="{% if lecture.metadata.id %}{{ lecture.metadata.id }}{% else %}{{ lecture.data|slugify }}{% endif %}"
               class="video-js mw-100"
               controls
-              preload="{% if lecture.data_metadata.preload %}{{ lecture.data_metadata.preload }}{% else %}auto{% endif %}"
-              {% if lecture.data_metadata.poster %}poster="{{ lecture.data_metadata.poster }}"{% endif %}
-              {% if lecture.data_metadata.width %}width="{{ lecture.data_metadata.width }}"{% endif %}
-              {% if lecture.data_metadata.height %}height="{{ lecture.data_metadata.height }}"{% endif %}
+              preload="{% if lecture.metadata.preload %}{{ lecture.metadata.preload }}{% else %}auto{% endif %}"
+              {% if lecture.metadata.poster %}poster="{{ lecture.metadata.poster }}"{% endif %}
+              {% if lecture.metadata.width %}width="{{ lecture.metadata.width }}"{% endif %}
+              {% if lecture.metadata.height %}height="{{ lecture.metadata.height }}"{% endif %}
               data-setup="{}"
             >
-              <source src="{{ MEDIA_URL }}{{ lecture.data }}" {% if lecture.data_metadata.type %}type="{{ lecture.data_metadata.type }}"{% endif %}/>
-              {% if lecture.data_metadata.width %}
-                <source src="{{ MEDIA_URL }}{{ lecture.data_metadata.alt_source }}" {% if lecture.data_metadata.alt_source_type %}type="{{ lecture.data_metadata.alt_source_type }}"{% endif %}/>
+              <source src="{{ MEDIA_URL }}{{ lecture.data }}" {% if lecture.metadata.type %}type="{{ lecture.metadata.type }}"{% endif %}/>
+              {% if lecture.metadata.width %}
+                <source src="{{ MEDIA_URL }}{{ lecture.metadata.alt_source }}" {% if lecture.metadata.alt_source_type %}type="{{ lecture.metadata.alt_source_type }}"{% endif %}/>
               {% endif %}
             </video>
           {% endif %}
