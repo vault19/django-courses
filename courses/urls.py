@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from . import views_ajax
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -26,6 +27,9 @@ urlpatterns = [
         views.lecture_submission,
         name="lecture_submission",
     ),
+    path("course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/video-ping/", views_ajax.video_lecture_submission,
+         name="video_ping"),
+
     # path('<int:question_id>/results/', views.results, name='results'),
     # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

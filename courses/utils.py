@@ -51,3 +51,49 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
     }
 
     return context
+
+
+def array_partition(array, start, end):
+    pivot_index = start
+
+    for i in range(start, end):
+        if array[i][0] <= array[end][0]:
+            array[i], array[pivot_index] = array[pivot_index], array[i]
+            pivot_index += 1
+
+    array[end], array[pivot_index] = array[pivot_index], array[end]
+
+    return pivot_index
+
+
+def array_quicksort(array, start, end):
+    if start < end:
+        partition_index = array_partition(array, start, end)
+        array_quicksort(array, start, partition_index - 1)
+        array_quicksort(array, partition_index + 1, end)
+
+
+def array_merge(intervals):
+    """
+    Helper function to sort and merge list of intervals
+    :type intervals: list[interval]
+    :rtype: list[interval]
+    """
+    if len(intervals) == 0:
+        return []
+
+    array_quicksort(intervals, 0, len(intervals) - 1)
+    stack = []
+    stack.append(intervals[0])
+
+    for i in range(1, len(intervals)):
+        last_element = stack[len(stack) - 1]
+
+        if last_element[1] >= intervals[i][0]:
+            last_element[1] = max(intervals[i][1], last_element[1])
+            stack.pop(len(stack) - 1)
+            stack.append(last_element)
+        else:
+            stack.append(intervals[i])
+
+    return stack
