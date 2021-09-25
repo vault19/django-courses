@@ -282,13 +282,13 @@ def subscribe_to_run(request, run_slug):
         if run.is_full:
             messages.error(request, _("Subscribed user's limit has been reached."))
         elif run.is_subscribed(request.user):
-            messages.warning(request, _("You are already subscribed to course: %(run)s.") % {'run': run})
+            messages.warning(request, _("You are already subscribed to course: %(run)s.") % {"run": run})
         elif run.is_subscribed_in_different_active_run(request.user):
             messages.error(request, _("You are already subscribed in different course run."))
         else:
             run.users.add(request.user)  # in M2M add will store to DB!
             # run.save()  # No need to save run
-            messages.success(request, _("You have been subscribed to course: %(run)s.") % {'run': run})
+            messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
 
             ctx_dict = {
                 "user": request.user,
@@ -326,9 +326,9 @@ def unsubscribe_from_run(request, run_slug):
         if run.is_subscribed(request.user):
             run.users.remove(request.user)  # in M2M remove will store to DB!
             # run.save()  # No need to save run
-            messages.success(request, _("You have been unsubscribed from course: %(run)s.") % {'run': run})
+            messages.success(request, _("You have been unsubscribed from course: %(run)s.") % {"run": run})
         else:
-            messages.warning(request, _("You are not subscribed to the course: %(run)s.") % {'run': run})
+            messages.warning(request, _("You are not subscribed to the course: %(run)s.") % {"run": run})
     else:
         messages.warning(request, _("You need to submit subscription form in order to unsubscribe!"))
 

@@ -37,12 +37,12 @@ def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
 
         if not submission.metadata:
             submission.metadata = data
-        elif 'watched_video_time_range' in submission.metadata:
-            submission.metadata['watched_video_time_range'] = array_merge(
-                data['watched_video_time_range'] + submission.metadata['watched_video_time_range']
+        elif "watched_video_time_range" in submission.metadata:
+            submission.metadata["watched_video_time_range"] = array_merge(
+                data["watched_video_time_range"] + submission.metadata["watched_video_time_range"]
             )
         else:
-            submission.metadata['watched_video_time_range'] = data['watched_video_time_range']
+            submission.metadata["watched_video_time_range"] = data["watched_video_time_range"]
 
         submission.save()
 

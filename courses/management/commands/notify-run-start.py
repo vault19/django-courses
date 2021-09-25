@@ -3,21 +3,28 @@ from time import sleep
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 
 from courses.models import Run
-from courses.settings import COURSES_EMAIL_SUBJECT_PREFIX, COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT, COURSES_NOTIFY_RUN_START_EMAIL_BODY, COURSES_NOTIFY_RUN_START_EMAIL_HTML
+from courses.settings import (
+    COURSES_EMAIL_SUBJECT_PREFIX,
+    COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT,
+    COURSES_NOTIFY_RUN_START_EMAIL_BODY,
+    COURSES_NOTIFY_RUN_START_EMAIL_HTML,
+)
 
 
 class Command(BaseCommand):
-    help = 'Notify users that run will start soon.'
+    help = "Notify users that run will start soon."
 
     def add_arguments(self, parser):
-        parser.add_argument('--time-delta', type=int, help='Time delta (in days) for run start comparasion adjustments.')
-        parser.add_argument('--delay', type=int, help='Time delay (in seconds) between each email.')
-        parser.add_argument('--confirm', action='store_true', help='Confirm user prompt to send out emails.')
+        parser.add_argument(
+            "--time-delta", type=int, help="Time delta (in days) for run start comparasion adjustments."
+        )
+        parser.add_argument("--delay", type=int, help="Time delay (in seconds) between each email.")
+        parser.add_argument("--confirm", action="store_true", help="Confirm user prompt to send out emails.")
 
     def notify(self, user, run, verbosity=1, delay=0):
         ctx_dict = {
@@ -68,11 +75,11 @@ class Command(BaseCommand):
                     if run.manager:
                         users_count += 1
 
-                    self.stdout.write(f"{run} has ", ending='')
+                    self.stdout.write(f"{run} has ", ending="")
                     self.stdout.write(self.style.SUCCESS(f"{users_count} user(s) that will be notified."))
 
                 if options["verbosity"] >= 2:
-                    self.stdout.write("Manager: ", ending='')
+                    self.stdout.write("Manager: ", ending="")
                     self.stdout.write(self.style.WARNING(run.manager))
 
                     if run.manager.email:
@@ -83,4 +90,4 @@ class Command(BaseCommand):
                         self.notify(user, run, verbosity=options["verbosity"], delay=options["delay"])
 
         else:
-            self.stdout.write(self.style.SUCCESS('Nothing to do...'))
+            self.stdout.write(self.style.SUCCESS("Nothing to do..."))

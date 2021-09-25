@@ -183,9 +183,7 @@ class Lecture(models.Model):
             FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
         ],
     )
-    metadata = models.JSONField(
-        blank=True, null=True, help_text=_("Metadata about uploaded data.")
-    )
+    metadata = models.JSONField(blank=True, null=True, help_text=_("Metadata about uploaded data."))
     video = EmbedVideoField(blank=True, null=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default="V")
@@ -430,9 +428,7 @@ class Submission(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    metadata = models.JSONField(
-        blank=True, null=True, help_text=_("Metadata about submission.")
-    )
+    metadata = models.JSONField(blank=True, null=True, help_text=_("Metadata about submission."))
     timestamp_added = models.DateTimeField(auto_now_add=True)
     timestamp_modified = models.DateTimeField(auto_now=True)
 
@@ -465,9 +461,7 @@ class Review(models.Model):
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     accepted = models.BooleanField(
-        help_text=_(
-            "Check if the submission if acceptable. If not, the reviewee will have to submit a new submission."
-        )
+        help_text=_("Check if the submission if acceptable. If not, the reviewee will have to submit a new submission.")
     )
     timestamp_added = models.DateTimeField(auto_now_add=True)
     timestamp_modified = models.DateTimeField(auto_now=True)

@@ -93,7 +93,16 @@ class ChapterAdmin(admin.ModelAdmin):
 class SubmissionInline(admin.TabularInline):
     model = Submission
     fields = ("lecture", "author", "title", "description", "data", "metadata", "timestamp_added", "timestamp_modified")
-    readonly_fields = ("lecture", "author", "title", "description", "data", "metadata", "timestamp_added", "timestamp_modified")
+    readonly_fields = (
+        "lecture",
+        "author",
+        "title",
+        "description",
+        "data",
+        "metadata",
+        "timestamp_added",
+        "timestamp_modified",
+    )
     show_change_link = False
     can_delete = False
     can_add = False

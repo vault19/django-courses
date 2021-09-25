@@ -7,85 +7,127 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('courses', '0001_initial'),
+        ("courses", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='runusers',
-            old_name='timestamp',
-            new_name='timestamp_added',
+            model_name="runusers",
+            old_name="timestamp",
+            new_name="timestamp_added",
         ),
         migrations.RemoveField(
-            model_name='lecture',
-            name='data_metadata',
+            model_name="lecture",
+            name="data_metadata",
         ),
         migrations.AddField(
-            model_name='certificate',
-            name='timestamp_added',
+            model_name="certificate",
+            name="timestamp_added",
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='chapter',
-            name='require_submission',
-            field=models.CharField(choices=[('D', 'Disabled'), ('N', 'Not required'), ('C', 'Required for next chapter'), ('E', 'Required to end course')], default='D', help_text='A submission can be required either for continuing to the next chapter or to finish the course.', max_length=1),
+            model_name="chapter",
+            name="require_submission",
+            field=models.CharField(
+                choices=[
+                    ("D", "Disabled"),
+                    ("N", "Not required"),
+                    ("C", "Required for next chapter"),
+                    ("E", "Required to end course"),
+                ],
+                default="D",
+                help_text="A submission can be required either for continuing to the next chapter or to finish the course.",
+                max_length=1,
+            ),
         ),
         migrations.AddField(
-            model_name='chapter',
-            name='require_submission_review',
-            field=models.CharField(choices=[('D', 'Disabled'), ('N', 'Not required'), ('C', 'Required for next chapter'), ('E', 'Required to end course')], default='D', help_text='Submission is accepted only after being accepted by a review.', max_length=1),
+            model_name="chapter",
+            name="require_submission_review",
+            field=models.CharField(
+                choices=[
+                    ("D", "Disabled"),
+                    ("N", "Not required"),
+                    ("C", "Required for next chapter"),
+                    ("E", "Required to end course"),
+                ],
+                default="D",
+                help_text="Submission is accepted only after being accepted by a review.",
+                max_length=1,
+            ),
         ),
         migrations.AddField(
-            model_name='lecture',
-            name='metadata',
-            field=models.JSONField(blank=True, help_text='Metadata about uploaded data.', null=True),
+            model_name="lecture",
+            name="metadata",
+            field=models.JSONField(blank=True, help_text="Metadata about uploaded data.", null=True),
         ),
         migrations.AddField(
-            model_name='review',
-            name='timestamp_added',
+            model_name="review",
+            name="timestamp_added",
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='review',
-            name='timestamp_modified',
+            model_name="review",
+            name="timestamp_modified",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='run',
-            name='state',
-            field=models.CharField(choices=[('D', 'Draft'), ('O', 'Open'), ('C', 'Closed'), ('P', 'Private')], default='D', max_length=1),
+            model_name="run",
+            name="state",
+            field=models.CharField(
+                choices=[("D", "Draft"), ("O", "Open"), ("C", "Closed"), ("P", "Private")], default="D", max_length=1
+            ),
         ),
         migrations.AddField(
-            model_name='runusers',
-            name='timestamp_modified',
+            model_name="runusers",
+            name="timestamp_modified",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='submission',
-            name='metadata',
-            field=models.JSONField(blank=True, help_text='Metadata about submission.', null=True),
+            model_name="submission",
+            name="metadata",
+            field=models.JSONField(blank=True, help_text="Metadata about submission.", null=True),
         ),
         migrations.AddField(
-            model_name='submission',
-            name='timestamp_added',
+            model_name="submission",
+            name="timestamp_added",
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='submission',
-            name='timestamp_modified',
+            model_name="submission",
+            name="timestamp_modified",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='lecture',
-            name='require_submission',
-            field=models.CharField(choices=[('D', 'Disabled'), ('N', 'Not required'), ('C', 'Required for next chapter'), ('E', 'Required to end course')], default='N', help_text='A submission can be required either for continuing to the next chapter or to finish the course.', max_length=1),
+            model_name="lecture",
+            name="require_submission",
+            field=models.CharField(
+                choices=[
+                    ("D", "Disabled"),
+                    ("N", "Not required"),
+                    ("C", "Required for next chapter"),
+                    ("E", "Required to end course"),
+                ],
+                default="N",
+                help_text="A submission can be required either for continuing to the next chapter or to finish the course.",
+                max_length=1,
+            ),
         ),
         migrations.AlterField(
-            model_name='lecture',
-            name='require_submission_review',
-            field=models.CharField(choices=[('D', 'Disabled'), ('N', 'Not required'), ('C', 'Required for next chapter'), ('E', 'Required to end course')], default='N', help_text='Submission is accepted only after being accepted by a review.', max_length=1),
+            model_name="lecture",
+            name="require_submission_review",
+            field=models.CharField(
+                choices=[
+                    ("D", "Disabled"),
+                    ("N", "Not required"),
+                    ("C", "Required for next chapter"),
+                    ("E", "Required to end course"),
+                ],
+                default="N",
+                help_text="Submission is accepted only after being accepted by a review.",
+                max_length=1,
+            ),
         ),
     ]
