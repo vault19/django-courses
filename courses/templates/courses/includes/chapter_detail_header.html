@@ -16,7 +16,9 @@
         {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
 
         {% if request.path == detail_page %}
+          {% if chapter.require_submission != 'D' %}
           <a href="{{ submission_page }}#submission-form" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
+          {% endif %}
         {% elif COURSES_DISPLAY_CHAPTER_DETAILS %}
           <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
         {% endif %}

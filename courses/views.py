@@ -216,6 +216,10 @@ def chapter_detail(request, run_slug, chapter_slug):
 @login_required
 def chapter_submission(request, run_slug, chapter_slug):
     context = get_run_chapter_context(request, run_slug, chapter_slug)
+
+    if context["chapter"].require_submission == "D":
+        raise PermissionDenied(_("Submission is not allowed."))
+
     context["breadcrumbs"][3]["url"] = reverse("chapter_detail", args=(run_slug, chapter_slug))
     context["breadcrumbs"].append({"title": _("Chapter Submission")})
 
@@ -350,6 +354,10 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 @login_required
 def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
+
+    if lecture.require_submission == "D":
+        raise PermissionDenied(_("Submission is not allowed."))
+
     context = get_run_chapter_context(request, run_slug, chapter_slug)
 
     if COURSES_DISPLAY_CHAPTER_DETAILS:

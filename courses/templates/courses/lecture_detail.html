@@ -20,7 +20,9 @@
           {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
 
           {% if request.path == detail_page %}
+            {% if chapter.require_submission != 'D' %}
             <a href="{{ submission_page }}#submission-form" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
+            {% endif %}
           {% elif COURSES_DISPLAY_CHAPTER_DETAILS %}
             <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
           {% endif %}
@@ -49,7 +51,7 @@
 
       <h3 class="fw-light">{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.title }}</h3>
         {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
-        {% if lecture.require_submission %}<div class="text-end"><span class="badge rounded-pill {% if lecture.require_submission == "N" %}bg-success{% else %}bg-danger{% endif %}">{{ lecture.get_require_submission_display }}</span></div>{% endif %}
+        {% if lecture.require_submission != "D" %}<div class="text-end">{% translate "Submission" %} <span class="badge rounded-pill {% if lecture.require_submission == "N" %}bg-success{% else %}bg-danger{% endif %}">{{ lecture.get_require_submission_display }}</span></div>{% endif %}
         <form id="ajax_csrf_token">
           {% csrf_token %}
         </form>
@@ -100,9 +102,11 @@
       <div class="row justify-content-center">
         <div class="col-4 text-center">
 
+          {% if lecture.require_submission != 'D' %}
           <a href="{% url 'lecture_submission' run.slug chapter.slug lecture.slug %}#submission-form" class="btn btn-lg btn-outline-success">
             {% translate "Submission" %}
           </a>
+          {% endif %}
 
         </div>
       </div>
