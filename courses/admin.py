@@ -92,8 +92,8 @@ class ChapterAdmin(admin.ModelAdmin):
 
 class SubmissionInline(admin.TabularInline):
     model = Submission
-    fields = ("lecture", "author", "title", "description", "data")
-    readonly_fields = ("lecture", "author", "title", "description", "data")
+    fields = ("lecture", "author", "title", "description", "data", "metadata", "timestamp_added", "timestamp_modified")
+    readonly_fields = ("lecture", "author", "title", "description", "data", "metadata", "timestamp_added", "timestamp_modified")
     show_change_link = False
     can_delete = False
     can_add = False
@@ -122,7 +122,7 @@ class MeetingDetailInline(admin.StackedInline):
 class RunUsersDetailInline(admin.TabularInline):
     model = RunUsers
     extra = 2
-    # readonly_fields = ["timestamp"]
+    readonly_fields = ["timestamp_added", "timestamp_modified"]
     autocomplete_fields = ["user"]
     classes = ["collapse"]
 
@@ -162,7 +162,8 @@ class RunAdmin(admin.ModelAdmin):
 
 class ReviewInline(admin.TabularInline):
     model = Review
-    fields = ("author", "title", "description", "accepted")
+    fields = ("author", "title", "description", "accepted", "timestamp_added", "timestamp_modified")
+    readonly_fields = ["timestamp_added", "timestamp_modified"]
     extra = 0
 
 
@@ -171,6 +172,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display = ("author", "title", "lecture", "run", "view_reviews_link")
     list_filter = ("run",)
     search_fields = ["title"]
+    readonly_fields = ["timestamp_added", "timestamp_modified"]
     inlines = (ReviewInline,)
 
     def render_change_form(self, request, context, *args, **kwargs):

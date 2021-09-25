@@ -324,7 +324,7 @@ class RunUsers(models.Model):
     timestamp_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.run}_{self.user}: {self.timestamp} {self.payment}"
+        return f"{self.run}_{self.user}: {self.timestamp_added} {self.payment}"
 
     def clean(self):
         pass
