@@ -13,6 +13,11 @@ COURSES_LANDING_PAGE_URL = getattr(settings, "COURSES_LANDING_PAGE_URL", "all_ac
 # Wheather to dispaly link to chapter detail page (page will still be accessible, but it might be too much views)
 COURSES_DISPLAY_CHAPTER_DETAILS = getattr(settings, "COURSES_DISPLAY_CHAPTER_DETAILS", True)
 
+# Wheather allow users to subscribe to run that has already started.
+COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE = getattr(settings, "COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE", True)
+# Wheather allow users to unsubscribe from any course run.
+COURSES_ALLOW_USER_UNSUBSCRIBE = getattr(settings, "COURSES_ALLOW_USER_UNSUBSCRIBE", True)
+
 # Whether to allow submission for the whole chapter.
 COURSES_ALLOW_SUBMISSION_TO_CHAPTERS = getattr(settings, "COURSES_ALLOW_SUBMISSION_TO_CHAPTERS", True)
 # Whether to allow submission for specific lecture.

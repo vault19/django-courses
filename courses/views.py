@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -18,6 +19,8 @@ from courses.utils import get_run_chapter_context
 from courses.settings import (
     COURSES_LANDING_PAGE_URL,
     COURSES_SHOW_FUTURE_CHAPTERS,
+    COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE,
+    COURSES_ALLOW_USER_UNSUBSCRIBE,
     COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS,
     COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS,
     COURSES_DISPLAY_CHAPTER_DETAILS,
@@ -281,6 +284,10 @@ def subscribe_to_run(request, run_slug):
 
         if run.is_full:
             messages.error(request, _("Subscribed user's limit has been reached."))
+        elif not COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE and run.start <= timezone.now().date():
+            messages.error(request, _("You are not allowed to subscribe to course that has already started."))
+        elif run.end < timezone.now().date():
+            messages.error(request, _("You are not allowed to subscribe to course that has already finished."))
         elif run.is_subscribed(request.user):
             messages.warning(request, _("You are already subscribed to course: %(run)s.") % {"run": run})
         elif run.is_subscribed_in_different_active_run(request.user):
@@ -323,7 +330,9 @@ def unsubscribe_from_run(request, run_slug):
     if request.method == "POST":
         run = get_object_or_404(Run, slug=run_slug)
 
-        if run.is_subscribed(request.user):
+        if not COURSES_ALLOW_USER_UNSUBSCRIBE:
+            messages.warning(request, _("You are not allowed to unsubscribe from the course: %(run)s.") % {"run": run})
+        elif run.is_subscribed(request.user):
             run.users.remove(request.user)  # in M2M remove will store to DB!
             # run.save()  # No need to save run
             messages.success(request, _("You have been unsubscribed from course: %(run)s.") % {"run": run})
