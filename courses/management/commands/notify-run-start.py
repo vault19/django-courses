@@ -23,10 +23,20 @@ class Command(BaseCommand):
         parser.add_argument(
             "--time-delta", type=int, help="Time delta (in days) for run start comparasion adjustments."
         )
-        parser.add_argument("--delay", type=int, help="Time delay (in seconds) between each email.")
+        parser.add_argument(
+            "--delay", nargs="?", type=int, help="Time delay (in seconds) between each email.", default=0
+        )
         parser.add_argument("--confirm", action="store_true", help="Confirm user prompt to send out emails.")
 
-    def notify(self, user, run, verbosity=1, delay=0):
+    def notify(self, user, run, verbosity=1, delay=0, confirm=False):
+        if not confirm:
+            self.stdout.write(f"Do you really want to send notification email to: {user} ?")
+            user_input = input()
+
+            if user_input.lower() != "y":
+                self.stdout.write(self.style.WARNING("Confirmation failed! No email is send..."))
+                return
+
         ctx_dict = {
             "user": user,
             "course_run": run,
@@ -83,11 +93,23 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.WARNING(run.manager))
 
                     if run.manager.email:
-                        self.notify(run.manager, run, verbosity=options["verbosity"], delay=options["delay"])
+                        self.notify(
+                            run.manager,
+                            run,
+                            verbosity=options["verbosity"],
+                            delay=options["delay"],
+                            confirm=options["confirm"],
+                        )
 
                 for user in run.users.all():
                     if user.email:
-                        self.notify(user, run, verbosity=options["verbosity"], delay=options["delay"])
+                        self.notify(
+                            user,
+                            run,
+                            verbosity=options["verbosity"],
+                            delay=options["delay"],
+                            confirm=options["confirm"],
+                        )
 
         else:
             self.stdout.write(self.style.SUCCESS("Nothing to do..."))
