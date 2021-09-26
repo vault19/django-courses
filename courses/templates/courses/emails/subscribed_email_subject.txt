@@ -1,0 +1,1 @@
+You have subscribed to the course {{ course_run.course.title }}.

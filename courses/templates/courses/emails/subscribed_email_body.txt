@@ -1,0 +1,9 @@
+Dear {{ user.first_name }},
+
+thank you for subscribing to the course {{ course_run.course.title }} - {{ course_run.title }}.
+
+Course will start at {{ course_run.start }}{% if course_run.end %} and will finish at {{ course_run.end }}{% endif %}.
+
+Best regards,
+
+The Team.

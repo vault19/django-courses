@@ -34,17 +34,21 @@ COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS = getattr(settings, "COURSES_ALLOW_S
 # Email settings
 COURSES_EMAIL_SUBJECT_PREFIX = getattr(settings, "COURSES_EMAIL_SUBJECT_PREFIX", "")
 COURSES_SUBSCRIBED_EMAIL_SUBJECT = getattr(
-    settings, "COURSES_SUBSCRIBED_EMAIL_SUBJECT", "courses/subscribed_email_subject.txt"
+    settings, "COURSES_SUBSCRIBED_EMAIL_SUBJECT", "courses/emails/subscribed_email_subject.txt"
 )
-COURSES_SUBSCRIBED_EMAIL_BODY = getattr(settings, "COURSES_SUBSCRIBED_EMAIL_BODY", "courses/subscribed_email_body.txt")
-COURSES_SUBSCRIBED_EMAIL_HTML = getattr(settings, "COURSES_SUBSCRIBED_EMAIL_HTML", "courses/subscribed_email_body.html")
+COURSES_SUBSCRIBED_EMAIL_BODY = getattr(
+    settings, "COURSES_SUBSCRIBED_EMAIL_BODY", "courses/emails/subscribed_email_body.txt"
+)
+COURSES_SUBSCRIBED_EMAIL_HTML = getattr(
+    settings, "COURSES_SUBSCRIBED_EMAIL_HTML", "courses/emails/subscribed_email_body.html"
+)
 
 COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT = getattr(
-    settings, "COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT", "courses/notify_run_start_email_subject.txt"
+    settings, "COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT", "courses/emails/run_start_email_subject.txt"
 )
 COURSES_NOTIFY_RUN_START_EMAIL_BODY = getattr(
-    settings, "COURSES_NOTIFY_RUN_START_EMAIL_BODY", "courses/notify_run_start_email_body.txt"
+    settings, "COURSES_NOTIFY_RUN_START_EMAIL_BODY", "courses/emails/run_start_email_body.txt"
 )
 COURSES_NOTIFY_RUN_START_EMAIL_HTML = getattr(
-    settings, "COURSES_NOTIFY_RUN_START_EMAIL_HTML", "courses/notify_run_start_email_body.html"
+    settings, "COURSES_NOTIFY_RUN_START_EMAIL_HTML", "courses/emails/run_start_email_body.html"
 )

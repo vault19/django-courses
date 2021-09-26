@@ -2,4 +2,6 @@ Dear {{ user.first_name }},
 
 You are subscribed to {{ course_run }} which is starting at {{ course_run.start }}.
 
+Best regards,
+
 The Team.
