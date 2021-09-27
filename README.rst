@@ -45,14 +45,12 @@ Alternatively install latest development version from Github::
 
 6. Visit http://127.0.0.1:8000/ to view the courses list.
 
-Testing
--------
+Contributing
+------------
 
-App is using Django's build in test framework. However, there are only a few tests :(
+All contributions are welcome!
 
-In order to run tests execute command (in your project)::
-
-     python manage.py test
+If you are not sure how to contribute, read our manual in `contributing.rst <https://github.com/vault19/django-courses/blob/main/contributing.rst>`_ file.
 
 Support
 -------
