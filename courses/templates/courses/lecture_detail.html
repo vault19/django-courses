@@ -27,16 +27,7 @@
             <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
           {% endif %}
 
-          {% if lecture %}
-            {% for lctr in lectures %}
-              {% if lctr.order|subtract:lecture.order == -1 %}
-                <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Previous lecture" %}</a>
-              {% elif lctr.order|subtract:lecture.order == 1 %}
-                <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">{% translate "Next lecture" %}</a>
-              {% endif %}
-            {% endfor %}
-
-          {% else %}
+          {% if not lecture %}
             {% for lecture_type in chapter.lecture_types %}
               <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
             {% endfor %}
@@ -46,6 +37,7 @@
       </div>
     </div>
 
+    {% include "courses/includes/next_prev_lecture_buttons.html" %}
 
     <div class="row row-cols-1 g-3">
 
@@ -125,25 +117,8 @@
 
       </div>
     </div>
-{#    <div class="row justify-content-center">#}
-{#      <div class="col-6 text-center">#}
-{##}
-{#        <div class="btn-group">#}
-{#        {% for lctr in lectures %}#}
-{#          {% if lctr.order|subtract:lecture.order == -1 %}#}
-{#              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">#}
-{#                {% translate "Previous lecture" %}#}
-{#              </a>#}
-{#          {% elif lctr.order|subtract:lecture.order == 1 %}#}
-{#              <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">#}
-{#                {% translate "Next lecture" %}#}
-{#              </a>#}
-{#          {% endif %}#}
-{#        {% endfor %}#}
-{#        </div>#}
-{##}
-{#      </div>#}
-{#    </div>#}
+
+    {% include "courses/includes/next_prev_lecture_buttons.html" %}
 
   </div>
 </div>

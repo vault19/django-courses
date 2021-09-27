@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load courses_extra %}
+
+<div class="row justify-content-center">
+  <div class="col-6 text-center">
+
+    <div class="btn-group">
+    {% for lctr in lectures %}
+      {% if lctr.order|subtract:lecture.order == -1 %}
+          <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
+            « {% translate "Previous lecture" %}
+          </a>
+      {% elif lctr.order|subtract:lecture.order == 1 %}
+          <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-outline-primary">
+            {% translate "Next lecture" %} »
+          </a>
+      {% endif %}
+    {% endfor %}
+    </div>
+
+  </div>
+</div>
