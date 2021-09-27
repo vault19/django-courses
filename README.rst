@@ -21,25 +21,29 @@ Quick start
 
 1. Install django-courses via pip::
 
-   pip install https://github.com/vault19/django-courses/archive/refs/heads/main.zip
+    pip install django-courses
 
-1. Add "courses" to your INSTALLED_APPS setting like this::
+Alternatively install latest development version from Github::
+
+    pip install https://github.com/vault19/django-courses/archive/refs/heads/main.zip
+
+2. Add "courses" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...
         'courses',
     ]
 
-2. Include the polls URLconf in your project urls.py like this::
+3. Include the polls URLconf in your project urls.py like this::
 
     path("", include("courses.urls")),
 
-3. Run `python manage.py migrate` to create the courses tables in DB.
+4. Run `python manage.py migrate` to create the courses tables in DB.
 
-4. Start the development server and visit http://127.0.0.1:8000/admin/
+5. Start the development server and visit http://127.0.0.1:8000/admin/
    to manage your courses (you'll need the Admin app enabled).
 
-5. Visit http://127.0.0.1:8000/ to view the courses list.
+6. Visit http://127.0.0.1:8000/ to view the courses list.
 
 Testing
 -------
@@ -49,7 +53,6 @@ App is using Django's build in test framework. However, there are only a few tes
 In order to run tests execute command (in your project)::
 
      python manage.py test
-
 
 Support
 -------
