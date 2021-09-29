@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
 `
 {% block content %}
-  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
-
 <div class="py-5">
   <div class="container">
     <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
@@ -14,5 +16,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}

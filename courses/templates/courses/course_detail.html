@@ -3,9 +3,11 @@
 {% load markdownify %}
 {% load courses_extra %}
 
-{% block content %}
+{% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
 
+{% block content %}
   {% include "courses/includes/course_detail_header.html" with course=course %}
 
   {% include "courses/includes/course_run_detail.html" with chapters=course.chapter_set.all %}

@@ -5,10 +5,11 @@
 {% load embed_video_tags %}
 {% load static %}
 
-{% block content %}
+{% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
 
-
+{% block content %}
 <div class="album py-1 {# bg-light #}">
   <div class="container">
 
