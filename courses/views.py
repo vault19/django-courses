@@ -403,7 +403,6 @@ def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
             messages.error(request, _("Please correct form errors."))
 
     elif datetime.date.today() > context["end"] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
-        context["user_submissions"] = user_submissions
         form = None
     elif len(user_submissions) == 1:
         submission = user_submissions[0]
@@ -411,6 +410,7 @@ def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
     else:
         form = SubmissionForm()
 
+    context["user_submissions"] = user_submissions
     context["form"] = form
 
-    return render(request, "courses/lecture_detail.html", context)
+    return render(request, "courses/lecture_submission.html", context)

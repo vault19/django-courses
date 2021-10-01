@@ -89,18 +89,12 @@
         </p>
     </div>
 
-    {% if form %}
-      {% include "courses/includes/submission.html" with user_submissions=user_submissions form=form %}
-    {% else %}
+    {% if lecture.require_submission != 'D' %}
       <div class="row justify-content-center">
         <div class="col-4 text-center">
-
-          {% if lecture.require_submission != 'D' %}
           <a href="{% url 'lecture_submission' run.slug chapter.slug lecture.slug %}#submission-form" class="btn btn-lg btn-outline-success">
-            {% translate "Submission" %}
+            {% translate "My Submission" %}
           </a>
-          {% endif %}
-
         </div>
       </div>
     {% endif %}

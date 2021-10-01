@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-29 20:34+0200\n"
+"POT-Creation-Date: 2021-10-01 07:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -223,41 +223,58 @@ msgid ""
 msgstr ""
 
 #: django-courses/courses/models.py:416
-msgid "Describe what you have learned."
-msgstr "Popis k odovzdaniu."
+#: django-courses/courses/templates/courses/lecture_detail.html:47
+#: django-courses/courses/templates/courses/lecture_submission.html:83
+msgid "Submission"
+msgstr "Zadanie"
+
+#: django-courses/courses/models.py:417
+msgid "Submissions"
+msgstr "Zadania"
+
+#: django-courses/courses/models.py:419
+msgid "Title"
+msgstr "Napdis"
+
+#: django-courses/courses/models.py:420
+msgid "Description"
+msgstr "Popis"
 
 #: django-courses/courses/models.py:421
-msgid "Upload proof of your work (document, video, image)."
-msgstr "Nahrajte prílohy k odovzdaniu (dokument, video alebo obrázok)"
+msgid "Describe what you have learned."
+msgstr "Popis k zadania."
 
-#: django-courses/courses/models.py:431
-#| msgid "Lecture submission"
+#: django-courses/courses/models.py:426
+msgid "Upload proof of your work (document, video, image)."
+msgstr "Nahrajte prílohy k zadaniu (dokument, video alebo obrázok)"
+
+#: django-courses/courses/models.py:436
 msgid "Metadata about submission."
 msgstr "Metadata o zadaní."
 
-#: django-courses/courses/models.py:442
+#: django-courses/courses/models.py:447
 msgid "Selected chapter does not belong to submission's course."
 msgstr ""
 
-#: django-courses/courses/models.py:445
+#: django-courses/courses/models.py:450
 msgid "Selected lecture does not belong to selected chapter."
 msgstr ""
 
-#: django-courses/courses/models.py:455
+#: django-courses/courses/models.py:460
 msgid "Selected lecture does not belong to submission's course."
 msgstr ""
 
-#: django-courses/courses/models.py:460
+#: django-courses/courses/models.py:465
 msgid "Describe your opinion about the submission."
 msgstr ""
 
-#: django-courses/courses/models.py:464
+#: django-courses/courses/models.py:469
 msgid ""
 "Check if the submission if acceptable. If not, the reviewee will have to "
 "submit a new submission."
 msgstr ""
 
-#: django-courses/courses/models.py:480
+#: django-courses/courses/models.py:485
 msgid "You can not review your own submission!"
 msgstr ""
 
@@ -310,12 +327,14 @@ msgstr "Kapitoly kurzu"
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:20
 #: django-courses/courses/templates/courses/lecture_detail.html:25
+#: django-courses/courses/templates/courses/lecture_submission.html:61
 #: django-courses/courses/views.py:227
 msgid "Chapter Submission"
 msgstr "Zadanie pre kapitolu"
 
 #: django-courses/courses/templates/courses/includes/chapter_detail_header.html:23
 #: django-courses/courses/templates/courses/lecture_detail.html:28
+#: django-courses/courses/templates/courses/lecture_submission.html:64
 msgid "Chapter Lectures"
 msgstr "Lekcie kapitoly"
 
@@ -348,6 +367,7 @@ msgstr "Práve sa idete záväzne registrovať na kurz:"
 
 #: django-courses/courses/templates/courses/includes/modal_subscribe.html:16
 #: django-courses/courses/templates/courses/includes/modal_subscribe.html:32
+#: django-courses/courses/templates/courses/lecture_submission.html:38
 msgid "Close"
 msgstr "Zavrieť"
 
@@ -356,17 +376,27 @@ msgid "Unsubscribe"
 msgstr "Odhlásiť"
 
 #: django-courses/courses/templates/courses/includes/submission.html:19
+#: django-courses/courses/templates/courses/lecture_detail.html:96
+#: django-courses/courses/templates/courses/lecture_submission.html:24
+#: django-courses/courses/templates/courses/lecture_submission.html:81
 msgid "My Submission"
-msgstr "Moje odovzdanie"
+msgstr "Moje zadanie"
 
 #: django-courses/courses/templates/courses/includes/submission.html:23
 msgid "Submit"
 msgstr "Odovzdať"
 
-#: django-courses/courses/templates/courses/lecture_detail.html:47
-#: django-courses/courses/templates/courses/lecture_detail.html:100
-msgid "Submission"
-msgstr "Zadanie"
+#: django-courses/courses/templates/courses/lecture_submission.html:39
+msgid "Save changes"
+msgstr "Uložiť zmeny"
+
+#: django-courses/courses/templates/courses/lecture_submission.html:96
+msgid "You have not submitted anything..."
+msgstr "Ešte ste neodovzdali zadanie..."
+
+#: django-courses/courses/templates/courses/lecture_submission.html:105
+msgid "Submit Submission"
+msgstr "Odovzdať Zadanie"
 
 #: django-courses/courses/templatetags/courses_extra.py:31
 #, python-format
