@@ -10,7 +10,7 @@ class TestRequiredLoginPage(TestCase):
     fixtures = ["test_data.json"]
 
     def test_redirects(self):
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.get("/courses/subscribed/")
             self.assertRedirects(response, "/accounts/login/?next=/courses/subscribed/")
 
@@ -56,13 +56,13 @@ class TestSubscribeUnsubscribePage(TestCase):
         self.user.set_password("12345")
         self.user.save()
 
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
 
             response = self.client.login(username=self.user.username, password="12345")
             self.assertEqual(True, response)
 
     def test_GET_methods(self):
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.get("/course/septembrovy-kurz/subscribe/", follow=True)
             messages = list(response.context["messages"])
             self.assertEqual(len(messages), 1)
@@ -80,7 +80,7 @@ class TestSubscribeUnsubscribePage(TestCase):
         run = Run.objects.get(slug=run_slug)
         self.assertEqual(run.users.count(), 2)
         self.assertEqual(self.user in run.users.all(), False)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -109,7 +109,7 @@ class TestSubscribeUnsubscribePage(TestCase):
         run.save()
         self.assertEqual(run.users.count(), 2)
         self.assertEqual(self.user in run.users.all(), False)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -123,7 +123,7 @@ class TestSubscribeUnsubscribePage(TestCase):
         run_slug = "septembrovy-kurz"
         run = Run.objects.get(slug=run_slug)
         self.assertEqual(self.user in run.users.all(), False)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -155,7 +155,7 @@ class TestSubscribeUnsubscribePage(TestCase):
 
         with self.assertRaises(ObjectDoesNotExist):
             run = Run.objects.get(slug=run_slug)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/subscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -166,7 +166,7 @@ class TestSubscribeUnsubscribePage(TestCase):
 
         with self.assertRaises(ObjectDoesNotExist):
             run = Run.objects.get(slug=run_slug)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/unsubscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -182,7 +182,7 @@ class TestSubscribeUnsubscribePage(TestCase):
         run.save()
         self.assertEqual(self.user in run.users.all(), True)
         self.assertEqual(run.users.count(), 3)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/unsubscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
@@ -194,7 +194,7 @@ class TestSubscribeUnsubscribePage(TestCase):
 
             run = Run.objects.get(slug=run_slug)
             self.assertEqual(self.user in run.users.all(), False)
-        if hasattr(django.conf.global_settings, 'ROOT_URLCONF'):
+        if hasattr(django.conf.global_settings, "ROOT_URLCONF"):
             response = self.client.post(
                 f"/course/{run_slug}/unsubscribe/", {"sender": self.user.username, "run_slug": run_slug}, follow=True
             )
