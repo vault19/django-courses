@@ -413,12 +413,13 @@ class Meeting(models.Model):
 
 class Submission(models.Model):
     class Meta:
-        verbose_name = _('Submission')
-        verbose_name_plural = _('Submissions')
+        verbose_name = _("Submission")
+        verbose_name_plural = _("Submissions")
 
-    title = models.CharField(max_length=250, verbose_name=_('Title'))
-    description = models.TextField(blank=True, null=True, verbose_name=_('Description'),
-                                   help_text=_("Describe what you have learned."))
+    title = models.CharField(max_length=250, verbose_name=_("Title"))
+    description = models.TextField(
+        blank=True, null=True, verbose_name=_("Description"), help_text=_("Describe what you have learned.")
+    )
     data = models.FileField(
         blank=True,
         null=True,
