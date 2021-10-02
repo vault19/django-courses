@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install {{ matrix.django-version }} -r requirements.txt
+        pip install ${{ matrix.django-version }} -r requirements.txt
     - name: Run unit tests with Python ${{ matrix.python-version }}
       run: |
         python runtests.py
