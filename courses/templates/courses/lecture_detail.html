@@ -5,6 +5,16 @@
 {% load embed_video_tags %}
 {% load static %}
 
+{% block css %}
+  <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="{% static 'courses/js/video_tracking.js' %}"></script>
+{% endblock %}
+
 {% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 {% endblock %}
@@ -117,9 +127,4 @@
 
   </div>
 </div>
-{% endblock %}
-
-{% block javascript %}
-  <script src="https://player.vimeo.com/api/player.js"></script>
-  <script src="{% static 'courses/js/video_tracking.js' %}"></script>
 {% endblock %}
