@@ -350,9 +350,6 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     # TODO: verify url mix and match of run and course
     # TODO: verify url mix and match of lecture and course
 
-    if lecture.require_submission == "D":
-        raise PermissionDenied(_("Submission is not allowed."))
-
     context = get_run_chapter_context(request, run_slug, chapter_slug)
 
     if COURSES_DISPLAY_CHAPTER_DETAILS:
@@ -366,6 +363,9 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     )
 
     if request.method == "POST":
+        if lecture.require_submission == "D":
+            raise PermissionDenied(_("Submission is not allowed."))
+
         if datetime.date.today() > context["end"] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
             raise PermissionDenied(_("Chapter has already ended...") + " " + _("Submission is not allowed."))
 
