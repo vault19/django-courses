@@ -52,3 +52,13 @@ COURSES_NOTIFY_RUN_START_EMAIL_BODY = getattr(
 COURSES_NOTIFY_RUN_START_EMAIL_HTML = getattr(
     settings, "COURSES_NOTIFY_RUN_START_EMAIL_HTML", "courses/emails/run_start_email_body.html"
 )
+
+COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_SUBJECT = getattr(
+    settings, "COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_SUBJECT", "courses/emails/chapter_open_email_subject.txt"
+)
+COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_BODY = getattr(
+    settings, "COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_BODY", "courses/emails/chapter_open_email_body.txt"
+)
+COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_HTML = getattr(
+    settings, "COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_HTML", "courses/emails/chapter_open_email_body.html"
+)
