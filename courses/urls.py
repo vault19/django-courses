@@ -23,11 +23,6 @@ urlpatterns = [
     ),
     path("course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/", views.lecture_detail, name="lecture_detail"),
     path(
-        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/",
-        views.lecture_submission,
-        name="lecture_submission",
-    ),
-    path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/video-ping/",
         views_ajax.video_lecture_submission,
         name="video_ping",
