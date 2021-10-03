@@ -1,0 +1,1 @@
+Meeting reminder {{ meeting.lecture }}
