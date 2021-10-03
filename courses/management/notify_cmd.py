@@ -16,9 +16,7 @@ class NotifyCommand(BaseCommand):
     mail_template_variables = {}
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--time-delta", type=int, help="Time delta (in days) for comparasion adjustments."
-        )
+        parser.add_argument("--time-delta", type=int, help="Time delta (in days) for comparasion adjustments.")
         parser.add_argument(
             "--delay", nargs="?", type=int, help="Time delay (in seconds) between each email.", default=0
         )

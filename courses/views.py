@@ -380,9 +380,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
             form.save()
 
             messages.success(request, _("Your submission has been saved."))
-            return redirect(
-                "lecture_detail", run_slug=run_slug, chapter_slug=chapter_slug, lecture_slug=lecture_slug
-            )
+            return redirect("lecture_detail", run_slug=run_slug, chapter_slug=chapter_slug, lecture_slug=lecture_slug)
         else:
             messages.error(request, _("Please correct form errors."))
 

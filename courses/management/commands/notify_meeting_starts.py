@@ -54,8 +54,7 @@ class Command(NotifyCommand):
                     self.stdout.write("Leader: ", ending="")
                     self.stdout.write(self.style.WARNING(meeting.organizer))
 
-                if meeting.leader and meeting.leader.email and \
-                        meeting.leader.email != meeting.run.manager.email:
+                if meeting.leader and meeting.leader.email and meeting.leader.email != meeting.run.manager.email:
                     self.send_email(
                         meeting.leader,
                         meeting.run,
@@ -68,4 +67,3 @@ class Command(NotifyCommand):
 
         else:
             self.stdout.write(self.style.SUCCESS("Nothing to do..."))
-
