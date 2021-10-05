@@ -370,7 +370,7 @@ class Meeting(models.Model):
     )
 
     def __str__(self):
-        return f"Meeting: {self.run} {self.lecture}: {self.start} {self.end}"
+        return _("Meeting") + f": {self.run} {self.lecture}: {self.start} {self.end}"
 
     def clean(self):
         if self.start > self.end:

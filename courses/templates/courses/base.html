@@ -1,0 +1,80 @@
+{% load static %}
+{% load bootstrap5 %}
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <!-- Video.js player -->
+  {% block css %}{% endblock %}
+  <title>{{ title }}</title>
+</head>
+<body>
+
+{% block navigation %}{% endblock %}
+
+<main role="main">
+{% block main %}
+  <div class="container">
+    <div class="row">
+    {% block alert %}
+      {% bootstrap_messages %}
+    {% endblock %}
+    </div>
+  </div>
+  {% block content_wrapper %}
+  <div class="album {# bg-light #}">
+    <div class="container">
+      <div class="row g-3">
+
+        {% block breadcrumbs %}
+          {% if breadcrumbs %}
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <nav aria-label="breadcrumb" class="mt-2">
+                  <ol class="breadcrumb">
+                    {% for breadcrumb in breadcrumbs %}
+                    <li class="breadcrumb-item{% if not breadcrumb.url %} active{% endif %}">
+                      {% if breadcrumb.url %}<a href="{{ breadcrumb.url }}">{% endif %}
+                        {{ breadcrumb.title }}
+                      {% if breadcrumb.url %}</a>{% endif %}
+                    </li>
+                    {% endfor %}
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endblock %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+{% endblock %}
+</main>
+
+{% block footer %}{% endblock %}
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+{% block javascript %}{% endblock %}
+
+</body>
+</html>

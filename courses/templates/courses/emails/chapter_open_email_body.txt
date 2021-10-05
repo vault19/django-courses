@@ -1,0 +1,7 @@
+Dear {{ user.first_name }},
+
+chapter {{ chapter }} is opening at {{ chapter_start }}.
+
+Best regards,
+
+The Team.

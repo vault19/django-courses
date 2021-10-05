@@ -349,6 +349,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
     # TODO: verify url mix and match of run and course
     # TODO: verify url mix and match of lecture and course
+
     context = get_run_chapter_context(request, run_slug, chapter_slug)
 
     if COURSES_DISPLAY_CHAPTER_DETAILS:
@@ -357,31 +358,14 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     context["breadcrumbs"].append({"title": lecture.title})
     context["lecture"] = lecture
 
-    return render(request, "courses/lecture_detail.html", context)
-
-
-@login_required
-def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
-    lecture = get_object_or_404(Lecture, slug=lecture_slug)
-
-    if lecture.require_submission == "D":
-        raise PermissionDenied(_("Submission is not allowed."))
-
-    context = get_run_chapter_context(request, run_slug, chapter_slug)
-
-    if COURSES_DISPLAY_CHAPTER_DETAILS:
-        context["breadcrumbs"][3]["url"] = reverse("chapter_detail", args=(run_slug, chapter_slug))
-
-    context["breadcrumbs"].append({"title": lecture.title, "url": "#"})
-    context["breadcrumbs"].append({"title": _("Lecture submission")})
-
-    context["lecture"] = lecture
-
     user_submissions = (
         Submission.objects.filter(author=request.user).filter(run=context["run"]).filter(lecture=lecture).all()
     )
 
     if request.method == "POST":
+        if lecture.require_submission == "D":
+            raise PermissionDenied(_("Submission is not allowed."))
+
         if datetime.date.today() > context["end"] and not COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS:
             raise PermissionDenied(_("Chapter has already ended...") + " " + _("Submission is not allowed."))
 
@@ -396,9 +380,7 @@ def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
             form.save()
 
             messages.success(request, _("Your submission has been saved."))
-            return redirect(
-                "lecture_submission", run_slug=run_slug, chapter_slug=chapter_slug, lecture_slug=lecture_slug
-            )
+            return redirect("lecture_detail", run_slug=run_slug, chapter_slug=chapter_slug, lecture_slug=lecture_slug)
         else:
             messages.error(request, _("Please correct form errors."))
 
@@ -413,4 +395,4 @@ def lecture_submission(request, run_slug, chapter_slug, lecture_slug):
     context["user_submissions"] = user_submissions
     context["form"] = form
 
-    return render(request, "courses/lecture_submission.html", context)
+    return render(request, "courses/lecture_detail.html", context)
