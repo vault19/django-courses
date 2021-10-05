@@ -75,7 +75,7 @@
             {% if meeting.leader %}
             <h6 class="card-subtitle mb-2 text-muted"> {{ meeting.leader.first_name }} {{ meeting.leader.last_name }}</h6>
             {% endif %}
-            <p class="card-text">{{ meeting.description }}</p>
+            <p class="card-text">{{ meeting.description|markdownify }}</p>
             <a href="{{ meeting.link }}" class="btn btn-primary" target="_blank">{% translate "Meeting link" %}</a>
           </div>
         </div>
