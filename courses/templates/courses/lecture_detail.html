@@ -103,7 +103,21 @@
             </div>
           {% endfor %}
         {% else %}
-          {% translate "You have not submitted anything..." %}
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fas fa-box-open"></i> {% translate "Submission" %}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">...</h5>
+                <p class="card-text">{% translate "You have not submitted anything..." %}</p>
+                <!-- Button trigger submission modal -->
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#submissionModal">
+                  {% translate "Submit Submission" %}
+                </button>
+              </div>
+            </div>
+          </div>
         {% endif %}
       {% endif %}
     </div>
