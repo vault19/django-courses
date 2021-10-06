@@ -35,31 +35,31 @@ msgstr "Súkromný"
 
 #: django-courses/courses/models.py:32
 msgid "Video Lesson"
-msgstr ""
+msgstr "Video lekcia"
 
 #: django-courses/courses/models.py:33
 msgid "Text to read"
-msgstr ""
+msgstr "Text na čítanie"
 
 #: django-courses/courses/models.py:34
 msgid "Peer Feedback"
-msgstr ""
+msgstr "Spätná väzba"
 
 #: django-courses/courses/models.py:35
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #: django-courses/courses/models.py:36
 msgid "Feedback"
-msgstr ""
+msgstr "Spätná väzba"
 
 #: django-courses/courses/models.py:37
 msgid "Live lesson"
-msgstr ""
+msgstr "Živá lekcia"
 
 #: django-courses/courses/models.py:41
 msgid "Disabled"
-msgstr ""
+msgstr "Zablokované"
 
 #: django-courses/courses/models.py:42
 msgid "Not required"
@@ -78,39 +78,46 @@ msgid ""
 "Short description of the course displayed in the list of all courses. If "
 "empty description will be used."
 msgstr ""
+"Krátky popis kurzu zobrazeného v zozname kurzov. Ak je nevyplnený, použije "
+"sa popis."
 
 #: django-courses/courses/models.py:59
 msgid "Full description of the course."
-msgstr ""
+msgstr "Plný popis kurzu."
 
 #: django-courses/courses/models.py:64
 msgid "Creaator of the course, mainly responsible for the content"
-msgstr ""
+msgstr "Autor kurzu, prevažne zodpovedný za obsah"
 
 #: django-courses/courses/models.py:97
 msgid "Short description of the chapter displayed in the list of all chapters."
-msgstr ""
+msgstr "Krátky popis kapitoly zobrazenej v zozname všetkých kapitol"
 
 #: django-courses/courses/models.py:102
 msgid ""
 "Full description of the chapter. Explain what will user learn in this lesson."
 msgstr ""
+"Plný popis kapitoly. Vysvetľuje, čo sa užívateľ naučív tejto lekcii."
 
 #: django-courses/courses/models.py:108
 msgid ""
 "Number of days that chapter will be open. If all chapters length is set to 0 "
 "course is considered self-paced."
 msgstr ""
+"Počet dní, kedy bude táto kapitola otvorená. Ak je dĺžka všetkých kapitol "
+"nastavená na 0, kurz môže byť absolvovaný vlastným tempom."
 
 #: django-courses/courses/models.py:116 django-courses/courses/models.py:195
 msgid ""
 "A submission can be required either for continuing to the next chapter or to "
 "finish the course."
 msgstr ""
+"Na pokračovanie k ďalšej kapitole alebo ukončenie kurzu bude možno potrebné "
+"odoslať zadanie."
 
 #: django-courses/courses/models.py:122 django-courses/courses/models.py:201
 msgid "Submission is accepted only after being accepted by a review."
-msgstr ""
+msgstr "Zadanie je prijaté až po akceptovaní recenzentom."
 
 #: django-courses/courses/models.py:142 django-courses/courses/views.py:238
 #: django-courses/courses/views.py:386 django-courses/courses/views_ajax.py:28
@@ -119,7 +126,7 @@ msgstr "Kapitola sa už skončila..."
 
 #: django-courses/courses/models.py:142
 msgid "Sorry it is not available any more."
-msgstr ""
+msgstr "Ospravedlňujeme sa, obsah už nie je dostupný."
 
 #: django-courses/courses/models.py:146
 msgid "Chapter hasnt started yet..."
@@ -131,15 +138,15 @@ msgstr "Prosím vráťe sa neskôr."
 
 #: django-courses/courses/models.py:166
 msgid "You can not link to chapter in different course!"
-msgstr ""
+msgstr "Nie je možné linkovať kapitoly z iných kurzov!"
 
 #: django-courses/courses/models.py:174
 msgid "Introduce the study material, explain what data are uploaded."
-msgstr ""
+msgstr "Predstaví študijný materiál, vysvetlí aké údaje budú nahrané."
 
 #: django-courses/courses/models.py:180
 msgid "Upload study material (document, video, image)."
-msgstr ""
+msgstr "Nahrať študijný materiál (dokument, video, obrázok)."
 
 #: django-courses/courses/models.py:186
 msgid "Metadata about uploaded data."
@@ -147,7 +154,7 @@ msgstr "Metadáta o nahratých dátach."
 
 #: django-courses/courses/models.py:203
 msgid "Order number for the lecture in the chapter."
-msgstr ""
+msgstr "Poradové číslo lekcie v kapitole."
 
 #: django-courses/courses/models.py:222
 #, python-format
@@ -155,31 +162,38 @@ msgid ""
 "Lecture type is \"%s\" but you are not uploading such file. Allowed "
 "extensions: %s"
 msgstr ""
+"Typ prednášky je \"%s\" ale nenahrali ste súbor tohto typu. Povolené "
+"typy: %s"
 
 #: django-courses/courses/models.py:248
 msgid ""
 "Short description displayed in course list, use as course perex. If empty "
 "course perex will be used."
 msgstr ""
+"Krátky popis zobrazený v zozname kurzov, použite ako perex kurzu. Pri "
+"prázdnom kurze sa použije perex."
 
 #: django-courses/courses/models.py:255
 msgid ""
 "Date will be calculated automatically if any of the chapter has length set."
 msgstr ""
+"Dátum bude vypočítaný automaticky ak má aspoň jedna kapitola nastavenú dĺžku."
 
 #: django-courses/courses/models.py:261
 msgid "Price for the course run that will have to be payed by the subscriber."
-msgstr ""
+msgstr "Cena kurzu, ktorá musí byť zaplatená predplatiteľom."
 
 #: django-courses/courses/models.py:266
 msgid ""
 "Max number of attendees, after which registration for the Run will close. If "
 "set to 0 the course will have no limit."
 msgstr ""
+"Maximálny počet účastníkov, po prekročení sa registrácia na termín uzavrie. "
+"Ak je nastavená na 0, kurz nemá obmedzený počet účastníkov."
 
 #: django-courses/courses/models.py:274
 msgid "Manager of the course run, responsible for the smoothness of the run."
-msgstr ""
+msgstr "Manažér kurzu, zodpovedný za bezproblémový priebeh kurzu."
 
 #: django-courses/courses/models.py:308
 msgid "You are not subscribed to this course!"
@@ -195,32 +209,34 @@ msgstr "Organizátor stretnutia, ktorý je zodpovedný za priebeh stretnutia."
 
 #: django-courses/courses/models.py:377
 msgid "Meeting can not finish before it has started."
-msgstr ""
+msgstr "Stretnutie nemôže skončiť skôr, ako začne."
 
 #: django-courses/courses/models.py:389
 msgid "You are not allowed to add meeting to run that has already finished."
-msgstr ""
+msgstr "Nie je možné pridávať stretnutia na termín kurzu, ktorý už skončil."
 
 #: django-courses/courses/models.py:392
 msgid "Lecture does not belong to this course (and its chapters)."
-msgstr ""
+msgstr "Lekcia nepatrí do tohto kurzu (a jeho kapitol)."
 
 #: django-courses/courses/models.py:397
 #, python-brace-format
 msgid "Meeting is scheduled before the lecture's chapter starts: {start}."
-msgstr ""
+msgstr "Stretnutie je naplánované pred začiatkom kapitoly: {start}."
 
 #: django-courses/courses/models.py:401
 #, python-brace-format
 msgid ""
 "Meeting is scheduled after the lecture's chapter is already finished: {end}."
 msgstr ""
+"Stretnutie je naplánované po ukončení kapitoly: {end}."
 
 #: django-courses/courses/models.py:406
 #, python-brace-format
 msgid ""
 "Meeting can not end after the lecture's chapter is already finished: {end}."
 msgstr ""
+"Stetnutie nemôže končiť po ukončení kapitoly: {end}."
 
 #: django-courses/courses/models.py:416
 #: django-courses/courses/templates/courses/lecture_detail.html:47
@@ -234,7 +250,7 @@ msgstr "Zadania"
 
 #: django-courses/courses/models.py:419
 msgid "Title"
-msgstr "Napdis"
+msgstr "Nadpis"
 
 #: django-courses/courses/models.py:420
 msgid "Description"
@@ -242,7 +258,7 @@ msgstr "Popis"
 
 #: django-courses/courses/models.py:421
 msgid "Describe what you have learned."
-msgstr "Popis k zadania."
+msgstr "Popíšte, čo ste sa naučili."
 
 #: django-courses/courses/models.py:426
 msgid "Upload proof of your work (document, video, image)."
@@ -254,29 +270,31 @@ msgstr "Metadata o zadaní."
 
 #: django-courses/courses/models.py:447
 msgid "Selected chapter does not belong to submission's course."
-msgstr ""
+msgstr "Vybraná kapitola nepatrí do kurzu zadania."
 
 #: django-courses/courses/models.py:450
 msgid "Selected lecture does not belong to selected chapter."
-msgstr ""
+msgstr "Vybraná lekcia nepatrí do vybranej kapitoly."
 
 #: django-courses/courses/models.py:460
 msgid "Selected lecture does not belong to submission's course."
-msgstr ""
+msgstr "Vybraná lekcia nepatrí do kurzu zadania."
 
 #: django-courses/courses/models.py:465
 msgid "Describe your opinion about the submission."
-msgstr ""
+msgstr "Napíšte svoj názor na zadanie."
 
 #: django-courses/courses/models.py:469
 msgid ""
 "Check if the submission if acceptable. If not, the reviewee will have to "
 "submit a new submission."
 msgstr ""
+"Skontrolujte či je nové zadanie v poriadku. Ak nie, podateľ bude musí "
+"odoslať nové zadanie."
 
 #: django-courses/courses/models.py:485
 msgid "You can not review your own submission!"
-msgstr ""
+msgstr "Nie je možné recenzovať vlastné zadania!"
 
 #: django-courses/courses/templates/courses/chapter_detail.html:32
 #: django-courses/courses/templates/courses/course_detail.html:44
@@ -359,7 +377,7 @@ msgstr "Žiadne termíny"
 
 #: django-courses/courses/templates/courses/includes/modal_subscribe.html:11
 msgid "You are going to unsubscribe from the course:"
-msgstr ""
+msgstr "Chystáte sa odhlásiť z kurzu:"
 
 #: django-courses/courses/templates/courses/includes/modal_subscribe.html:13
 msgid "You are going to subscribe to the course:"
@@ -418,7 +436,7 @@ msgstr "Kurzy"
 #: django-courses/courses/validators.py:6
 #, python-format
 msgid "The maximum file size that can be uploaded is %(limit_value)s MB."
-msgstr ""
+msgstr "Maximálna veľkosť"
 
 #: django-courses/courses/views.py:78 django-courses/courses/views.py:103
 msgid "Open courses"
@@ -486,7 +504,7 @@ msgstr "Boli ste registrovaný na kurz: %(run)s."
 
 #: django-courses/courses/views.py:323
 msgid "You need to submit subscription form in order to subscribe!"
-msgstr ""
+msgstr "Na registráciu musíte odoslať registračný formulár!"
 
 #: django-courses/courses/views.py:334
 #, python-format
@@ -505,7 +523,7 @@ msgstr "Nie ste prihlásený na kurz: %(run)s."
 
 #: django-courses/courses/views.py:342
 msgid "You need to submit subscription form in order to unsubscribe!"
-msgstr ""
+msgstr "Na odhlásenie musíte odoslať registračný formulár!"
 
 #: django-courses/courses/views.py:376
 msgid "Lecture submission"
