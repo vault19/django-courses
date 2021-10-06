@@ -8,11 +8,11 @@ Courses
 .. image:: https://img.shields.io/github/license/vault19/django-courses.svg
    :target: https://github.com/vault19/django-courses/blob/master/LICENSE
 
-Courses is a simple Django app to manage online courses (education). Appliaction is already used by civic association
+Courses is a simple Django app to manage online courses (education). Application is already used by civic association
 `SPy o.z. <https://python.sk/o_nas/>`_ (non-profit) for project "Teaching with hardware" in Slovak "Učíme s hardvérom":
 https://kurzy.ucimesharverom.sk
 
-Project "Učíme s hárverom" is run in Slovak language (how ever this app is in English, but has Slovak translations)
+Project "Učíme s hardvérom" is run in Slovak language (however this app is in English, but has Slovak translations)
 and is aimed for Slovak teachers to introduce hardware (such as `BBC microbit <https://microbit.org/>`_) into computing
 lessons at primary and secondary schools.
 
