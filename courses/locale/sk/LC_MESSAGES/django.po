@@ -436,7 +436,7 @@ msgstr "Kurzy"
 #: django-courses/courses/validators.py:6
 #, python-format
 msgid "The maximum file size that can be uploaded is %(limit_value)s MB."
-msgstr "Maximálna veľkosť"
+msgstr "Maximálna veľkosť súboru, ktorý môžete nahrať je %(limit_value)s MB."
 
 #: django-courses/courses/views.py:78 django-courses/courses/views.py:103
 msgid "Open courses"
