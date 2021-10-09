@@ -1,3 +1,6 @@
+import os
+import requests
+
 from time import sleep
 
 from django.conf import settings
@@ -91,3 +94,12 @@ class NotifyCommand(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Notification email sent to {user}!"))
 
         sleep(delay)
+
+    def notify_healthchecks(self):
+        if os.getenv('HEALTHCHECKS', None):
+            r = requests.get(os.getenv('HEALTHCHECKS'))
+            self.stdout.write('Acknoledge healthchecks.io: ', ending="")
+            self.stdout.write(self.style.SUCCESS(r.text))
+
+    def handle(self, *args, **options):
+        self.notify_healthchecks()

@@ -32,3 +32,5 @@ class Command(NotifyCommand):
                 self.notify_users(run, options)
         else:
             self.stdout.write(self.style.SUCCESS("Nothing to do..."))
+
+        super().handle(*args, **options)

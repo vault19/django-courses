@@ -50,3 +50,5 @@ class Command(NotifyCommand):
 
         else:
             self.stdout.write(self.style.SUCCESS("Nothing to do..."))
+
+        super().handle(*args, **options)
