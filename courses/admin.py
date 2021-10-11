@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
+from django.utils.translation import ngettext, ugettext_lazy as _
 from django import forms
 
 from courses.models import Course, Chapter, Lecture, Run, RunUsers, Submission, Review, Certificate, Meeting
@@ -48,17 +49,33 @@ class CourseAdmin(admin.ModelAdmin):
 
     def view_run_link(self, obj):
         count = obj.run_set.count()
+        runs = ngettext(
+            '%(count)d %(name)s',
+            '%(count)d %(plural_name)s',
+            count,
+        ) % {
+            'count': count,
+            'name': Run._meta.verbose_name,
+            'plural_name': Run._meta.verbose_name_plural,
+        }
         url = reverse("admin:courses_run_changelist") + "?" + urlencode({"course__id__exact": f"{obj.id}"})
-        return format_html('<a href="{}">{} Run(s)</a>', url, count)
+        return format_html('<a href="{}">{}</a>', url, runs)
 
-    view_run_link.short_description = "Runs"
+    view_run_link.short_description = _("Course Runs")
 
     def view_chapter_link(self, obj):
         count = obj.chapter_set.count()
+        chapters = ngettext(
+            '%(count)d Chapter',
+            '%(count)d Chapters',
+            count,
+        ) % {
+            'count': count,
+        }
         url = reverse("admin:courses_chapter_changelist") + "?" + urlencode({"course__id__exact": f"{obj.id}"})
-        return format_html('<a href="{}">{} Chapter(s)</a>', url, count)
+        return format_html('<a href="{}">{}</a>', url, chapters)
 
-    view_chapter_link.short_description = "Chapter"
+    view_chapter_link.short_description = _("Chapter")
 
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
@@ -85,9 +102,16 @@ class ChapterAdmin(admin.ModelAdmin):
 
     def view_lectures_link(self, obj):
         count = obj.lecture_set.count()
-        return format_html("{} Lecture(s)", count)
+        lectures = ngettext(
+            '%(count)d Lecture',
+            '%(count)d Lectures',
+            count,
+        ) % {
+            'count': count,
+        }
+        return lectures
 
-    view_lectures_link.short_description = "Lectures"
+    view_lectures_link.short_description = _("Lectures")
 
 
 class SubmissionInline(admin.TabularInline):
@@ -151,16 +175,30 @@ class RunAdmin(admin.ModelAdmin):
 
     def view_submissions_link(self, obj):
         count = obj.submission_set.count()
+        submissions = ngettext(
+            '%(count)d Submission',
+            '%(count)d Submissions',
+            count,
+        ) % {
+            'count': count,
+        }
         url = reverse("admin:courses_submission_changelist") + "?" + urlencode({"run__id__exact": f"{obj.id}"})
-        return format_html('<a href="{}">{} Submission(s)</a>', url, count)
+        return format_html('<a href="{}">{}</a>', url, submissions)
 
-    view_submissions_link.short_description = "Submissions"
+    view_submissions_link.short_description = _("Submissions")
 
     def view_users_link(self, obj):
         count = obj.users.count()
-        return format_html("{} User(s)", count)
+        users = ngettext(
+            '%(count)d User',
+            '%(count)d Users',
+            count,
+        ) % {
+            'count': count,
+        }
+        return users
 
-    view_users_link.short_description = "Users"
+    view_users_link.short_description = _("Users")
 
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
@@ -200,9 +238,16 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     def view_reviews_link(self, obj):
         count = obj.review_set.count()
-        return format_html("{} Review(s)", count)
+        reviews = ngettext(
+            '%(count)d Review',
+            '%(count)d Reviews',
+            count,
+        ) % {
+            'count': count,
+        }
+        return reviews
 
-    view_reviews_link.short_description = "Reviews"
+    view_reviews_link.short_description = _("Reviews")
 
 
 @admin.register(Certificate)

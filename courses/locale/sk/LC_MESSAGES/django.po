@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-11 21:31+0200\n"
+"POT-Creation-Date: 2021-10-11 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,8 +14,88 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#: django-courses/courses/admin.py:53
+#| msgid "%(count)d Run"
+#| msgid_plural "%(count)d Runs"
+msgid "%(count)d %(name)s"
+msgid_plural "%(count)d %(plural_name)s"
+msgstr[0] "%(count)d %(name)s"
+msgstr[1] "%(count)d %(plural_name)s"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Termínov kurzu"
+
+#: django-courses/courses/admin.py:64 django-courses/courses/models.py:277
+#: django-courses/courses/templates/courses/course_detail.html:17
+msgid "Course Runs"
+msgstr "Termíny kurzu"
+
+#: django-courses/courses/admin.py:69
+#, python-format
+msgid "%(count)d Chapter"
+msgid_plural "%(count)d Chapters"
+msgstr[0] "%(count)d Kapitola"
+msgstr[1] "%(count)d Kapitoly"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Kapitol"
+
+#: django-courses/courses/admin.py:78 django-courses/courses/models.py:101
+#: django-courses/courses/models.py:218 django-courses/courses/models.py:488
+msgid "Chapter"
+msgstr "Kapitola"
+
+#: django-courses/courses/admin.py:106
+#, python-format
+msgid "%(count)d Lecture"
+msgid_plural "%(count)d Lectures"
+msgstr[0] "%(count)d Lekcia"
+msgstr[1] "%(count)d Lekcie"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Lekcií"
+
+#: django-courses/courses/admin.py:114 django-courses/courses/models.py:192
+msgid "Lectures"
+msgstr "Lekcie"
+
+#: django-courses/courses/admin.py:179
+#, python-format
+msgid "%(count)d Submission"
+msgid_plural "%(count)d Submissions"
+msgstr[0] "%(count)d Zadanie"
+msgstr[1] "%(count)d Zadania"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Zadaní"
+
+#: django-courses/courses/admin.py:188 django-courses/courses/models.py:470
+msgid "Submissions"
+msgstr "Zadania"
+
+#: django-courses/courses/admin.py:193
+#, python-format
+msgid "%(count)d User"
+msgid_plural "%(count)d Users"
+msgstr[0] "%(count)d Používateľ"
+msgstr[1] "%(count)d Používatelia"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Používateľov"
+
+#: django-courses/courses/admin.py:201 django-courses/courses/models.py:298
+msgid "Users"
+msgstr "Používatelia"
+
+#: django-courses/courses/admin.py:242
+#, python-format
+msgid "%(count)d Review"
+msgid_plural "%(count)d Reviews"
+msgstr[0] "%(count)d Recenzia"
+msgstr[1] "%(count)d Recenzie"
+msgstr[2] "%(count)d "
+msgstr[3] "%(count)d Recenzií"
+
+#: django-courses/courses/admin.py:250 django-courses/courses/models.py:523
+msgid "Reviews"
+msgstr "Recenzie"
 
 #: django-courses/courses/models.py:24
 msgid "Draft"
@@ -141,11 +221,6 @@ msgstr "Tvorca"
 msgid "Creator of the course, mainly responsible for the content"
 msgstr "Autor kurzu, prevažne zodpovedný za obsah"
 
-#: django-courses/courses/models.py:101 django-courses/courses/models.py:218
-#: django-courses/courses/models.py:488
-msgid "Chapter"
-msgstr "Kapitola"
-
 #: django-courses/courses/models.py:102
 msgid "Chapters"
 msgstr "Kapitoly"
@@ -221,10 +296,6 @@ msgstr "Nie je možné linkovať kapitoly z iných kurzov!"
 msgid "Lecture"
 msgstr "Lekcia"
 
-#: django-courses/courses/models.py:192
-msgid "Lectures"
-msgstr "Lekcie"
-
 #: django-courses/courses/models.py:196
 msgid "Subtitle"
 msgstr "Podnadpis"
@@ -271,11 +342,6 @@ msgstr ""
 msgid "Course Run"
 msgstr "Termín kurzu"
 
-#: django-courses/courses/models.py:277
-#: django-courses/courses/templates/courses/course_detail.html:17
-msgid "Course Runs"
-msgstr "Termíny kurzu"
-
 #: django-courses/courses/models.py:286
 msgid ""
 "Short description displayed in course list, use as course perex. If empty "
@@ -297,10 +363,6 @@ msgid ""
 "Date will be calculated automatically if any of the chapter has length set."
 msgstr ""
 "Dátum bude vypočítaný automaticky ak má aspoň jedna kapitola nastavenú dĺžku."
-
-#: django-courses/courses/models.py:298
-msgid "Users"
-msgstr "Používatelia"
 
 #: django-courses/courses/models.py:300
 msgid "Price"
@@ -442,10 +504,6 @@ msgstr "Stetnutie nemôže končiť po ukončení kapitoly: {end}."
 msgid "Submission"
 msgstr "Zadanie"
 
-#: django-courses/courses/models.py:470
-msgid "Submissions"
-msgstr "Zadania"
-
 #: django-courses/courses/models.py:474
 msgid "Describe what you have learned."
 msgstr "Popíšte, čo ste sa naučili."
@@ -477,10 +535,6 @@ msgstr "Vybraná lekcia nepatrí do kurzu zadania."
 #: django-courses/courses/models.py:522
 msgid "Review"
 msgstr "Recenzia"
-
-#: django-courses/courses/models.py:523
-msgid "Reviews"
-msgstr "Recenzie"
 
 #: django-courses/courses/models.py:532
 msgid "Describe your opinion about the submission."
