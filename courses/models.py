@@ -20,7 +20,6 @@ from courses.settings import (
     MAX_FILE_SIZE_UPLOAD_FRONTEND,
 )
 
-
 STATE = (
     ("D", _("Draft")),
     ("O", _("Open")),
@@ -46,22 +45,30 @@ SUBMISSION_TYPE = (
 
 
 class Course(models.Model):
-    title = models.CharField(max_length=250)
+    class Meta:
+        verbose_name = _("Course")
+        verbose_name_plural = _("Courses")
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
     perex = models.TextField(
+        verbose_name=_("Perex"),
         blank=True,
         null=True,
         help_text=_(
-            "Short description of the course displayed in the list"
-            " of all courses. If empty description will be used."
+            "Short description of the course displayed in the list of all courses. If empty description will be used."
         ),
     )
-    slug = AutoSlugField(populate_from="name", editable=True, unique=True)
-    description = models.TextField(help_text=_("Full description of the course."))
-    state = models.CharField(max_length=1, choices=STATE, default="D")
+    slug = AutoSlugField(verbose_name=_("Slug"), populate_from="name", editable=True, unique=True)
+    description = models.TextField(verbose_name=_("Description"), help_text=_("Full description of the course."))
+    state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about course.")
+    )
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name=_("Creator"),
         on_delete=models.CASCADE,
-        help_text=_("Creaator of the course, mainly responsible for the content"),
+        help_text=_("Creator of the course, mainly responsible for the content"),
     )
 
     def __str__(self):
@@ -90,19 +97,30 @@ class Course(models.Model):
 
 
 class Chapter(models.Model):
-    title = models.CharField(max_length=250)
-    previous = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
-    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
+    class Meta:
+        verbose_name = _("Chapter")
+        verbose_name_plural = _("Chapters")
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    previous = models.ForeignKey(
+        "self", verbose_name=_("Previous chapter"), blank=True, null=True, on_delete=models.SET_NULL
+    )
+    slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
     perex = models.TextField(
-        blank=True, null=True, help_text=_("Short description of the chapter displayed in the list" " of all chapters.")
+        verbose_name=_("Perex"),
+        blank=True,
+        null=True,
+        help_text=_("Short description of the chapter displayed in the list" " of all chapters."),
     )
     description = models.TextField(
+        verbose_name=_("Description"),
         blank=True,
         null=True,
         help_text=_("Full description of the chapter. Explain what " "will user learn in this lesson."),
     )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
     length = models.IntegerField(
+        verbose_name=_("Length"),
         default=7,
         help_text=_(
             "Number of days that chapter will be open. If all chapters "
@@ -110,12 +128,14 @@ class Chapter(models.Model):
         ),
     )
     require_submission = models.CharField(
+        verbose_name=_("Require submission"),
         max_length=1,
         choices=SUBMISSION_TYPE,
         default="D",
         help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
     )
     require_submission_review = models.CharField(
+        verbose_name=_("Require submission review"),
         max_length=1,
         choices=SUBMISSION_TYPE,
         default="D",
@@ -167,13 +187,21 @@ class Chapter(models.Model):
 
 
 class Lecture(models.Model):
-    title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
-    subtitle = models.CharField(blank=True, null=True, max_length=250)
+    class Meta:
+        verbose_name = _("Lecture")
+        verbose_name_plural = _("Lectures")
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
+    subtitle = models.CharField(verbose_name=_("Subtitle"), blank=True, null=True, max_length=250)
     description = models.TextField(
-        blank=True, null=True, help_text=_("Introduce the study material, explain what data " "are uploaded.")
+        verbose_name=_("Description"),
+        blank=True,
+        null=True,
+        help_text=_("Introduce the study material, explain what data " "are uploaded."),
     )
     data = models.FileField(
+        verbose_name=_("Data"),
         blank=True,
         null=True,
         upload_to="lectures",
@@ -183,18 +211,21 @@ class Lecture(models.Model):
             FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
         ],
     )
-    metadata = models.JSONField(blank=True, null=True, help_text=_("Metadata about uploaded data."))
-    video = EmbedVideoField(blank=True, null=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    lecture_type = models.CharField(max_length=2, choices=LECTURE_TYPE, default="V")
-
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about uploaded data.")
+    )
+    video = EmbedVideoField(verbose_name=_("Video"), blank=True, null=True)
+    chapter = models.ForeignKey(Chapter, verbose_name=_("Chapter"), on_delete=models.CASCADE)
+    lecture_type = models.CharField(verbose_name=_("Lecture type"), max_length=2, choices=LECTURE_TYPE, default="V")
     require_submission = models.CharField(
+        verbose_name=_("Require submission"),
         max_length=1,
         choices=SUBMISSION_TYPE,
         default="N",
         help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
     )
     require_submission_review = models.CharField(
+        verbose_name=_("Require submission review"),
         max_length=1,
         choices=SUBMISSION_TYPE,
         default="N",
@@ -219,8 +250,9 @@ class Lecture(models.Model):
                 raise ValidationError(
                     {
                         "data": _(
-                            'Lecture type is "%s" but you are not uploading such file. Allowed '
-                            "extensions: %s" % (LECTURE_TYPE[0][1], EXTENSION_VIDEO)
+                            'Lecture type is "%(lecture_type)s" but you are not uploading such file. Allowed '
+                            "extensions: %(file_format)s"
+                            % {"lecture_type": LECTURE_TYPE[0][1], "file_format": EXTENSION_VIDEO}
                         )
                     }
                 )
@@ -231,44 +263,56 @@ class Lecture(models.Model):
                 raise ValidationError(
                     {
                         "data": _(
-                            'Lecture type is "%s" but you are not uploading such file. Allowed '
-                            "extensions: %s" % (LECTURE_TYPE[1][1], EXTENSION_IMAGE + EXTENSION_DOCUMENT)
+                            'Lecture type is "%(lecture_type)s" but you are not uploading such file. Allowed '
+                            "extensions: %(file_format)s"
+                            % {"lecture_type": LECTURE_TYPE[1][1], "file_format": EXTENSION_IMAGE + EXTENSION_DOCUMENT}
                         )
                     }
                 )
 
 
 class Run(models.Model):
-    title = models.CharField(max_length=250)
-    slug = AutoSlugField(populate_from="title", editable=True, unique=True)
+    class Meta:
+        verbose_name = _("Course Run")
+        verbose_name_plural = _("Course Runs")
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
     perex = models.TextField(
+        verbose_name=_("Perex"),
         blank=True,
         null=True,
         help_text=_(
-            "Short description displayed in course list, use as course perex. If empty " "course perex will be used."
+            "Short description displayed in course list, use as course perex. If empty course perex will be used."
         ),
     )
-    start = models.DateField()
+    start = models.DateField(verbose_name=_("Start"))
     end = models.DateField(
+        verbose_name=_("End"),
         blank=True,
         null=True,
-        help_text=_("Date will be calculated automatically if any of the " "chapter has length set."),
+        help_text=_("Date will be calculated automatically if any of the chapter has length set."),
     )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    state = models.CharField(max_length=1, choices=STATE, default="D")
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through="RunUsers", blank=True)
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
+    state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
+    price = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Users"), through="RunUsers", blank=True)
     price = models.FloatField(
-        default=0, help_text=_("Price for the course run that will have to be payed by the " "subscriber.")
+        verbose_name=_("Price"),
+        default=0,
+        help_text=_("Price for the course run that will have to be payed by the subscriber."),
     )
     limit = models.IntegerField(
+        verbose_name=_("Limit"),
         default=0,
         help_text=_(
-            "Max number of attendees, after which registration for the Run "
-            "will close. If set to 0 the course will have no limit."
+            "Max number of attendees, after which registration for the Run will close. If set to 0 the course will "
+            "have no limit."
         ),
     )
+    metadata = models.JSONField(verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about run."))
     manager = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name=_("Manager"),
         on_delete=models.CASCADE,
         related_name="manager",
         help_text=_("Manager of the course run, responsible for the smoothness of the run."),
@@ -328,11 +372,15 @@ class Run(models.Model):
 
 
 class RunUsers(models.Model):
-    run = models.ForeignKey(Run, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    payment = models.FloatField(default=0)
-    timestamp_added = models.DateTimeField(auto_now_add=True)
-    timestamp_modified = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = _("Run User")
+        verbose_name_plural = _("Run Users")
+
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    payment = models.FloatField(verbose_name=_("Payment"), default=0)
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
 
     def __str__(self):
         return f"{self.run}_{self.user}: {self.timestamp_added} {self.payment}"
@@ -348,14 +396,22 @@ class RunUsers(models.Model):
 
 
 class Meeting(models.Model):
-    run = models.ForeignKey(Run, on_delete=models.CASCADE)
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    link = models.URLField(max_length=250)
-    description = models.TextField(blank=True, null=True)
+    class Meta:
+        verbose_name = _("Meeting")
+        verbose_name_plural = _("Meetings")
+
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE)
+    start = models.DateTimeField(verbose_name=_("Start"))
+    end = models.DateTimeField(verbose_name=_("End"))
+    link = models.URLField(verbose_name=_("Link"), max_length=250)
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about meeting.")
+    )
     leader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name=_("Leader"),
         on_delete=models.CASCADE,
         related_name="leader",
         blank=True,
@@ -364,6 +420,7 @@ class Meeting(models.Model):
     )
     organizer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name=_("Organizer"),
         on_delete=models.CASCADE,
         related_name="organizer",
         help_text=_("Organizer of the meeting, responsible for the meeting."),
@@ -407,20 +464,17 @@ class Meeting(models.Model):
             )
 
 
-# class Subscription(models.Model):
-#     models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
-
-
 class Submission(models.Model):
     class Meta:
         verbose_name = _("Submission")
         verbose_name_plural = _("Submissions")
 
-    title = models.CharField(max_length=250, verbose_name=_("Title"))
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(
-        blank=True, null=True, verbose_name=_("Description"), help_text=_("Describe what you have learned.")
+        verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe what you have learned.")
     )
     data = models.FileField(
+        verbose_name=_("Data"),
         blank=True,
         null=True,
         upload_to="submissions",
@@ -430,13 +484,15 @@ class Submission(models.Model):
             FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, null=True, blank=True)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
-    run = models.ForeignKey(Run, on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    metadata = models.JSONField(blank=True, null=True, help_text=_("Metadata about submission."))
-    timestamp_added = models.DateTimeField(auto_now_add=True)
-    timestamp_modified = models.DateTimeField(auto_now=True)
+    lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE, null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, verbose_name=_("Chapter"), on_delete=models.CASCADE, null=True, blank=True)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"), on_delete=models.CASCADE)
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about submission.")
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
 
     def __str__(self):
         return f"{self.lecture}: {self.title}"
@@ -462,21 +518,29 @@ class Submission(models.Model):
 
 
 class Review(models.Model):
-    title = models.CharField(max_length=250)
-    description = models.TextField(blank=True, null=True, help_text=_("Describe your opinion about the submission."))
-    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    accepted = models.BooleanField(
-        help_text=_("Check if the submission if acceptable. If not, the reviewee will have to submit a new submission.")
-    )
-    timestamp_added = models.DateTimeField(auto_now_add=True)
-    timestamp_modified = models.DateTimeField(auto_now=True)
-
     class Meta:
+        verbose_name = _("Review")
+        verbose_name_plural = _("Reviews")
+
         unique_together = (
             "submission",
             "author",
         )
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    description = models.TextField(
+        verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe your opinion about the submission.")
+    )
+    submission = models.ForeignKey(Submission, verbose_name=_("Submission"), on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"), on_delete=models.CASCADE)
+    accepted = models.BooleanField(
+        verbose_name=_("Accepted"),
+        help_text=_(
+            "Check if the submission if acceptable. If not, the reviewee will have to submit a new submission."
+        ),
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -487,19 +551,23 @@ class Review(models.Model):
 
 
 class Certificate(models.Model):
-    data = models.FileField(
-        upload_to="certificates",
-        validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],
-    )
-    run = models.ForeignKey(Run, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    timestamp_added = models.DateTimeField(auto_now_add=True)
-
     class Meta:
+        verbose_name = _("Certificate")
+        verbose_name_plural = _("Certificates")
+
         unique_together = (
             "run",
             "user",
         )
 
+    data = models.FileField(
+        verbose_name=_("Data"),
+        upload_to="certificates",
+        validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+    )
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+
     def __str__(self):
-        return f"Certificate: {self.run} - {self.user}"
+        return _("Certificate") + f": {self.run} - {self.user}"
