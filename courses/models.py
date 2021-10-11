@@ -295,7 +295,7 @@ class Run(models.Model):
     )
     course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
     state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
-    price = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Users"), through="RunUsers", blank=True)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_("Users"), through="RunUsers", blank=True)
     price = models.FloatField(
         verbose_name=_("Price"),
         default=0,
