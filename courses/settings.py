@@ -9,6 +9,9 @@ MAX_FILE_SIZE_UPLOAD_FRONTEND = getattr(settings, "MAX_FILE_SIZE_UPLOAD_FRONTEND
 
 # Default redirect from index page
 COURSES_LANDING_PAGE_URL = getattr(settings, "COURSES_LANDING_PAGE_URL", "all_active_runs")
+COURSES_LANDING_PAGE_URL_AUTHORIZED = getattr(
+    settings, "COURSES_LANDING_PAGE_URL_AUTHORIZED", "all_subscribed_active_runs"
+)
 
 # Wheather to dispaly link to chapter detail page (page will still be accessible, but it might be too much views)
 COURSES_DISPLAY_CHAPTER_DETAILS = getattr(settings, "COURSES_DISPLAY_CHAPTER_DETAILS", True)

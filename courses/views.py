@@ -16,10 +16,12 @@ from django.urls import reverse
 from courses.forms import SubmissionForm, SubscribeForm
 from courses.models import Course, Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
-from courses.settings import COURSES_LANDING_PAGE_URL
+from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect(COURSES_LANDING_PAGE_URL_AUTHORIZED)
     return redirect(COURSES_LANDING_PAGE_URL)
 
 
