@@ -11,14 +11,16 @@ from autoslug import AutoSlugField
 from embed_video.fields import EmbedVideoField
 
 from courses.validators import FileSizeValidator
-from courses.settings import (
-    COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS,
-    EXTENSION_VIDEO,
-    EXTENSION_IMAGE,
-    EXTENSION_DOCUMENT,
-    MAX_FILE_SIZE_UPLOAD,
-    MAX_FILE_SIZE_UPLOAD_FRONTEND,
-)
+from courses import settings as course_settings
+
+# (
+#     course_settings.COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS,
+#     course_settings.EXTENSION_VIDEO,
+#     course_settings.EXTENSION_IMAGE,
+#     course_settings.EXTENSION_DOCUMENT,
+#     course_settings.MAX_FILE_SIZE_UPLOAD,
+#     course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND,
+# )
 
 STATE = (
     ("D", _("Draft")),
@@ -157,7 +159,7 @@ class Chapter(models.Model):
     @staticmethod
     def verify_course_dates(start, end):
         if date.today() > end:
-            if not COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
+            if not course_settings.COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS:
                 raise PermissionDenied(
                     _("Chapter has already ended...") + " " + _("Sorry it is not available any more.")
                 )
@@ -208,7 +210,7 @@ class Lecture(models.Model):
         help_text=_("Upload study material (document, " "video, image)."),
         validators=[
             FileExtensionValidator(["jpg", "jpeg", "gif", "png", "tiff", "svg", "pdf", "mkv", "avi", "mp4", "mov"]),
-            FileSizeValidator(MAX_FILE_SIZE_UPLOAD),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD),
         ],
     )
     metadata = models.JSONField(
@@ -246,26 +248,31 @@ class Lecture(models.Model):
 
     def clean(self):
         if self.data:
-            if self.lecture_type == LECTURE_TYPE[0][0] and not self.check_file_extension(self.data, EXTENSION_VIDEO):
-                raise ValidationError(
-                    {
-                        "data": _(
-                            'Lecture type is "%(lecture_type)s" but you are not uploading such file. Allowed '
-                            "extensions: %(file_format)s"
-                            % {"lecture_type": LECTURE_TYPE[0][1], "file_format": EXTENSION_VIDEO}
-                        )
-                    }
-                )
-
-            if self.lecture_type == LECTURE_TYPE[1][0] and not self.check_file_extension(
-                self.data, EXTENSION_IMAGE + EXTENSION_DOCUMENT
+            if self.lecture_type == LECTURE_TYPE[0][0] and not self.check_file_extension(
+                self.data, course_settings.EXTENSION_VIDEO
             ):
                 raise ValidationError(
                     {
                         "data": _(
                             'Lecture type is "%(lecture_type)s" but you are not uploading such file. Allowed '
                             "extensions: %(file_format)s"
-                            % {"lecture_type": LECTURE_TYPE[1][1], "file_format": EXTENSION_IMAGE + EXTENSION_DOCUMENT}
+                            % {"lecture_type": LECTURE_TYPE[0][1], "file_format": course_settings.EXTENSION_VIDEO}
+                        )
+                    }
+                )
+
+            if self.lecture_type == LECTURE_TYPE[1][0] and not self.check_file_extension(
+                self.data, course_settings.EXTENSION_IMAGE + course_settings.EXTENSION_DOCUMENT
+            ):
+                raise ValidationError(
+                    {
+                        "data": _(
+                            'Lecture type is "%(lecture_type)s" but you are not uploading such file. Allowed '
+                            "extensions: %(file_format)s"
+                            % {
+                                "lecture_type": LECTURE_TYPE[1][1],
+                                "file_format": course_settings.EXTENSION_IMAGE + course_settings.EXTENSION_DOCUMENT,
+                            }
                         )
                     }
                 )
@@ -363,6 +370,19 @@ class Run(models.Model):
                 if other_run_user == user:
                     return True
         return False
+
+    def get_setting(self, option):
+        if self.metadata and "options" in self.metadata and option in self.metadata["options"]:
+            option_value = self.metadata["options"][option]
+        elif self.course.metadata and "options" in self.course.metadata and option in self.course.metadata["options"]:
+            option_value = self.course.metadata["options"][option]
+        else:
+            option_value = getattr(course_settings, option, "__NOT_FOUND__")
+
+            if option_value == "__NOT_FOUND__":
+                raise ValueError("Unknown setting!")
+
+        return option_value
 
     def save(self, *args, **kwargs):
         if self.length != 0:
@@ -481,7 +501,7 @@ class Submission(models.Model):
         help_text=_("Upload proof of your work " "(document, video, image)."),
         validators=[
             FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]),
-            FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
     lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE, null=True, blank=True)
@@ -563,7 +583,7 @@ class Certificate(models.Model):
     data = models.FileField(
         verbose_name=_("Data"),
         upload_to="certificates",
-        validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+        validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND)],
     )
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)

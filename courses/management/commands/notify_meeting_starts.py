@@ -2,18 +2,10 @@ from datetime import timedelta, datetime
 
 from courses.management.notify_cmd import NotifyCommand
 from courses.models import Meeting
-from courses.settings import (
-    COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT,
-    COURSES_NOTIFY_MEETING_START_EMAIL_BODY,
-    COURSES_NOTIFY_MEETING_START_EMAIL_HTML,
-)
 
 
 class Command(NotifyCommand):
     help = "Notify (send email) users that meeting will start (meeting start == today +/- time_delta)."
-    mail_subject = COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT
-    mail_body = COURSES_NOTIFY_MEETING_START_EMAIL_BODY
-    mail_body_html = COURSES_NOTIFY_MEETING_START_EMAIL_HTML
 
     def handle(self, *args, **options):
         if options["time_delta"]:
@@ -29,12 +21,13 @@ class Command(NotifyCommand):
                 self.stdout.write(f"Found {meetings.count()} meeting(s).")
 
             for meeting in meetings.all():
-                counter = 0
+                self.mail_subject = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT")
+                self.mail_body = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_BODY")
+                self.mail_body_html = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_HTML")
 
                 if options["verbosity"] >= 1:
                     self.stdout.write(f"{meeting}: starts {meeting.start}.")
 
-                counter += 1
                 self.mail_template_variables["meeting"] = meeting
 
                 if options["verbosity"] >= 2:

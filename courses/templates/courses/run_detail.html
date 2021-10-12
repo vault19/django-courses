@@ -10,7 +10,7 @@
 {% block content %}
   {% include "courses/includes/course_detail_header.html" with course=run.course run=run subscribed=subscribed %}
 
-  {% if COURSES_DISPLAY_CHAPTER_DETAILS %}
+  {% if run|get_run_setting:"COURSES_DISPLAY_CHAPTER_DETAILS" %}
     {% include "courses/includes/course_run_detail.html" with chapters=chapters run=run %}
 <div class="album py-5">
   {% else %}

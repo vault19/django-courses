@@ -49,14 +49,10 @@ class CourseAdmin(admin.ModelAdmin):
 
     def view_run_link(self, obj):
         count = obj.run_set.count()
-        runs = ngettext(
-            '%(count)d %(name)s',
-            '%(count)d %(plural_name)s',
-            count,
-        ) % {
-            'count': count,
-            'name': Run._meta.verbose_name,
-            'plural_name': Run._meta.verbose_name_plural,
+        runs = ngettext("%(count)d %(name)s", "%(count)d %(plural_name)s", count,) % {
+            "count": count,
+            "name": Run._meta.verbose_name,
+            "plural_name": Run._meta.verbose_name_plural,
         }
         url = reverse("admin:courses_run_changelist") + "?" + urlencode({"course__id__exact": f"{obj.id}"})
         return format_html('<a href="{}">{}</a>', url, runs)
@@ -65,12 +61,8 @@ class CourseAdmin(admin.ModelAdmin):
 
     def view_chapter_link(self, obj):
         count = obj.chapter_set.count()
-        chapters = ngettext(
-            '%(count)d Chapter',
-            '%(count)d Chapters',
-            count,
-        ) % {
-            'count': count,
+        chapters = ngettext("%(count)d Chapter", "%(count)d Chapters", count,) % {
+            "count": count,
         }
         url = reverse("admin:courses_chapter_changelist") + "?" + urlencode({"course__id__exact": f"{obj.id}"})
         return format_html('<a href="{}">{}</a>', url, chapters)
@@ -102,12 +94,8 @@ class ChapterAdmin(admin.ModelAdmin):
 
     def view_lectures_link(self, obj):
         count = obj.lecture_set.count()
-        lectures = ngettext(
-            '%(count)d Lecture',
-            '%(count)d Lectures',
-            count,
-        ) % {
-            'count': count,
+        lectures = ngettext("%(count)d Lecture", "%(count)d Lectures", count,) % {
+            "count": count,
         }
         return lectures
 
@@ -175,12 +163,8 @@ class RunAdmin(admin.ModelAdmin):
 
     def view_submissions_link(self, obj):
         count = obj.submission_set.count()
-        submissions = ngettext(
-            '%(count)d Submission',
-            '%(count)d Submissions',
-            count,
-        ) % {
-            'count': count,
+        submissions = ngettext("%(count)d Submission", "%(count)d Submissions", count,) % {
+            "count": count,
         }
         url = reverse("admin:courses_submission_changelist") + "?" + urlencode({"run__id__exact": f"{obj.id}"})
         return format_html('<a href="{}">{}</a>', url, submissions)
@@ -189,12 +173,8 @@ class RunAdmin(admin.ModelAdmin):
 
     def view_users_link(self, obj):
         count = obj.users.count()
-        users = ngettext(
-            '%(count)d User',
-            '%(count)d Users',
-            count,
-        ) % {
-            'count': count,
+        users = ngettext("%(count)d User", "%(count)d Users", count,) % {
+            "count": count,
         }
         return users
 
@@ -238,12 +218,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     def view_reviews_link(self, obj):
         count = obj.review_set.count()
-        reviews = ngettext(
-            '%(count)d Review',
-            '%(count)d Reviews',
-            count,
-        ) % {
-            'count': count,
+        reviews = ngettext("%(count)d Review", "%(count)d Reviews", count,) % {
+            "count": count,
         }
         return reviews
 

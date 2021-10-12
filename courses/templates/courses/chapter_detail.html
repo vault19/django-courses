@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end filter_lecture_type=filter_lecture_type COURSES_DISPLAY_CHAPTER_DETAILS=COURSES_DISPLAY_CHAPTER_DETAILS %}
+  {% include "courses/includes/chapter_detail_header.html" with run=run chapter=chapter start=start end=end filter_lecture_type=filter_lecture_type %}
 
   {% if chapter.lecture_set.all %}
   <div class="py-5 container">
