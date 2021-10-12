@@ -18,6 +18,7 @@ from courses.models import Course, Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
 from courses.settings import (
     COURSES_LANDING_PAGE_URL,
+    COURSES_LANDING_PAGE_URL_AUTHORIZED,
     COURSES_SHOW_FUTURE_CHAPTERS,
     COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE,
     COURSES_ALLOW_USER_UNSUBSCRIBE,
@@ -32,6 +33,8 @@ from courses.settings import (
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect(COURSES_LANDING_PAGE_URL_AUTHORIZED)
     return redirect(COURSES_LANDING_PAGE_URL)
 
 
