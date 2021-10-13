@@ -18,6 +18,11 @@ def get_run_dates(chapter, run):
 
 
 @register.filter
+def get_run_setting(run, setting):
+    return run.get_setting(setting)
+
+
+@register.filter
 def timedelta(value, arg=None):
     if not value:
         return ""

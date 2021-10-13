@@ -38,7 +38,7 @@
             {% if chapter.require_submission != 'D' %}
             <a href="{{ submission_page }}#submission-form" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
             {% endif %}
-          {% elif COURSES_DISPLAY_CHAPTER_DETAILS %}
+          {% elif run|get_run_setting:"COURSES_DISPLAY_CHAPTER_DETAILS" %}
             <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
           {% endif %}
 

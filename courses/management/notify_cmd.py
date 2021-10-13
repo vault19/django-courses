@@ -96,9 +96,9 @@ class NotifyCommand(BaseCommand):
         sleep(delay)
 
     def notify_healthchecks(self):
-        if os.getenv('HEALTHCHECKS', None):
-            r = requests.get(os.getenv('HEALTHCHECKS'))
-            self.stdout.write('Acknoledge healthchecks.io: ', ending="")
+        if os.getenv("HEALTHCHECKS", None):
+            r = requests.get(os.getenv("HEALTHCHECKS"))
+            self.stdout.write("Acknoledge healthchecks.io: ", ending="")
             self.stdout.write(self.style.SUCCESS(r.text))
 
     def handle(self, *args, **options):
