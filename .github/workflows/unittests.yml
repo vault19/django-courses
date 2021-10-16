@@ -14,9 +14,8 @@ jobs:
       DEBUG: True
     strategy:
       matrix:
-        include:
-          - python-version: [3.7, 3.8, 3.9]
-            django-version: [Django==3.2, Django==3.1]
+        python-version: [3.7, 3.8, 3.9, '3.10' ]
+        django-version: [Django==3.2, Django==3.1]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -26,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install {{ matrix.django-version }} -r requirements.txt
-    - name: Run unit tests with Python ${{ matrix.python-version }}
+        pip install ${{ matrix.django-version }} -r requirements.txt
+    - name: Run unit tests
       run: |
         python runtests.py

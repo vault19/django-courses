@@ -10,39 +10,61 @@ class TestRequiredLoginPage(TestCase):
 
     def test_redirects(self):
         response = self.client.get("/courses/subscribed/")
-        self.assertRedirects(response, "/account/login/?next=/courses/subscribed/")
+        self.assertRedirects(response, "/account/login/?next=/courses/subscribed/", fetch_redirect_response=False)
 
         response = self.client.get("/courses/subscribed/closed/")
-        self.assertRedirects(response, "/account/login/?next=/courses/subscribed/closed/")
+        self.assertRedirects(
+            response, "/account/login/?next=/courses/subscribed/closed/", fetch_redirect_response=False
+        )
 
         response = self.client.get("/courses/closed/")
-        self.assertRedirects(response, "/account/login/?next=/courses/closed/")
+        self.assertRedirects(response, "/account/login/?next=/courses/closed/", fetch_redirect_response=False)
 
         # From fixture
         response = self.client.get("/course/septembrovy-kurz/lekcia-1/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/")
+        self.assertRedirects(
+            response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/", fetch_redirect_response=False
+        )
         # Non Existing
         response = self.client.get("/course/unknown-course/introduction/")
-        self.assertRedirects(response, "/account/login/?next=/course/unknown-course/introduction/")
+        self.assertRedirects(
+            response, "/account/login/?next=/course/unknown-course/introduction/", fetch_redirect_response=False
+        )
 
         response = self.client.get("/course/septembrovy-kurz/lekcia-1/submission/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/submission/")
+        self.assertRedirects(
+            response,
+            "/account/login/?next=/course/septembrovy-kurz/lekcia-1/submission/",
+            fetch_redirect_response=False,
+        )
 
         response = self.client.get("/course/septembrovy-kurz/lekcia-1/filter/V/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/filter/V/")
+        self.assertRedirects(
+            response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/filter/V/", fetch_redirect_response=False
+        )
 
         response = self.client.get("/course/septembrovy-kurz/subscribe/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/subscribe/")
+        self.assertRedirects(
+            response, "/account/login/?next=/course/septembrovy-kurz/subscribe/", fetch_redirect_response=False
+        )
 
         response = self.client.get("/course/septembrovy-kurz/unsubscribe/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/unsubscribe/")
+        self.assertRedirects(
+            response, "/account/login/?next=/course/septembrovy-kurz/unsubscribe/", fetch_redirect_response=False
+        )
 
         response = self.client.get("/course/septembrovy-kurz/lekcia-1/uvod-do-kurzu/")
-        self.assertRedirects(response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/uvod-do-kurzu/")
-
-        response = self.client.get("/course/septembrovy-kurz/lekcia-1/uvod-do-kurzu/submission/")
         self.assertRedirects(
-            response, "/account/login/?next=/course/septembrovy-kurz/lekcia-1/uvod-do-kurzu/submission/"
+            response,
+            "/account/login/?next=/course/septembrovy-kurz/lekcia-1/uvod-do-kurzu/",
+            fetch_redirect_response=False,
+        )
+
+        response = self.client.get("/course/septembrovy-kurz/lekcia-1/submission/")
+        self.assertRedirects(
+            response,
+            "/account/login/?next=/course/septembrovy-kurz/lekcia-1/submission/",
+            fetch_redirect_response=False,
         )
 
 
