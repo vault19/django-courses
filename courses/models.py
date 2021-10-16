@@ -42,9 +42,10 @@ class CourseManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('creator').prefetch_related('run_set', 'chapter_set')
+        return qs.select_related("creator").prefetch_related("run_set", "chapter_set")
 
 
 class Course(models.Model):
@@ -106,9 +107,10 @@ class ChapterManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('course', 'previous').prefetch_related('lecture_set')
+        return qs.select_related("course", "previous").prefetch_related("lecture_set")
 
 
 class Chapter(models.Model):
@@ -208,9 +210,10 @@ class LectureManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('chapter',)
+        return qs.select_related("chapter")
 
 
 class Lecture(models.Model):
@@ -310,9 +313,10 @@ class RunManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('course', 'manager').prefetch_related('meeting_set')
+        return qs.select_related("course", "manager").prefetch_related("meeting_set")
 
 
 class Run(models.Model):
@@ -459,9 +463,10 @@ class MeetingManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('run', 'lecture', 'leader', 'organizer')
+        return qs.select_related("run", "lecture", "leader", "organizer")
 
 
 class Meeting(models.Model):
@@ -540,9 +545,10 @@ class SubmissionManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('lecture', 'chapter', 'run', 'author')
+        return qs.select_related("lecture", "chapter", "run", "author")
 
 
 class Submission(models.Model):
@@ -605,9 +611,10 @@ class ReviewManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('submission', 'author')
+        return qs.select_related("submission", "author")
 
 
 class Review(models.Model):
@@ -650,9 +657,10 @@ class CertificateManager(models.Manager):
     """
     Manager at pre-select all related items for each query set.
     """
+
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related('run', 'user')
+        return qs.select_related("run", "user")
 
 
 class Certificate(models.Model):
