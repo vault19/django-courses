@@ -13,14 +13,6 @@ from embed_video.fields import EmbedVideoField
 from courses.validators import FileSizeValidator
 from courses import settings as course_settings
 
-# (
-#     course_settings.COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS,
-#     course_settings.EXTENSION_VIDEO,
-#     course_settings.EXTENSION_IMAGE,
-#     course_settings.EXTENSION_DOCUMENT,
-#     course_settings.MAX_FILE_SIZE_UPLOAD,
-#     course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND,
-# )
 
 STATE = (
     ("D", _("Draft")),
@@ -46,10 +38,23 @@ SUBMISSION_TYPE = (
 )
 
 
+class CourseManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("creator").prefetch_related("run_set", "chapter_set")
+
+
 class Course(models.Model):
     class Meta:
         verbose_name = _("Course")
         verbose_name_plural = _("Courses")
+
+    objects = CourseManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     perex = models.TextField(
@@ -98,10 +103,23 @@ class Course(models.Model):
         return self.length == 0
 
 
+class ChapterManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("course", "previous").prefetch_related("lecture_set")
+
+
 class Chapter(models.Model):
     class Meta:
         verbose_name = _("Chapter")
         verbose_name_plural = _("Chapters")
+
+    objects = ChapterManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     previous = models.ForeignKey(
@@ -188,10 +206,23 @@ class Chapter(models.Model):
             raise ValidationError({"previous": _("You can not link to chapter in different course!")})
 
 
+class LectureManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("chapter")
+
+
 class Lecture(models.Model):
     class Meta:
         verbose_name = _("Lecture")
         verbose_name_plural = _("Lectures")
+
+    objects = LectureManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
@@ -278,10 +309,23 @@ class Lecture(models.Model):
                 )
 
 
+class RunManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("course", "manager").prefetch_related("meeting_set")
+
+
 class Run(models.Model):
     class Meta:
         verbose_name = _("Course Run")
         verbose_name_plural = _("Course Runs")
+
+    objects = RunManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
@@ -415,10 +459,23 @@ class RunUsers(models.Model):
         super().save(*args, **kwargs)
 
 
+class MeetingManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("run", "lecture", "leader", "organizer")
+
+
 class Meeting(models.Model):
     class Meta:
         verbose_name = _("Meeting")
         verbose_name_plural = _("Meetings")
+
+    objects = MeetingManager()
+    objects_no_relations = models.Manager()
 
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE)
@@ -484,10 +541,23 @@ class Meeting(models.Model):
             )
 
 
+class SubmissionManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("lecture", "chapter", "run", "author")
+
+
 class Submission(models.Model):
     class Meta:
         verbose_name = _("Submission")
         verbose_name_plural = _("Submissions")
+
+    objects = SubmissionManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(
@@ -537,6 +607,16 @@ class Submission(models.Model):
                 raise ValidationError({"lecture": _("Selected lecture does not belong to submission's course.")})
 
 
+class ReviewManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("submission", "author")
+
+
 class Review(models.Model):
     class Meta:
         verbose_name = _("Review")
@@ -546,6 +626,9 @@ class Review(models.Model):
             "submission",
             "author",
         )
+
+    objects = ReviewManager()
+    objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(
@@ -570,6 +653,16 @@ class Review(models.Model):
             raise ValidationError({"author": _("You can not review your own submission!")})
 
 
+class CertificateManager(models.Manager):
+    """
+    Manager at pre-select all related items for each query set.
+    """
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.select_related("run", "user")
+
+
 class Certificate(models.Model):
     class Meta:
         verbose_name = _("Certificate")
@@ -579,6 +672,9 @@ class Certificate(models.Model):
             "run",
             "user",
         )
+
+    objects = CertificateManager()
+    objects_no_relations = models.Manager()
 
     data = models.FileField(
         verbose_name=_("Data"),

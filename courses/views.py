@@ -26,7 +26,7 @@ def index(request):
 
 
 def courses(request):
-    courses = Course.objects.filter(state="O").order_by("title")
+    courses = Course.objects_no_relations.filter(state="O").order_by("title")
     context = {"courses": courses}
 
     return render(request, "courses/courses_list.html", context)
