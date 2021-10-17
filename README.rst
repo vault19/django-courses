@@ -30,7 +30,7 @@ Project "Učíme s hardvérom" is run in Slovak language (however this app is in
 and is aimed for Slovak teachers to introduce hardware (such as `BBC microbit <https://microbit.org/>`_) into computing
 lessons at primary and secondary schools.
 
-Read more in our **`documentation <https://vault19.github.io/django-courses/html/contributing.html>`_**.
+Read more in our `**documentation** <https://vault19.github.io/django-courses/html/>`_.
 
 Quick start
 -----------
