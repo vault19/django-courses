@@ -10,7 +10,8 @@ Welcome to django-courses's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   settings
+   contributing
 
 Indices and tables
 ==================
