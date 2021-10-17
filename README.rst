@@ -50,7 +50,7 @@ Contributing
 
 All contributions are welcome!
 
-If you are not sure how to contribute, read our manual in `contributing.rst <https://github.com/vault19/django-courses/blob/main/contributing.rst>`_ file.
+If you are not sure how to contribute, read our manual in `contributing.rst <https://github.com/vault19/django-courses/blob/main/docs/source/contributing.rst>`_ in documentation.
 
 Support
 -------

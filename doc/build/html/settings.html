@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings &mdash; django-courses 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributors Guide" href="contributing.html" />
+    <link rel="prev" title="Welcome to django-courses’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> django-courses
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-basics">The basics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#core-settings">Core Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extension-image">EXTENSION_IMAGE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-document">EXTENSION_DOCUMENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-video">EXTENSION_VIDEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#max-file-size-upload">MAX_FILE_SIZE_UPLOAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#max-file-size-upload-frontend">MAX_FILE_SIZE_UPLOAD_FRONTEND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-landing-page-url">COURSES_LANDING_PAGE_URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-landing-page-url-authorized">COURSES_LANDING_PAGE_URL_AUTHORIZED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-display-chapter-details">COURSES_DISPLAY_CHAPTER_DETAILS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-subscription-to-running-course">COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-user-unsubscribe">COURSES_ALLOW_USER_UNSUBSCRIBE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-submission-to-chapters">COURSES_ALLOW_SUBMISSION_TO_CHAPTERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-submission-to-lectures">COURSES_ALLOW_SUBMISSION_TO_LECTURES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-show-future-chapters">COURSES_SHOW_FUTURE_CHAPTERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-access-to-passed-chapters">COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-allow-submission-to-passed-chapters">COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-subscribed-email-subject">COURSES_SUBSCRIBED_EMAIL_SUBJECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-subscribed-email-body">COURSES_SUBSCRIBED_EMAIL_BODY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-subscribed-email-html">COURSES_SUBSCRIBED_EMAIL_HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-run-start-email-subject">COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-run-start-email-body">COURSES_NOTIFY_RUN_START_EMAIL_BODY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-run-start-email-html">COURSES_NOTIFY_RUN_START_EMAIL_HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-chapter-open-email-subject">COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_SUBJECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-chapter-open-email-body">COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_BODY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-chapter-open-email-html">COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-meeting-start-email-subject">COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-meeting-start-email-body">COURSES_NOTIFY_MEETING_START_EMAIL_BODY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#courses-notify-meeting-start-email-html">COURSES_NOTIFY_MEETING_START_EMAIL_HTML</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributors Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#developer-s-howto">Developer’s HowTo</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">django-courses</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Settings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/settings.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="settings">
+<h1>Settings<a class="headerlink" href="#settings" title="Permalink to this headline"></a></h1>
+<p>A django-courses settings file contains all the configuration of your application. This document explains how settings work and which settings are available.</p>
+<section id="the-basics">
+<h2>The basics<a class="headerlink" href="#the-basics" title="Permalink to this headline"></a></h2>
+<p>A settings file is just a Python module with module-level variables. Because a settings file is a Python module, the following apply:</p>
+<ul class="simple">
+<li><p>It doesn’t allow for Python syntax errors.</p></li>
+<li><p>It can assign settings dynamically using normal Python syntax.</p></li>
+<li><p>It can import values from other settings files.</p></li>
+<li><p>Django project settings can overwrite values defined in django-courses settings defaults.</p></li>
+</ul>
+</section>
+</section>
+<section id="core-settings">
+<h1>Core Settings<a class="headerlink" href="#core-settings" title="Permalink to this headline"></a></h1>
+<p>Here’s a list of settings available in django-courses and their default values.</p>
+<section id="extension-image">
+<h2>EXTENSION_IMAGE<a class="headerlink" href="#extension-image" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>[“jpg”, “jpeg”, “gif”, “png”, “tiff”, “svg”]</strong></p>
+</section>
+<section id="extension-document">
+<h2>EXTENSION_DOCUMENT<a class="headerlink" href="#extension-document" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>[“pdf”]</strong></p>
+</section>
+<section id="extension-video">
+<h2>EXTENSION_VIDEO<a class="headerlink" href="#extension-video" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>[“mkv”, “avi”, “mp4”, “mov”]</strong></p>
+</section>
+<section id="max-file-size-upload">
+<h2>MAX_FILE_SIZE_UPLOAD<a class="headerlink" href="#max-file-size-upload" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>50</strong></p>
+</section>
+<section id="max-file-size-upload-frontend">
+<h2>MAX_FILE_SIZE_UPLOAD_FRONTEND<a class="headerlink" href="#max-file-size-upload-frontend" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>2</strong></p>
+</section>
+<section id="courses-landing-page-url">
+<h2>COURSES_LANDING_PAGE_URL<a class="headerlink" href="#courses-landing-page-url" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“all_active_runs”</strong></p>
+<p>Default redirect from index page.</p>
+</section>
+<section id="courses-landing-page-url-authorized">
+<h2>COURSES_LANDING_PAGE_URL_AUTHORIZED<a class="headerlink" href="#courses-landing-page-url-authorized" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“all_subscribed_active_runs”</strong></p>
+<p>Default redirect from index page for users that are already logged in.</p>
+</section>
+<section id="courses-display-chapter-details">
+<h2>COURSES_DISPLAY_CHAPTER_DETAILS<a class="headerlink" href="#courses-display-chapter-details" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Wheather to dispaly link to chapter detail page (page will still be accessible, but it might be too much views)</p>
+</section>
+<section id="courses-allow-subscription-to-running-course">
+<h2>COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE<a class="headerlink" href="#courses-allow-subscription-to-running-course" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Wheather allow users to subscribe to run that has already started.</p>
+</section>
+<section id="courses-allow-user-unsubscribe">
+<h2>COURSES_ALLOW_USER_UNSUBSCRIBE<a class="headerlink" href="#courses-allow-user-unsubscribe" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Wheather allow users to unsubscribe from any course run.</p>
+</section>
+<section id="courses-allow-submission-to-chapters">
+<h2>COURSES_ALLOW_SUBMISSION_TO_CHAPTERS<a class="headerlink" href="#courses-allow-submission-to-chapters" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Whether to allow submission for the whole chapter.</p>
+</section>
+<section id="courses-allow-submission-to-lectures">
+<h2>COURSES_ALLOW_SUBMISSION_TO_LECTURES<a class="headerlink" href="#courses-allow-submission-to-lectures" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Whether to allow submission for specific lecture.</p>
+</section>
+<section id="courses-show-future-chapters">
+<h2>COURSES_SHOW_FUTURE_CHAPTERS<a class="headerlink" href="#courses-show-future-chapters" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>False</strong></p>
+<p>In run details display also future chapters that are not available yet.</p>
+</section>
+<section id="courses-allow-access-to-passed-chapters">
+<h2>COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS<a class="headerlink" href="#courses-allow-access-to-passed-chapters" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>True</strong></p>
+<p>Wheather to show 404 or the details of the chapter if it has passed.</p>
+</section>
+<section id="courses-allow-submission-to-passed-chapters">
+<h2>COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS<a class="headerlink" href="#courses-allow-submission-to-passed-chapters" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>False</strong></p>
+<p>Wheather to show 404 or the details of the chapter if it has passed.</p>
+<p># Email settings
+COURSES_EMAIL_SUBJECT_PREFIX
+—————————-</p>
+<p>Default: <strong>“”</strong></p>
+<p>Default prefix in all emails. Value is prepended to each email subject setting below.</p>
+</section>
+<section id="courses-subscribed-email-subject">
+<h2>COURSES_SUBSCRIBED_EMAIL_SUBJECT<a class="headerlink" href="#courses-subscribed-email-subject" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/subscribed_email_subject.txt”</strong></p>
+</section>
+<section id="courses-subscribed-email-body">
+<h2>COURSES_SUBSCRIBED_EMAIL_BODY<a class="headerlink" href="#courses-subscribed-email-body" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/subscribed_email_body.txt”</strong></p>
+</section>
+<section id="courses-subscribed-email-html">
+<h2>COURSES_SUBSCRIBED_EMAIL_HTML<a class="headerlink" href="#courses-subscribed-email-html" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/subscribed_email_body.html”</strong></p>
+<p>File does not exists within project. If file does not exists just plain text email is send. If specified to existing file html will be send as an rich mail with text version.</p>
+</section>
+<section id="courses-notify-run-start-email-subject">
+<h2>COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT<a class="headerlink" href="#courses-notify-run-start-email-subject" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/run_start_email_subject.txt”</strong></p>
+</section>
+<section id="courses-notify-run-start-email-body">
+<h2>COURSES_NOTIFY_RUN_START_EMAIL_BODY<a class="headerlink" href="#courses-notify-run-start-email-body" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/run_start_email_body.txt”</strong></p>
+</section>
+<section id="courses-notify-run-start-email-html">
+<h2>COURSES_NOTIFY_RUN_START_EMAIL_HTML<a class="headerlink" href="#courses-notify-run-start-email-html" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/run_start_email_body.html”</strong></p>
+<p>File does not exists within project. If file does not exists just plain text email is send. If specified to existing file html will be send as an rich mail with text version.</p>
+</section>
+<section id="courses-notify-chapter-open-email-subject">
+<h2>COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_SUBJECT<a class="headerlink" href="#courses-notify-chapter-open-email-subject" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/chapter_open_email_subject.txt”</strong></p>
+</section>
+<section id="courses-notify-chapter-open-email-body">
+<h2>COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_BODY<a class="headerlink" href="#courses-notify-chapter-open-email-body" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/chapter_open_email_body.txt”</strong></p>
+</section>
+<section id="courses-notify-chapter-open-email-html">
+<h2>COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_HTML<a class="headerlink" href="#courses-notify-chapter-open-email-html" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/chapter_open_email_body.html”</strong></p>
+<p>File does not exists within project. If file does not exists just plain text email is send. If specified to existing file html will be send as an rich mail with text version.</p>
+</section>
+<section id="courses-notify-meeting-start-email-subject">
+<h2>COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT<a class="headerlink" href="#courses-notify-meeting-start-email-subject" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/meeting_start_email_subject.txt”</strong></p>
+</section>
+<section id="courses-notify-meeting-start-email-body">
+<h2>COURSES_NOTIFY_MEETING_START_EMAIL_BODY<a class="headerlink" href="#courses-notify-meeting-start-email-body" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/meeting_start_email_body.txt”</strong></p>
+</section>
+<section id="courses-notify-meeting-start-email-html">
+<h2>COURSES_NOTIFY_MEETING_START_EMAIL_HTML<a class="headerlink" href="#courses-notify-meeting-start-email-html" title="Permalink to this headline"></a></h2>
+<p>Default: <strong>“courses/emails/meeting_start_email_body.html”</strong></p>
+<p>File does not exists within project. If file does not exists just plain text email is send. If specified to existing file html will be send as an rich mail with text version.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to django-courses’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributors Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Vault19 o.z..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
