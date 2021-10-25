@@ -173,7 +173,7 @@ def course_run_detail(request, run_slug):
         ],
     }
 
-    for chapter in run.course.chapter_set.all():
+    for chapter in run.course.chapter_set.order_by('previous').all():
         start, end = chapter.get_run_dates(run=run)
 
         if (run.get_setting("COURSES_SHOW_FUTURE_CHAPTERS") or start <= datetime.date.today()) and (
