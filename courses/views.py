@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Q
+from django.db.models import Q, F
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
@@ -173,7 +173,7 @@ def course_run_detail(request, run_slug):
         ],
     }
 
-    for chapter in run.course.chapter_set.all():
+    for chapter in run.course.chapter_set.order_by(F('previous').asc(nulls_first=True)).all():
         start, end = chapter.get_run_dates(run=run)
 
         if (run.get_setting("COURSES_SHOW_FUTURE_CHAPTERS") or start <= datetime.date.today()) and (
