@@ -15,6 +15,9 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
     chapter = get_object_or_404(Chapter, slug=chapter_slug)
 
     if raise_unsubscribed:
+        if request.user.is_staff:
+            raise_unsubscribed = False
+
         run.is_subscribed(request.user, raise_unsubscribed=raise_unsubscribed)
 
     start, end = chapter.get_run_dates(run=run, raise_wrong_dates=raise_wrong_dates)
