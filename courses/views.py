@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from courses.forms import SubmissionForm, SubscribeForm, ReviewForm
-from courses.models import Course, Run, Submission, Lecture, Review
+from courses.models import Course, Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
