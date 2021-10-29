@@ -27,6 +27,16 @@ urlpatterns = [
         views_ajax.video_lecture_submission,
         name="video_ping",
     ),
+    path(
+        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",
+        views.lecture_submissions,
+        name="lecture_submissions",
+    ),
+    path(
+        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/<int:submission_id>",
+        views.lecture_submission_review,
+        name="lecture_submission_review",
+    ),
     # path('<int:question_id>/results/', views.results, name='results'),
     # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

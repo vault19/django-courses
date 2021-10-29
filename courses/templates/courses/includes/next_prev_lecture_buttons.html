@@ -16,6 +16,13 @@
           </a>
       {% endif %}
     {% endfor %}
+
+    {% if request.user.is_staff %}
+      {% url 'lecture_submissions' run.slug chapter.slug lecture.slug as lecture_submissions_url %}
+      <a href="{{ lecture_submissions_url }}" class="btn{% if request.path == lecture_submissions_url %} btn-primary{% else %} btn-outline-primary{% endif %}">
+        <i class="fas fa-box-open"></i> {% translate "Submissions" %}
+      </a>
+    {% endif %}
     </div>
 
   </div>
