@@ -9,10 +9,12 @@ class Command(NotifyCommand):
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
-        parser.add_argument("--user_ids", type=str,
-                            help="Comma separated list of IDs for which certificates will be generated.")
-        parser.add_argument("--run_ids", type=str,
-                            help="Comma separated list of Run IDs for which certificates will be generated.")
+        parser.add_argument(
+            "--user_ids", type=str, help="Comma separated list of IDs for which certificates will be generated."
+        )
+        parser.add_argument(
+            "--run_ids", type=str, help="Comma separated list of Run IDs for which certificates will be generated."
+        )
 
     def handle(self, *args, **options):
         if options["time_delta"]:
@@ -25,10 +27,10 @@ class Command(NotifyCommand):
         user_ids = []
 
         if options["run_ids"]:
-            run_ids = options["run_ids"].split(',')
+            run_ids = options["run_ids"].split(",")
 
         if options["user_ids"]:
-            user_ids = options["user_ids"].split(',')
+            user_ids = options["user_ids"].split(",")
 
         runs = Run.objects.filter(start__lt=datetime.today()).filter(end__gt=datetime.today())
 
@@ -55,9 +57,10 @@ class Command(NotifyCommand):
                         create_cert = True
 
                     if create_cert:
-                        self.mail_template_variables['certificate'] = Certificate.objects.get_or_create(run=run,
-                                                                                                        user=user)[0]
-                        self.send_email(user, run, verbosity=1, delay=0, confirm=options['confirm'])
+                        self.mail_template_variables["certificate"] = Certificate.objects.get_or_create(
+                            run=run, user=user
+                        )[0]
+                        self.send_email(user, run, verbosity=1, delay=0, confirm=options["confirm"])
                         counter += 1
 
                 if counter == 0 and options["verbosity"] >= 1:

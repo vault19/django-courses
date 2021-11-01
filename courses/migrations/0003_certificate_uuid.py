@@ -7,13 +7,13 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('courses', '0002_auto_20211011_2145'),
+        ("courses", "0002_auto_20211011_2145"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='certificate',
-            name='uuid',
+            model_name="certificate",
+            name="uuid",
             field=models.UUIDField(default=uuid.uuid4, editable=False),
         ),
     ]

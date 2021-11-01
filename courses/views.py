@@ -404,14 +404,14 @@ def certificate(request, uuid):
     cert = get_object_or_404(Certificate, uuid=uuid)
     template = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
 
-    return render(request, template, {'cert': cert})
+    return render(request, template, {"cert": cert})
 
 
 class CertificatePDF(PDFTemplateView):
     filename = "certificate.pdf"
     template_name = "courses/certificate.html"
     cmd_options = {
-        'margin-top': 3,
+        "margin-top": 3,
     }
 
     def get(self, request, uuid, *args, **kwargs):
