@@ -13,8 +13,10 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.urls import reverse
 
+from wkhtmltopdf.views import PDFTemplateView
+
 from courses.forms import SubmissionForm, SubscribeForm
-from courses.models import Course, Run, Submission, Lecture
+from courses.models import Course, Run, Submission, Lecture, Certificate
 from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
@@ -395,3 +397,25 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     context["form"] = form
 
     return render(request, "courses/lecture_detail.html", context)
+
+
+@login_required
+def certificate(request, uuid):
+    cert = get_object_or_404(Certificate, uuid=uuid)
+    template = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+    return render(request, template, {'cert': cert})
+
+
+class CertificatePDF(PDFTemplateView):
+    filename = "certificate.pdf"
+    template_name = "courses/certificate.html"
+    cmd_options = {
+        'margin-top': 3,
+    }
+
+    def get(self, request, uuid, *args, **kwargs):
+        cert = get_object_or_404(Certificate, uuid=uuid)
+        self.template_name = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+        return super().get(request, *args, cert=cert, **kwargs)

@@ -38,6 +38,9 @@
 
             {% if run|is_subscribed:request.user %}
               <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-success disabled">{% translate "Subscribed" %}</a>
+              {% for cert in run.certificate_set.all %}
+              <a href="{% url 'certificate' cert.uuid %}" class="btn btn-sm btn-outline-success">{% translate "Certificate" %}</a>
+              {% endfor %}
             {% endif %}
 
             {% if run.is_past_due %}

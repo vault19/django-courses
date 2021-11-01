@@ -34,6 +34,9 @@ COURSES_ALLOW_ACCESS_TO_PASSED_CHAPTERS = getattr(settings, "COURSES_ALLOW_ACCES
 # Wheather to show 404 or the details of the chapter if it has passed.
 COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS = getattr(settings, "COURSES_ALLOW_SUBMISSION_TO_PASSED_CHAPTERS", False)
 
+# Path for Certificate that is generated uppon successfull course finish
+COURSES_CERTIFICATE_TEMPLATE_PATH = getattr(settings, "COURSES_CERTIFICATE_TEMPLATE_PATH", "courses/certificate.html")
+
 # Email settings
 COURSES_EMAIL_SUBJECT_PREFIX = getattr(settings, "COURSES_EMAIL_SUBJECT_PREFIX", "")
 COURSES_SUBSCRIBED_EMAIL_SUBJECT = getattr(
@@ -74,4 +77,14 @@ COURSES_NOTIFY_MEETING_START_EMAIL_BODY = getattr(
 )
 COURSES_NOTIFY_MEETING_START_EMAIL_HTML = getattr(
     settings, "COURSES_NOTIFY_MEETING_START_EMAIL_HTML", "courses/emails/meeting_start_email_body.html"
+)
+
+COURSES_NOTIFY_CERTIFICATE_EMAIL_SUBJECT = getattr(
+    settings, "COURSES_NOTIFY_CERTIFICATE_EMAIL_SUBJECT", "courses/emails/certificate_email_subject.txt"
+)
+COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY = getattr(
+    settings, "COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY", "courses/emails/certificate_email_body.txt"
+)
+COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML = getattr(
+    settings, "COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML", "courses/emails/certificate_email_body.html"
 )

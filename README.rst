@@ -47,6 +47,7 @@ Alternatively install latest development version from Github::
 
     INSTALLED_APPS = [
         ...
+        'wkhtmltopdf',
         'courses',
     ]
 

@@ -27,6 +27,6 @@ urlpatterns = [
         views_ajax.video_lecture_submission,
         name="video_ping",
     ),
-    # path('<int:question_id>/results/', views.results, name='results'),
-    # path('<int:question_id>/vote/', views.vote, name='vote'),
+    path("certificate/<str:uuid>/pdf/", views.CertificatePDF.as_view(), name='certificate_pdf'),
+    path("certificate/<str:uuid>/", views.certificate, name="certificate"),
 ]
