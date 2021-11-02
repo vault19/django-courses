@@ -14,6 +14,28 @@ from courses.settings import (
 )
 
 
+
+@login_required
+def video_lecture_duration(request, run_slug, chapter_slug, lecture_slug):
+    lecture = get_object_or_404(Lecture, slug=lecture_slug)
+    context = get_run_chapter_context(request, run_slug, chapter_slug)
+
+    if request.method == "POST":
+        # time range from one session is nicely merged with javascript
+        data = json.loads(request.body)
+
+        if not lecture.metadata:
+            lecture.metadata = data
+        else:
+            lecture.metadata["video_duration"] = data["video_duration"]
+
+        lecture.save()
+
+        return HttpResponse('{"Duration": "Saved"}', content_type="application/json")
+    else:
+        return HttpResponse('{"Duration": "Not processed"}', content_type="application/json")
+
+
 @login_required
 def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
@@ -43,6 +65,15 @@ def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
             )
         else:
             submission.metadata["watched_video_time_range"] = data["watched_video_time_range"]
+
+        if lecture.metadata and 'video_duration' in lecture.metadata and lecture.metadata['video_duration']:
+            video_watched = 0
+
+            for video_range in submission.metadata["watched_video_time_range"]:
+                video_watched += video_range[1] - video_range[0]
+
+            video_watched_percent = video_watched / lecture.metadata['video_duration'] * 100
+            submission.metadata['video_watched_percent'] = round(video_watched_percent, 1)
 
         submission.save()
 
