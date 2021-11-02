@@ -65,6 +65,13 @@
             </span>
           </div>
         {% endif %}
+        {% if user_submissions and user_submissions.0.metadata and user_submissions.0.metadata.video_watched_percent > 95 %}
+          <div class="text-end">
+            <span class="badge rounded-pill bg-success">
+              <i class="far fa-check-circle"></i> {% translate "Watched" %}
+            </span>
+          </div>
+        {% endif %}
 
     </div>
 
@@ -141,6 +148,8 @@
           {% csrf_token %}
         </form>
         {% if lecture.video %}
+          <div id="video_duration" data-video_duration="{{ lecture.metadata.video_duration }}"></div>
+
           {% video lecture.video as my_video %}
             {% video my_video "large" %}
           {% endvideo %}
