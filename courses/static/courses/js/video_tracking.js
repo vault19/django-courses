@@ -54,7 +54,7 @@ player.on('timeupdate', function(data) {
                   console.log(response);
               }
           };
-          var data = {'watched_video_time_range': played};
+          var data = {'video_watched_time_range': played};
           xhr.send(JSON.stringify(data));
           console.log(data);
 

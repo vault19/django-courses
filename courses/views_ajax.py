@@ -14,11 +14,10 @@ from courses.settings import (
 )
 
 
-
 @login_required
 def video_lecture_duration(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
-    context = get_run_chapter_context(request, run_slug, chapter_slug)
+    get_run_chapter_context(request, run_slug, chapter_slug)
 
     if request.method == "POST":
         # time range from one session is nicely merged with javascript
@@ -59,21 +58,21 @@ def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
 
         if not submission.metadata:
             submission.metadata = data
-        elif "watched_video_time_range" in submission.metadata:
-            submission.metadata["watched_video_time_range"] = array_merge(
-                data["watched_video_time_range"] + submission.metadata["watched_video_time_range"]
+        elif "video_watched_time_range" in submission.metadata:
+            submission.metadata["video_watched_time_range"] = array_merge(
+                data["video_watched_time_range"] + submission.metadata["video_watched_time_range"]
             )
         else:
-            submission.metadata["watched_video_time_range"] = data["watched_video_time_range"]
+            submission.metadata["video_watched_time_range"] = data["video_watched_time_range"]
 
-        if lecture.metadata and 'video_duration' in lecture.metadata and lecture.metadata['video_duration']:
+        if lecture.metadata and "video_duration" in lecture.metadata and lecture.metadata["video_duration"]:
             video_watched = 0
 
-            for video_range in submission.metadata["watched_video_time_range"]:
+            for video_range in submission.metadata["video_watched_time_range"]:
                 video_watched += video_range[1] - video_range[0]
 
-            video_watched_percent = video_watched / lecture.metadata['video_duration'] * 100
-            submission.metadata['video_watched_percent'] = round(video_watched_percent, 1)
+            video_watched_percent = video_watched / lecture.metadata["video_duration"] * 100
+            submission.metadata["video_watched_percent"] = round(video_watched_percent, 1)
 
         submission.save()
 
