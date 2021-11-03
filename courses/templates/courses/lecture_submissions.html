@@ -65,8 +65,12 @@
             <th scope="col">{% translate "First Name" %}</th>
             <th scope="col">{% translate "Last Name" %}</th>
             <th scope="col">{% translate "Submission" %}</th>
+            {% if lecture.lecture_type == "V" %}
+            <th scope="col">{% translate "Viewed" %}</th>
+            {% else %}
             <th scope="col">{% translate "Reviews" %}</th>
             <th scope="col">{% translate "Review" %}</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -76,8 +80,12 @@
             <td>{{ submission.author.first_name }}</td>
             <td>{{ submission.author.last_name }}</td>
             <td>{{ submission.title }}</td>
+            {% if lecture.lecture_type == "V" %}
+            <td>{{ submission.metadata.video_watched_percent }} %</td>
+            {% else %}
             <td>{{ submission.review_set.count }} {% if submission.metadata.reviewed %}{{ submission.metadata }}{% endif %}</td>
             <td><a href="{% url 'lecture_submission_review' run.slug chapter.slug lecture.slug submission.id %}" class="btn{% if submission|has_review:request.user %} btn-outline-success{% else %} btn-outline-primary{% endif %}">{% translate "Review Submission" %}</a></td>
+            {% endif %}
           </tr>
         {% endfor %}
         </tbody>
