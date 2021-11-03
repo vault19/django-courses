@@ -99,6 +99,7 @@
       {% if lecture.require_submission != 'D' and form %}
         {% if user_submissions %}
           {% for submission in user_submissions %}
+          <div class="row">
             <div class="col-6">
               <div class="card">
                 <div class="card-header bg-success text-white">
@@ -114,6 +115,13 @@
                 </div>
               </div>
             </div>
+
+            {% for review in submission.review_set.all %}
+            <div class="col-6">
+              {% include "courses/includes/review_card.html" with review=review user=request.user %}
+            </div>
+            {% endfor %}
+          </div>
           {% endfor %}
         {% else %}
           <div class="col-6">

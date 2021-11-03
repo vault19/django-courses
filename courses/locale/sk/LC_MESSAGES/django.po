@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 01:04+0200\n"
+"POT-Creation-Date: 2021-10-29 08:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,6 +70,9 @@ msgstr[2] "%(count)d "
 msgstr[3] "%(count)d Zadaní"
 
 #: courses/admin.py:172 courses/models.py:557
+#: courses/templates/courses/includes/next_prev_lecture_buttons.html:23
+#: courses/templates/courses/lecture_submission_review.html:63
+#: courses/views.py:414 courses/views.py:440
 msgid "Submissions"
 msgstr "Zadania"
 
@@ -96,6 +99,7 @@ msgstr[2] "%(count)d "
 msgstr[3] "%(count)d Recenzií"
 
 #: courses/admin.py:226 courses/models.py:623
+#: courses/templates/courses/lecture_submissions.html:68
 msgid "Reviews"
 msgstr "Recenzie"
 
@@ -159,7 +163,7 @@ msgstr "Povinné pre ukončenie kurzu"
 msgid "Course"
 msgstr "Kurz"
 
-#: courses/models.py:54 courses/utils.py:25 courses/views.py:43
+#: courses/models.py:54 courses/utils.py:28 courses/views.py:43
 #: courses/views.py:65 courses/views.py:89 courses/views.py:117
 #: courses/views.py:143 courses/views.py:164
 msgid "Courses"
@@ -408,6 +412,7 @@ msgid "Run"
 msgstr "Termín"
 
 #: courses/models.py:444 courses/models.py:685
+#: courses/templates/courses/lecture_submissions.html:64
 msgid "User"
 msgstr "Používateľ"
 
@@ -489,7 +494,8 @@ msgstr "Stetnutie nemôže končiť po ukončení kapitoly: {end}."
 
 #: courses/models.py:556 courses/models.py:637
 #: courses/templates/courses/lecture_detail.html:62
-#: courses/templates/courses/lecture_detail.html:115
+#: courses/templates/courses/lecture_detail.html:123
+#: courses/templates/courses/lecture_submissions.html:67
 msgid "Submission"
 msgstr "Zadanie"
 
@@ -521,7 +527,7 @@ msgstr "Vybraná lekcia nepatrí do vybranej kapitoly."
 msgid "Selected lecture does not belong to submission's course."
 msgstr "Vybraná lekcia nepatrí do kurzu zadania."
 
-#: courses/models.py:622
+#: courses/models.py:622 courses/templates/courses/lecture_submissions.html:69
 msgid "Review"
 msgstr "Recenzia"
 
@@ -529,7 +535,7 @@ msgstr "Recenzia"
 msgid "Describe your opinion about the submission."
 msgstr "Napíšte svoj názor na zadanie."
 
-#: courses/models.py:640
+#: courses/models.py:640 courses/templates/courses/includes/review_card.html:8
 msgid "Accepted"
 msgstr "Akceptované"
 
@@ -586,18 +592,25 @@ msgstr "Ukončené"
 msgid "Self-paced"
 msgstr "Vlastné tempo"
 
+#: courses/templates/courses/htmx/review_form.html:8
+#: courses/templates/courses/includes/submission.html:23
+msgid "Submit"
+msgstr "Odovzdať"
+
 #: courses/templates/courses/includes/chapter_detail_header.html:12
 #: courses/templates/courses/includes/course_run_detail.html:7
 msgid "Course Chapters"
 msgstr "Kapitoly kurzu"
 
 #: courses/templates/courses/includes/chapter_detail_header.html:20
-#: courses/templates/courses/lecture_detail.html:39 courses/views.py:216
+#: courses/templates/courses/lecture_detail.html:39
+#: courses/templates/courses/lecture_submissions.html:36 courses/views.py:216
 msgid "Chapter Submission"
 msgstr "Zadanie pre kapitolu"
 
 #: courses/templates/courses/includes/chapter_detail_header.html:23
 #: courses/templates/courses/lecture_detail.html:42
+#: courses/templates/courses/lecture_submissions.html:39
 msgid "Chapter Lectures"
 msgstr "Lekcie kapitoly"
 
@@ -630,6 +643,8 @@ msgstr "Práve sa idete záväzne registrovať na kurz:"
 
 #: courses/templates/courses/includes/modal_subscribe.html:16
 #: courses/templates/courses/includes/modal_subscribe.html:32
+#: courses/templates/courses/includes/review_modal.html:13
+#: courses/templates/courses/includes/review_modal.html:26
 #: courses/templates/courses/includes/submission_modal.html:13
 #: courses/templates/courses/includes/submission_modal.html:26
 msgid "Close"
@@ -639,38 +654,65 @@ msgstr "Zavrieť"
 msgid "Unsubscribe"
 msgstr "Odhlásiť"
 
+#: courses/templates/courses/includes/review_card.html:6
+msgid "Submitted Review"
+msgstr "Odovzdaná Recenzia"
+
+#: courses/templates/courses/includes/review_card.html:10
+msgid "Rejected"
+msgstr "Odmietnutá"
+
+#: courses/templates/courses/includes/review_card.html:21
+msgid "Edit Review"
+msgstr "Zmeniť Recenziu"
+
+#: courses/templates/courses/includes/review_modal.html:12
+#: courses/templates/courses/lecture_submissions.html:80 courses/views.py:442
+msgid "Review Submission"
+msgstr "Recenzovať Zadanie"
+
+#: courses/templates/courses/includes/review_modal.html:27
+#: courses/templates/courses/includes/submission_modal.html:27
+msgid "Save changes"
+msgstr "Uložiť zmeny"
+
 #: courses/templates/courses/includes/submission.html:19
 #: courses/templates/courses/includes/submission_modal.html:12
 msgid "My Submission"
 msgstr "Moje zadanie"
 
-#: courses/templates/courses/includes/submission.html:23
-msgid "Submit"
-msgstr "Odovzdať"
-
-#: courses/templates/courses/includes/submission_modal.html:27
-msgid "Save changes"
-msgstr "Uložiť zmeny"
-
 #: courses/templates/courses/lecture_detail.html:85
 msgid "Meeting link"
 msgstr "Link na stretnutie"
 
-#: courses/templates/courses/lecture_detail.html:98
+#: courses/templates/courses/lecture_detail.html:99
+#: courses/templates/courses/lecture_submission_review.html:36
 msgid "Submitted Submission"
 msgstr "Odovzdané Zadanie"
 
-#: courses/templates/courses/lecture_detail.html:105
+#: courses/templates/courses/lecture_detail.html:106
 msgid "Edit Submitted Submission"
 msgstr "Zmeniť Odovzdané Zadanie"
 
-#: courses/templates/courses/lecture_detail.html:118
+#: courses/templates/courses/lecture_detail.html:126
 msgid "You have not submitted anything..."
 msgstr "Ešte ste neodovzdali zadanie..."
 
-#: courses/templates/courses/lecture_detail.html:122
+#: courses/templates/courses/lecture_detail.html:130
 msgid "Submit Submission"
 msgstr "Odovzdať Zadanie"
+
+#: courses/templates/courses/lecture_submission_review.html:46
+msgid "Submit Review"
+msgstr "Odovzdať Recenziu"
+
+#: courses/templates/courses/lecture_submissions.html:65
+msgid "First Name"
+msgstr "Meno"
+
+#: courses/templates/courses/lecture_submissions.html:66
+msgid "Last Name"
+msgstr "Priezvisko"
 
 #: courses/templatetags/courses_extra.py:36
 #, python-format
@@ -772,6 +814,10 @@ msgstr "Nie ste prihlásený na kurz: %(run)s."
 #: courses/views.py:337
 msgid "You need to submit subscription form in order to unsubscribe!"
 msgstr "Na odhlásenie musíte odoslať registračný formulár!"
+
+#: courses/views.py:456
+msgid "Your review has been saved."
+msgstr "Vaša recenzia bola uložená."
 
 #~ msgid "Edit Submission"
 #~ msgstr "Zmeniť Zadanie"

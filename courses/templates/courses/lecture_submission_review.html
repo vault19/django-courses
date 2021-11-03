@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+{% load embed_video_tags %}
+{% load static %}
+
+{% block javascript %}
+  <script src="{% static 'courses/js/submission_review_modal.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+
+{% include "courses/includes/review_modal.html" with form=form run=run chapter=chapter lecture=lecture %}
+{% if form_errors %}
+  <span id="formErrors"></span>
+{% endif %}
+
+<div class="album py-1 {# bg-light #}">
+  <div class="container">
+
+    <div class="row row-cols-2 g-3 py-3">
+      <h3 class="fw-light">{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.title }}</h3>
+        {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
+    </div>
+
+    <div class="row row-cols-1 g-3">
+
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-box-open"></i> {% translate "Submitted Submission" %}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ submission.title }}</h5>
+            <p class="card-text">{{ submission.description|markdownify }}</p>
+            <p class="card-text text-end">{{ submission.author }}</p>
+            {% if not submission|has_review:request.user %}
+              <button type="button" data-bs-toggle="modal" class="btn btn-primary"
+                data-bs-submission_id="{{ submission.id }}"
+                data-bs-author_id="{{ user.id }}"
+                data-bs-target="#reviewModal">{% translate "Submit Review" %}</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% for review in submission.review_set.all %}
+      <div class="col">
+        {% include "courses/includes/review_card.html" with review=review user=request.user %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="row justify-content-center py-3">
+      <div class="col-6 text-center">
+
+        <div class="btn-group">
+          <a href="{% url 'lecture_submissions' run.slug chapter.slug lecture.slug %}" class="btn btn-outline-primary">{% translate "Submissions" %}</a>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+{% load embed_video_tags %}
+{% load static %}
+
+{% block css %}
+  <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="{% static 'courses/js/video_tracking.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+
+<div class="album py-1 {# bg-light #}">
+  <div class="container">
+
+    <div class="row py-lg-2">
+      <div class="col-lg-6 col-md-8 mr-auto">
+
+        <div class="btn-group">
+          {% url 'chapter_detail' run.slug chapter.slug as detail_page %}
+          {% url 'chapter_submission' run.slug chapter.slug as submission_page %}
+
+          {% if request.path == detail_page %}
+            {% if chapter.require_submission != 'D' %}
+            <a href="{{ submission_page }}#submission-form" class="btn btn-outline-success">{% translate "Chapter Submission" %}</a>
+            {% endif %}
+          {% elif run|get_run_setting:"COURSES_DISPLAY_CHAPTER_DETAILS" %}
+            <a href="{{ detail_page }}" class="btn btn-outline-primary">{% translate "Chapter Lectures" %}</a>
+          {% endif %}
+
+          {% if not lecture %}
+            {% for lecture_type in chapter.lecture_types %}
+              <a href="{% url 'chapter_lecture_types' run.slug chapter.slug lecture_type %}" class="btn {% if filter_lecture_type and lecture_type == filter_lecture_type %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ lecture_type|lecture_type_icon }}</a>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    {% include "courses/includes/next_prev_lecture_buttons.html" %}
+
+    <div class="row row-cols-2 g-3 py-3">
+
+      <h3 class="fw-light">{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.title }}</h3>
+        {% if lecture.subtitle %}<h4 class="fw-light">{{ lecture.subtitle }}</h4>{% endif %}
+    </div>
+
+    <div class="row row-cols-1 g-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{% translate "User" %}</th>
+            <th scope="col">{% translate "First Name" %}</th>
+            <th scope="col">{% translate "Last Name" %}</th>
+            <th scope="col">{% translate "Submission" %}</th>
+            {% if lecture.lecture_type == "V" %}
+            <th scope="col">{% translate "Viewed" %}</th>
+            {% else %}
+            <th scope="col">{% translate "Reviews" %}</th>
+            <th scope="col">{% translate "Review" %}</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for submission in submissions %}
+          <tr>
+            <th scope="row">{{ submission.author.username }}</th>
+            <td>{{ submission.author.first_name }}</td>
+            <td>{{ submission.author.last_name }}</td>
+            <td>{{ submission.title }}</td>
+            {% if lecture.lecture_type == "V" %}
+            <td>{{ submission.metadata.video_watched_percent }} %</td>
+            {% else %}
+            <td>{{ submission.review_set.count }} {% if submission.metadata.reviewed %}{{ submission.metadata }}{% endif %}</td>
+            <td><a href="{% url 'lecture_submission_review' run.slug chapter.slug lecture.slug submission.id %}" class="btn{% if submission|has_review:request.user %} btn-outline-success{% else %} btn-outline-primary{% endif %}">{% translate "Review Submission" %}</a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row justify-content-center py-3">
+      <div class="col text-center">
+
+        <div class="btn-group">
+          {% for lctr in lectures %}
+            <a href="{% url 'lecture_detail' run.slug chapter.slug lctr.slug %}" class="btn btn-sm btn-{% if lctr.slug != lecture.slug %}outline-{% endif %}primary">
+              {{ lctr.lecture_type|lecture_type_icon }} {{ lctr.title }}
+            </a>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+    {% include "courses/includes/next_prev_lecture_buttons.html" %}
+
+  </div>
+</div>
+{% endblock %}

@@ -81,3 +81,15 @@ def is_image(data):
 @register.filter
 def is_video(data):
     return Lecture.check_file_extension(data, alloed_extensions=EXTENSION_VIDEO)
+
+
+@register.filter
+def has_review(submission, user):
+    has_review = False
+
+    for review in submission.review_set.all():
+        if review.author == user:
+            has_review = True
+            break
+
+    return has_review
