@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load markdownify %}
+
+<div class="card">
+  <div class="card-header{% if review.accepted %} bg-success text-white{% else %} bg-danger text-white{% endif %}">
+    <i class="fas fa-glasses"></i> {% translate "Submitted Review" %}
+    {% if review.accepted %}
+    <i class="far fa-check-circle"></i> {% translate "Accepted" %}
+    {% else %}
+    <i class="far fa-times-circle"></i> {% translate "Rejected" %}
+    {% endif %}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ review.title }}</h5>
+    <p class="card-text">{{ review.description|markdownify }}</p>
+    <p class="card-text text-end">{{ review.author }}</p>
+    {% if review.author == user %}
+      <button type="button" data-bs-toggle="modal" class="btn btn-primary"
+        data-bs-submission_id="{{ review.submission.id }}"
+        data-bs-author_id="{{ user.id }}"
+        data-bs-target="#reviewModal">{% translate "Edit Review" %}</button>
+    {% endif %}
+  </div>
+</div>

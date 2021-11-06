@@ -65,6 +65,13 @@
             </span>
           </div>
         {% endif %}
+        {% if user_submissions and user_submissions.0.metadata and user_submissions.0.metadata.video_watched_percent > 95 %}
+          <div class="text-end">
+            <span class="badge rounded-pill bg-success">
+              <i class="far fa-check-circle"></i> {% translate "Watched" %}
+            </span>
+          </div>
+        {% endif %}
 
     </div>
 
@@ -92,6 +99,7 @@
       {% if lecture.require_submission != 'D' and form %}
         {% if user_submissions %}
           {% for submission in user_submissions %}
+          <div class="row">
             <div class="col-6">
               <div class="card">
                 <div class="card-header bg-success text-white">
@@ -107,6 +115,13 @@
                 </div>
               </div>
             </div>
+
+            {% for review in submission.review_set.all %}
+            <div class="col-6">
+              {% include "courses/includes/review_card.html" with review=review user=request.user %}
+            </div>
+            {% endfor %}
+          </div>
           {% endfor %}
         {% else %}
           <div class="col-6">
@@ -133,6 +148,8 @@
           {% csrf_token %}
         </form>
         {% if lecture.video %}
+          <div id="video_duration" data-video_duration="{{ lecture.metadata.video_duration }}"></div>
+
           {% video lecture.video as my_video %}
             {% video my_video "large" %}
           {% endvideo %}

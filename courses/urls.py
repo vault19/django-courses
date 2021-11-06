@@ -23,10 +23,27 @@ urlpatterns = [
     ),
     path("course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/", views.lecture_detail, name="lecture_detail"),
     path(
+        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/video-duration/",
+        views_ajax.video_lecture_duration,
+        name="video_duration",
+    ),
+    path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/video-ping/",
         views_ajax.video_lecture_submission,
         name="video_ping",
     ),
     path("certificate/<str:uuid>/pdf/", views.CertificatePDF.as_view(), name="certificate_pdf"),
     path("certificate/<str:uuid>/", views.certificate, name="certificate"),
+    path(
+        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",
+        views.lecture_submissions,
+        name="lecture_submissions",
+    ),
+    path(
+        "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/<int:submission_id>",
+        views.lecture_submission_review,
+        name="lecture_submission_review",
+    ),
+    # path('<int:question_id>/results/', views.results, name='results'),
+    # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

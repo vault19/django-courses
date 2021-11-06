@@ -550,7 +550,7 @@ class SubmissionManager(models.Manager):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.select_related("lecture", "chapter", "run", "author")
+        return qs.select_related("lecture", "chapter", "run", "author").prefetch_related("review_set")
 
 
 class Submission(models.Model):
