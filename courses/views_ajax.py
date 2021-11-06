@@ -59,11 +59,25 @@ def video_lecture_submission(request, run_slug, chapter_slug, lecture_slug):
         if not submission.metadata:
             submission.metadata = data
         elif "video_watched_time_range" in submission.metadata:
-            submission.metadata["video_watched_time_range"] = array_merge(
-                data["video_watched_time_range"] + submission.metadata["video_watched_time_range"]
-            )
+            if "video_watched_time_range" in data:
+                submission.metadata["video_watched_time_range"] = array_merge(
+                    data["video_watched_time_range"] + submission.metadata["video_watched_time_range"]
+                )
+            elif "watched_video_time_range" in data:
+                # Deprecated! Just for those who have old cached JS!
+                submission.metadata["video_watched_time_range"] = array_merge(
+                    data["watched_video_time_range"] + submission.metadata["video_watched_time_range"]
+                )
+            else:
+                raise ValueError("Unrecognized video watched time range.")
         else:
-            submission.metadata["video_watched_time_range"] = data["video_watched_time_range"]
+            if "video_watched_time_range" in data:
+                submission.metadata["video_watched_time_range"] = data["video_watched_time_range"]
+            elif "watched_video_time_range" in data:
+                # Deprecated! Just for those who have old cached JS!
+                submission.metadata["video_watched_time_range"] = data["watched_video_time_range"]
+            else:
+                raise ValueError("Unrecognized video watched time range.")
 
         if lecture.metadata and "video_duration" in lecture.metadata and lecture.metadata["video_duration"]:
             video_watched = 0
