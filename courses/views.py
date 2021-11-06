@@ -13,15 +13,10 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-<<<<<<< HEAD
 from wkhtmltopdf.views import PDFTemplateView
 
-from courses.forms import SubmissionForm, SubscribeForm
-from courses.models import Course, Run, Submission, Lecture, Certificate
-=======
 from courses.forms import SubmissionForm, SubscribeForm, ReviewForm
-from courses.models import Course, Run, Submission, Lecture
->>>>>>> main
+from courses.models import Course, Run, Submission, Lecture, Certificate
 from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
