@@ -90,6 +90,27 @@ class Course(models.Model):
         else:
             return self.objects.none()
 
+    def get_required_submissions(self, lecture=True, chapter=False):
+        required_lectures = []
+        required_chapters = []
+
+        for db_chapter in self.chapter_set.all():
+            if chapter and db_chapter.require_submission in ("C", "E",):
+                required_chapters.append(db_chapter)
+
+            for db_lecture in db_chapter.lecture_set.all():
+                if lecture and db_lecture.require_submission in ("C", "E",):
+                    required_lectures.append(db_lecture)
+
+        if chapter and lecture:
+            return required_chapters, required_lectures
+        elif chapter:
+            return required_chapters
+        elif lecture:
+            return required_lectures
+        else:
+            return ()
+
     @property
     def length(self):
         length = 0
@@ -414,6 +435,33 @@ class Run(models.Model):
                 if other_run_user == user:
                     return True
         return False
+
+    def passed(self, user_id):
+        passed = True
+        required_chapters, required_lectures = self.course.get_required_submissions(lecture=True, chapter=True)
+        submissions = self.submission_set.filter(author_id=user_id).all()
+
+        for chapter in required_chapters:
+            has_submissoin = False
+
+            for submission in submissions:
+                if chapter == submission.lecture:
+                    has_submissoin = True
+
+            if not has_submissoin:
+                passed = False
+
+        for lecture in required_lectures:
+            has_submissoin = False
+
+            for submission in submissions:
+                if lecture == submission.lecture:
+                    has_submissoin = True
+
+            if not has_submissoin:
+                passed = False
+
+        return passed
 
     def get_setting(self, option):
         if self.metadata and "options" in self.metadata and option in self.metadata["options"]:

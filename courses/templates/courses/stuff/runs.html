@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+`
+{% block content %}
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">{% translate 'Run' %}</th>
+          <th scope="col">{% translate 'Submissions' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for run in runs %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ run }}</td>
+            <td>
+              <a href="{% url 'run_attendees' run.slug %}" class="btn btn-outline-primary">
+                <i class="fas fa-user-friends"></i> {% translate 'Atendees' %}
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

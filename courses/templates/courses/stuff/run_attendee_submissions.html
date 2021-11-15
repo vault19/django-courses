@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load courses_extra %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
+    {{ passed }}
+    {% for chapter in run.course.chapter_set.all %}
+      <h1>{{ chapter.title }}</h1>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Lekcia</th>
+          <th scope="col">{% translate 'Lecture type' %}</th>
+          <th scope="col">{% translate 'Require submission' %}</th>
+          <th scope="col">{% translate 'Require submission review' %}</th>
+          <th scope="col">{% translate 'Submission' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lecture in chapter.lecture_set.all %}
+          <tr>
+            <th scope="col">{{ lecture.title }}</th>
+            <td>{{ lecture.lecture_type|lecture_type_icon }} {{ lecture.get_lecture_type_display }}</td>
+            <td>{{ lecture.get_require_submission_display }}</td>
+            <td>{{ lecture.get_require_submission_review_display }}</td>
+            <td>
+              {% for submission in submissions %}
+                {% if submission.lecture == lecture %}
+
+                  {% if lecture.lecture_type == 'V' %}
+                    {{ submission.metadata.video_watched_percent }} %
+                  {% elif submission %}
+                    <a href="{% url 'lecture_submission_review' run.slug chapter.slug lecture.slug submission.id %}" class="btn btn-outline-primary"><i class="fas fa-box-open"></i> {{ submission.title }}</a>
+                  {% endif %}
+
+                {% endif %}
+              {% endfor %}
+            </td>
+
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+
+    {% for submission in submissions %}
+
+    {% endfor %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}
