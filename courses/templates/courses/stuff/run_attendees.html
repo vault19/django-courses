@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load courses_extra %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+`
+{% block content %}
+<div class="py-5">
+  <div class="container">
+    <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">{% translate 'User' %}</th>
+          <th scope="col">{% translate 'First Name' %}</th>
+          <th scope="col">{% translate 'Last Name' %}</th>
+          <th scope="col">{% translate 'Email' %}</th>
+          <th scope="col">{% translate 'Passed' %}</th>
+          <th scope="col">{% translate 'Submissions' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for user in run.users.all %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ user }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{% if run|has_passed:user %}<i class="fas fa-check-circle"></i>{% endif %}</td>
+            <td>
+              <a href="{% url 'run_attendee_submissions' run.slug user.id %}" class="btn btn-outline-primary">
+                <i class="fas fa-box-open"></i> {% translate "Submissions" %}
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

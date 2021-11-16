@@ -48,6 +48,11 @@ def is_subscribed(run, user):
     return run.is_subscribed(user)
 
 
+@register.filter
+def has_passed(run, user):
+    return run.passed(user.id)
+
+
 @register.filter()
 def lecture_type_icon(lecture_type):
     icon = ""
