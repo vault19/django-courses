@@ -95,11 +95,17 @@ class Course(models.Model):
         required_chapters = []
 
         for db_chapter in self.chapter_set.all():
-            if chapter and db_chapter.require_submission in ("C", "E",):
+            if chapter and db_chapter.require_submission in (
+                "C",
+                "E",
+            ):
                 required_chapters.append(db_chapter)
 
             for db_lecture in db_chapter.lecture_set.all():
-                if lecture and db_lecture.require_submission in ("C", "E",):
+                if lecture and db_lecture.require_submission in (
+                    "C",
+                    "E",
+                ):
                     required_lectures.append(db_lecture)
 
         if chapter and lecture:

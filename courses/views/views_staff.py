@@ -1,29 +1,19 @@
-import datetime
-
-from django.db.models import Q, F
-from django.conf import settings
-from django.core.exceptions import PermissionDenied
-from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.template import TemplateDoesNotExist
-from django.template.loader import render_to_string
 from django.urls import reverse
 
-from courses.forms import SubmissionForm, SubscribeForm, ReviewForm
-from courses.models import Course, Run, Submission, Lecture
+from courses.forms import ReviewForm
+from courses.models import Run, Submission, Lecture
 from courses.utils import get_run_chapter_context
-from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def runs(request):
-    runs = Run.objects.order_by('-end').all()
+    runs = Run.objects.order_by("-end").all()
 
     context = {}
     context["breadcrumbs"] = [
@@ -40,7 +30,7 @@ def runs(request):
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def run_attendees(request, run_slug):
-    run = Run.objects.filter(slug=run_slug).order_by('-end').get()
+    run = Run.objects.filter(slug=run_slug).order_by("-end").get()
 
     context = {}
     context["run"] = run
@@ -65,12 +55,12 @@ def run_attendees(request, run_slug):
 def run_attendee_submissions(request, run_slug, user_id):
     User = get_user_model()
     atendee = User.objects.filter(id=user_id).get()
-    run = Run.objects.filter(slug=run_slug).order_by('-end').get()
+    run = Run.objects.filter(slug=run_slug).order_by("-end").get()
     passed = run.passed(user_id)
 
     context = {}
     context["run"] = run
-    context['atendee'] = atendee
+    context["atendee"] = atendee
     context["breadcrumbs"] = [
         {
             "url": reverse("runs"),
@@ -92,7 +82,7 @@ def run_attendee_submissions(request, run_slug, user_id):
     ]
 
     context["submissions"] = Submission.objects.filter(run=run, author_id=user_id).all()
-    context['passed'] = passed
+    context["passed"] = passed
 
     return render(request, "courses/stuff/run_attendee_submissions.html", context)
 
