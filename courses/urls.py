@@ -1,7 +1,8 @@
 from django.urls import path
 
-from . import views
-from . import views_ajax
+from .views import views
+from .views import views_staff
+from .views import views_ajax
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -35,13 +36,28 @@ urlpatterns = [
     path("certificate/<str:uuid>/pdf/", views.CertificatePDF.as_view(), name="certificate_pdf"),
     path("certificate/<str:uuid>/", views.certificate, name="certificate"),
     path(
+        "stuff/runs/",
+        views_staff.runs,
+        name="runs",
+    ),
+    path(
+        "stuff/run/<str:run_slug>/attendees/",
+        views_staff.run_attendees,
+        name="run_attendees",
+    ),
+    path(
+        "stuff/run/<str:run_slug>/attendee/<int:user_id>/",
+        views_staff.run_attendee_submissions,
+        name="run_attendee_submissions",
+    ),
+    path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",
-        views.lecture_submissions,
+        views_staff.lecture_submissions,
         name="lecture_submissions",
     ),
     path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/<int:submission_id>",
-        views.lecture_submission_review,
+        views_staff.lecture_submission_review,
         name="lecture_submission_review",
     ),
     # path('<int:question_id>/results/', views.results, name='results'),
