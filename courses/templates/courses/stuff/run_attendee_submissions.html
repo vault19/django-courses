@@ -10,9 +10,11 @@
 <div class="py-5">
   <div class="container">
     <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
-    {{ passed }}
+    <h1>{{ atendee.first_name }} {{ atendee.last_name }}</h1>
+    <p>{{ atendee.email }}</p>
+
     {% for chapter in run.course.chapter_set.all %}
-      <h1>{{ chapter.title }}</h1>
+      <h3>{{ chapter.title }}</h3>
 
       <table class="table table-striped">
         <thead>

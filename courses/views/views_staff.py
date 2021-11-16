@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -62,10 +63,14 @@ def run_attendees(request, run_slug):
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def run_attendee_submissions(request, run_slug, user_id):
+    User = get_user_model()
+    atendee = User.objects.filter(id=user_id).get()
     run = Run.objects.filter(slug=run_slug).order_by('-end').get()
+    passed = run.passed(user_id)
 
     context = {}
     context["run"] = run
+    context['atendee'] = atendee
     context["breadcrumbs"] = [
         {
             "url": reverse("runs"),
@@ -81,10 +86,13 @@ def run_attendee_submissions(request, run_slug, user_id):
         {
             "title": _("Submissions"),
         },
+        {
+            "title": f"{atendee.first_name} {atendee.last_name}",
+        },
     ]
 
     context["submissions"] = Submission.objects.filter(run=run, author_id=user_id).all()
-    context['passed'] = run.passed(user_id)
+    context['passed'] = passed
 
     return render(request, "courses/stuff/run_attendee_submissions.html", context)
 

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import views
-from .views import views_stuff
+from .views import views_staff
 from .views import views_ajax
 
 urlpatterns = [
@@ -35,27 +35,27 @@ urlpatterns = [
     ),
     path(
         "stuff/runs/",
-        views_stuff.runs,
+        views_staff.runs,
         name="runs",
     ),
     path(
         "stuff/run/<str:run_slug>/attendees/",
-        views_stuff.run_attendees,
+        views_staff.run_attendees,
         name="run_attendees",
     ),
     path(
         "stuff/run/<str:run_slug>/attendee/<int:user_id>/",
-        views_stuff.run_attendee_submissions,
+        views_staff.run_attendee_submissions,
         name="run_attendee_submissions",
     ),
     path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",
-        views_stuff.lecture_submissions,
+        views_staff.lecture_submissions,
         name="lecture_submissions",
     ),
     path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submission/<int:submission_id>",
-        views_stuff.lecture_submission_review,
+        views_staff.lecture_submission_review,
         name="lecture_submission_review",
     ),
     # path('<int:question_id>/results/', views.results, name='results'),
