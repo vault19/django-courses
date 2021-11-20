@@ -3,6 +3,8 @@ from django.urls import path
 from .views import views
 from .views import views_staff
 from .views import views_ajax
+from .views import views_subscribtion
+
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -13,8 +15,8 @@ urlpatterns = [
     path("courses/subscribed/closed/", views.all_subscribed_closed_runs, name="all_subscribed_closed_runs"),
     path("course/<str:course_slug>/details/", views.course_detail, name="course_detail"),
     path("course/<str:run_slug>/", views.course_run_detail, name="course_run_detail"),
-    path("course/<str:run_slug>/subscribe/", views.subscribe_to_run, name="subscribe_to_run"),
-    path("course/<str:run_slug>/unsubscribe/", views.unsubscribe_from_run, name="unsubscribe_from_run"),
+    path("course/<str:run_slug>/subscribe/", views_subscribtion.subscribe_to_run, name="subscribe_to_run"),
+    path("course/<str:run_slug>/unsubscribe/", views_subscribtion.unsubscribe_from_run, name="unsubscribe_from_run"),
     path("course/<str:run_slug>/<str:chapter_slug>/", views.chapter_detail, name="chapter_detail"),
     path("course/<str:run_slug>/<str:chapter_slug>/submission/", views.chapter_submission, name="chapter_submission"),
     path(

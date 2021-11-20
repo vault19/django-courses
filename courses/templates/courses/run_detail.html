@@ -2,6 +2,11 @@
 {% load i18n %}
 {% load markdownify %}
 {% load courses_extra %}
+{% load static %}
+
+{% block javascript %}
+  <script src="{% static 'courses/js/subscription_modal_form.js' %}?v=20211109"></script>
+{% endblock %}
 
 {% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}

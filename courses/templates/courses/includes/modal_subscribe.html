@@ -25,7 +25,17 @@
             {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}
           </p>
           {% csrf_token %}
+          {% for level in subscription_levels %}
+            <div class="card level" data-level_id="{{ level.id }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ level.title }}</h5>
+                <p class="card-text">{{ level.description }}</p>
+              </div>
+            </div>
+          {% endfor %}
+          <div id="form_id">
           {% bootstrap_form form %}
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">{% if unsubscribe %}{% translate "Unsubscribe" %}{% else %}{% translate "Subscribe" %}{% endif %}</button>
