@@ -483,7 +483,13 @@ class Run(models.Model):
         return option_value
 
     def get_subscription_level(self, user):
-        return self.users.through.objects.filter(run=self).filter(user=user).all()
+        level = []
+
+        for run_user in self.users.through.objects.filter(run=self).filter(user=user).all():
+            if run_user.subscription_level:
+                level.append((run_user.id, run_user.subscription_level))
+
+        return level
 
     def save(self, *args, **kwargs):
         if self.length != 0:

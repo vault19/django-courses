@@ -65,7 +65,7 @@ def run_payment_instructions(request, run_slug):
     context = {
         "run": run,
         "subscribed": run.is_subscribed(request.user),
-        "run_users": run.get_subscription_level(request.user),
+        "subscribed_levels": run.get_subscription_level(request.user),
         "breadcrumbs": [
             {
                 "url": reverse("courses"),
@@ -109,11 +109,15 @@ def subscribe_to_run(request, run_slug):
             if not form.is_valid():
                 messages.error(request, _("Please correct errors in your subscription form.") + form.errors)
 
+            defaults = {
+                "payment": 0
+            }
+
+            if "subscription_level" in form.cleaned_data:
+                defaults["subscription_level_id"] = form.cleaned_data["subscription_level"]
+
             # in M2M add will store to DB!
-            run.users.add(
-                request.user,
-                through_defaults={"subscription_level_id": form.cleaned_data["subscription_level"], "payment": 0},
-            )
+            run.users.add(request.user, through_defaults=defaults,)
 
             # run.save()  # No need to save run
             messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
@@ -121,8 +125,7 @@ def subscribe_to_run(request, run_slug):
             ctx_dict = {
                 "user": request.user,
                 "course_run": run,
-                "subscription_levels": subscription_levels.all(),
-                "selected_level": int(form.cleaned_data["subscription_level"]),
+                "subscribed_levels": run.get_subscription_level(request.user),
             }
             subject = run.get_setting("COURSES_EMAIL_SUBJECT_PREFIX") + render_to_string(
                 run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"), ctx_dict, request=request
@@ -150,8 +153,8 @@ def subscribe_to_run(request, run_slug):
 
     if run.get_subscription_level(request.user):
         return redirect("run_payment_instructions", run_slug=run_slug)
-    else:
-        return redirect("course_run_detail", run_slug=run_slug)
+
+    return redirect("course_run_detail", run_slug=run_slug)
 
 
 @login_required
