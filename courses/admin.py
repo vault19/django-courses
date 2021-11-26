@@ -5,8 +5,18 @@ from django.utils.html import format_html
 from django.utils.translation import ngettext, ugettext_lazy as _
 from django import forms
 
-from courses.models import Course, Chapter, Lecture, Run, RunUsers, Submission, Review, Certificate, Meeting, \
-    SubscriptionLevel
+from courses.models import (
+    Course,
+    Chapter,
+    Lecture,
+    Run,
+    RunUsers,
+    Submission,
+    Review,
+    Certificate,
+    Meeting,
+    SubscriptionLevel,
+)
 
 
 @admin.register(SubscriptionLevel)

@@ -482,6 +482,9 @@ class Run(models.Model):
 
         return option_value
 
+    def get_subscription_level(self, user):
+        return self.users.through.objects.filter(run=self).filter(user=user).all()
+
     def save(self, *args, **kwargs):
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
@@ -518,7 +521,9 @@ class RunUsers(models.Model):
 
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
-    subscription_level = models.ForeignKey(SubscriptionLevel, verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True)
+    subscription_level = models.ForeignKey(
+        SubscriptionLevel, verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True
+    )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)

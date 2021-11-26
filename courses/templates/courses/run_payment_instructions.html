@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+{% load static %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+  {% include "courses/includes/course_detail_header.html" with course=run.course run=run subscribed=subscribed %}
+
+  {% if run|get_run_setting:"COURSES_DISPLAY_CHAPTER_DETAILS" %}
+    {% include "courses/includes/course_run_detail.html" with chapters=chapters run=run %}
+  {% endif %}
+
+  <div class="album py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <p>
+            {% trans "You can use following options to make a payment for the course:" %}<br />
+            ....<br />
+            ....<br />
+            ....<br />
+          </p>
+        </div>
+
+        <div class="col-sm-12">
+          <h3>{% trans "Your subscriptions:" %}</h3>
+        </div>
+
+        {% for run_user in run_users %}
+          <div class="col-sm-6">
+            <div class="card level" data-level_id="{{ run_user.subscription_level.id }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ run_user.subscription_level.title }}</h5>
+                <p class="card-text">{{ run_user.subscription_level.description|markdownify }}<br />
+                  <b>{% trans "Price:" %} {{ run_user.subscription_level.price }} EUR.</b>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

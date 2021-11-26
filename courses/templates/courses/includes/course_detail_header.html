@@ -2,7 +2,7 @@
 {% load markdownify %}
 {% load courses_extra %}
 
-{% if run %}
+{% if run and form %}
   {% include "courses/includes/modal_subscribe.html" with form=form run=run %}
   {% include "courses/includes/modal_subscribe.html" with form=form run=run unsubscribe=True %}
 {% endif %}
@@ -32,15 +32,56 @@
         {% if user.is_authenticated and not run.is_past_due %}
           <p>
             {% if not subscribed %}
-              {% if run.limit|subtract:run.users.count != 0 %}
-                <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#SubscribeModal">
-                  {% translate "Subscribe" %}
-                </button>
-              {% endif %}
               {% if run.limit|subtract:run.users.count < 10 %}
-                <span class="badge {% if run.limit|subtract:run.users.count == 0 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{% translate "Remains" %} {{ run.limit|subtract:run.users.count }} <i class="fas fa-user"></i></span>
+                <span class="badge {% if run.limit|subtract:run.users.count == 0 %}bg-danger{% else %}bg-warning text-dark{% endif %}">{% translate "Remains" %} {{ run.limit|subtract:run.users.count }} <i class="fas fa-user"></i></span><br />
               {% endif %}
-{#            {% else %}#}
+
+              {% if run.limit|subtract:run.users.count != 0 %}
+                {% if not subscription_levels %}
+                  <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#SubscribeModal">
+                    {% translate "Subscribe" %}
+                  </button>
+                {% else %} {# not subscription_levels #}
+
+
+                  <div class="album py-5">
+                    <div class="container">
+                      <div class="row">
+
+                        {% for level in subscription_levels %}
+                          <div class="col-sm-6">
+                          <div class="card level" data-level_id="{{ level.id }}">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ level.title }}</h5>
+                              <p class="card-text">{{ level.description|markdownify }}<br />
+                              <b>{% trans "Price:" %} {{ level.price }} EUR.</b>
+                              </p>
+                              {% if run %}
+                                {% if user.is_authenticated and not run.is_past_due %}
+                                  {% if not subscribed %}
+                                    {% if run.limit|subtract:run.users.count != 0 %}
+                                      <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#SubscribeModal">
+                                        {% translate "Subscribe" %}
+                                      </button>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endif %}
+                              {% endif %}
+
+                            </div>
+                          </div>
+                          </div>
+                        {% endfor %}
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                {% endif %}
+              {% endif %}
+
+{#            {% else %}  # not subscribed #}
 {#                <button type="button" class="btn btn-outline-success my-2" data-bs-toggle="modal" data-bs-target="#UnsubscribeModal">#}
 {#                  {% translate "Unsubscribe" %}#}
 {#                </button>#}

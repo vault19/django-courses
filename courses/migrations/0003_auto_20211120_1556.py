@@ -7,28 +7,52 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('courses', '0002_auto_20211011_2145'),
+        ("courses", "0002_auto_20211011_2145"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SubscriptionLevel',
+            name="SubscriptionLevel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('price', models.FloatField(verbose_name='Price')),
-                ('title', models.CharField(max_length=250, verbose_name='Title')),
-                ('description', models.TextField(blank=True, help_text='Full description of the subscription level.', null=True, verbose_name='Description')),
-                ('metadata', models.JSONField(blank=True, help_text='Metadata about uploaded data.', null=True, verbose_name='Metadata')),
-                ('run', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.run', verbose_name='Run')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("price", models.FloatField(verbose_name="Price")),
+                ("title", models.CharField(max_length=250, verbose_name="Title")),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True,
+                        help_text="Full description of the subscription level.",
+                        null=True,
+                        verbose_name="Description",
+                    ),
+                ),
+                (
+                    "metadata",
+                    models.JSONField(
+                        blank=True, help_text="Metadata about uploaded data.", null=True, verbose_name="Metadata"
+                    ),
+                ),
+                (
+                    "run",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="courses.run", verbose_name="Run"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Subscription Level',
-                'verbose_name_plural': 'Subscription Levels',
+                "verbose_name": "Subscription Level",
+                "verbose_name_plural": "Subscription Levels",
             },
         ),
         migrations.AddField(
-            model_name='runusers',
-            name='subscription_level',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='courses.subscriptionlevel', verbose_name='User'),
+            model_name="runusers",
+            name="subscription_level",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="courses.subscriptionlevel",
+                verbose_name="User",
+            ),
         ),
     ]

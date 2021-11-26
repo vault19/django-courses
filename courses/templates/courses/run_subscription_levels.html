@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load markdownify %}
+{% load courses_extra %}
+{% load static %}
+
+{% block javascript %}
+  <script src="{% static 'courses/js/subscription_modal_form.js' %}?v=20211125"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+  {% include "courses/includes/course_detail_header.html" with course=run.course run=run subscribed=subscribed %}
+
+  {% if run|get_run_setting:"COURSES_DISPLAY_CHAPTER_DETAILS" %}
+    {% include "courses/includes/course_run_detail.html" with chapters=chapters run=run %}
+  {% endif %}
+
+{% endblock %}

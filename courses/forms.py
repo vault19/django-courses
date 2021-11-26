@@ -54,6 +54,8 @@ class SubscribeForm(Form):
         super().__init__(*args, **kwargs)
 
         if subscription_levels:
-            self.fields["subscription_level"] = ChoiceField(choices=subscription_levels, widget=RadioSelect, required=True)
+            self.fields["subscription_level"] = ChoiceField(
+                choices=subscription_levels, widget=RadioSelect, required=True
+            )
         else:
-            del(self.fields["subscription_level"])
+            del self.fields["subscription_level"]

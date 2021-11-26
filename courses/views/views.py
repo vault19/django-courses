@@ -1,16 +1,11 @@
 import datetime
 
 from django.db.models import Q, F
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.template import TemplateDoesNotExist
-from django.template.loader import render_to_string
 from django.urls import reverse
 
 from courses.decorators import verify_payment
@@ -155,7 +150,10 @@ def all_closed_runs(request):
 def course_run_detail(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
     subscription_levels = SubscriptionLevel.objects.filter(run=run)
-    form = SubscribeForm(initial={"sender": request.user.username, "run_slug": run_slug}, subscription_levels=subscription_levels.values_list('id', 'title'))
+    form = SubscribeForm(
+        initial={"sender": request.user.username, "run_slug": run_slug},
+        subscription_levels=subscription_levels.values_list("id", "title"),
+    )
 
     context = {
         "run": run,

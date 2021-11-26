@@ -15,6 +15,16 @@ urlpatterns = [
     path("courses/subscribed/closed/", views.all_subscribed_closed_runs, name="all_subscribed_closed_runs"),
     path("course/<str:course_slug>/details/", views.course_detail, name="course_detail"),
     path("course/<str:run_slug>/", views.course_run_detail, name="course_run_detail"),
+    path(
+        "course/<str:run_slug>/subscription_levels/",
+        views_subscribtion.run_subscription_levels,
+        name="run_subscription_levels",
+    ),
+    path(
+        "course/<str:run_slug>/payment_instructions/",
+        views_subscribtion.run_payment_instructions,
+        name="run_payment_instructions",
+    ),
     path("course/<str:run_slug>/subscribe/", views_subscribtion.subscribe_to_run, name="subscribe_to_run"),
     path("course/<str:run_slug>/unsubscribe/", views_subscribtion.unsubscribe_from_run, name="unsubscribe_from_run"),
     path("course/<str:run_slug>/<str:chapter_slug>/", views.chapter_detail, name="chapter_detail"),
