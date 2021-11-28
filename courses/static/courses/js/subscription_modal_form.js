@@ -1,4 +1,4 @@
-// document.getElementById('form_id').style.display = "none";
+document.getElementById('form_id').style.display = "none";
 
 var formCheckLabel = document.getElementsByClassName('form-check-input');
 var cardLevel = document.getElementsByClassName('level');

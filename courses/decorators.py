@@ -1,4 +1,6 @@
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
 from courses.models import RunUsers
@@ -20,7 +22,11 @@ def verify_payment(func):
 
             for subscription in subscriptions.all():
                 if subscription.subscription_level and (subscription.subscription_level.price >= subscription.payment):
-                    raise PermissionDenied(_("Subscription has not been payed yet!"))
+                    if 'run_slug' in kwargs:
+                        messages.error(request, _("You need to finish the payment in order to continue to the course."))
+                        return redirect("run_payment_instructions", run_slug=kwargs['run_slug'])
+                    else:
+                        raise PermissionDenied(_("Subscription has not been payed yet!"))
 
         return func(*args, **kwargs)
 
