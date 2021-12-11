@@ -33,8 +33,9 @@
       <div class="d-flex justify-content-between align-items-center">
         <div class="btn-group">
           {% if run %}
+            {% with run|check_payment:request.user as payment %}
 
-            <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
+            <a href="{% if payment == "Unpaid" %}{% url "run_payment_instructions" run.slug %}{% else %}{% url 'course_run_detail' run.slug %}{% endif %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
 
             {% if run|is_subscribed:request.user %}
               <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-success disabled">{% translate "Subscribed" %}</a>
@@ -44,6 +45,8 @@
               <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
             {% endif %}
 
+            <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-{% if payment == "Unpaid" %}danger{% else %}success{% endif %} disabled">{% translate payment %}</a>
+            {% endwith %}
           {% else %}
               <a href="{% url 'course_detail' course.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
           {% endif %}

@@ -491,6 +491,15 @@ class Run(models.Model):
 
         return level
 
+    def user_payment(self, user):
+        total = 0
+
+        for run_user in self.users.through.objects.filter(run=self).filter(user=user).all():
+            if run_user.payment:
+                total += run_user.payment
+
+        return total
+
     def save(self, *args, **kwargs):
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
