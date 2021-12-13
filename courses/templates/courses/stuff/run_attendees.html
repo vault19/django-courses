@@ -15,11 +15,11 @@
         <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">{% translate 'User' %}</th>
+          <th scope="col">{% translate 'User' %} ({% translate 'Email' %})</th>
           <th scope="col">{% translate 'First Name' %}</th>
           <th scope="col">{% translate 'Last Name' %}</th>
-          <th scope="col">{% translate 'Email' %}</th>
           <th scope="col">{% translate 'Passed' %}</th>
+          <th scope="col">{% translate 'Certificate' %}</th>
           <th scope="col">{% translate 'Submissions' %}</th>
         </tr>
         </thead>
@@ -27,11 +27,23 @@
           {% for user in run.users.all %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ user }}</td>
+            <td>{{ user }}<br /><small><i class="far fa-envelope"></i> {{ user.email }}</small></td>
             <td>{{ user.first_name }}</td>
             <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
             <td>{% if run|has_passed:user %}<i class="fas fa-check-circle"></i>{% endif %}</td>
+            <td>
+              {% if run|get_certificates:user %}
+                {% for cert in run|get_certificates:user %}
+                  <a href="{% url 'certificate' cert.uuid %}" class="btn btn-outline-success" target="_blank">
+                    <i class="fas fa-certificate"></i> {% translate "Show Certificate" %}
+                  </a>
+                {% endfor %}
+              {% elif run|has_passed:user %}
+                <a href="{% url 'run_attendee_generate_certificate' run.slug user.id %}" class="btn btn-outline-primary">
+                  <i class="fas fa-certificate"></i> {% translate "Generate Certificate" %}
+                </a>
+              {% endif %}
+            </td>
             <td>
               <a href="{% url 'run_attendee_submissions' run.slug user.id %}" class="btn btn-outline-primary">
                 <i class="fas fa-box-open"></i> {% translate "Submissions" %}

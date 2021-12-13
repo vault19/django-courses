@@ -3,13 +3,9 @@ import requests
 
 from time import sleep
 
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.template import TemplateDoesNotExist
-from django.template.loader import render_to_string
 
-from courses.settings import COURSES_EMAIL_SUBJECT_PREFIX
+from courses.utils import send_email
 
 
 class NotifyCommand(BaseCommand):
@@ -40,7 +36,7 @@ class NotifyCommand(BaseCommand):
             self.stdout.write(self.style.WARNING(run.manager))
 
         if run.manager.email:
-            self.send_email(
+            self.prepare_and_send_email(
                 run.manager,
                 run,
                 verbosity=options["verbosity"],
@@ -50,7 +46,7 @@ class NotifyCommand(BaseCommand):
 
         for user in run.users.all():
             if user.email:
-                self.send_email(
+                self.prepare_and_send_email(
                     user,
                     run,
                     verbosity=options["verbosity"],
@@ -58,7 +54,7 @@ class NotifyCommand(BaseCommand):
                     confirm=options["confirm"],
                 )
 
-    def send_email(self, user, run, verbosity=1, delay=0, confirm=False):
+    def prepare_and_send_email(self, user, run, verbosity=1, delay=0, confirm=False):
         if not confirm:
             self.stdout.write(f"Do you really want to send notification email to: {user} ?")
             user_input = input()
@@ -70,23 +66,9 @@ class NotifyCommand(BaseCommand):
         self.mail_template_variables["user"] = user
         self.mail_template_variables["course_run"] = run
 
-        subject = COURSES_EMAIL_SUBJECT_PREFIX + render_to_string(self.mail_subject, self.mail_template_variables)
-        # Email subject *must not* contain newlines
-        subject = "".join(subject.splitlines())
-        message = render_to_string(self.mail_body, self.mail_template_variables)
-
-        email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-
-        if self.mail_body_html:
-            try:
-                message_html = render_to_string(self.mail_body_html, self.mail_template_variables)
-            except TemplateDoesNotExist:
-                pass
-            else:
-                email_message.attach_alternative(message_html, "text/html")
-
         try:
-            email_message.send()
+            send_email(user, mail_subject=self.mail_subject, mail_body=self.mail_body,
+                       mail_body_html=self.mail_body_html, mail_template_variables=self.mail_template_variables)
         except Exception as e:
             self.stdout.write(self.style.ERROR(e))
         else:

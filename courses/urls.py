@@ -51,6 +51,11 @@ urlpatterns = [
         name="run_attendee_submissions",
     ),
     path(
+        "stuff/run/<str:run_slug>/attendee/<int:user_id>/generate_certificate",
+        views_staff.run_attendee_generate_certificate,
+        name="run_attendee_generate_certificate",
+    ),
+    path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",
         views_staff.lecture_submissions,
         name="lecture_submissions",

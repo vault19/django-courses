@@ -1,8 +1,13 @@
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import get_object_or_404
+from django.template import TemplateDoesNotExist
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
-from courses.models import Chapter, Run
+from courses.settings import COURSES_EMAIL_SUBJECT_PREFIX
+from courses.models import Chapter, Run, Certificate
 from courses.settings import (
     COURSES_ALLOW_SUBMISSION_TO_CHAPTERS,
     COURSES_ALLOW_SUBMISSION_TO_LECTURES,
@@ -54,6 +59,53 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
     }
 
     return context
+
+
+def send_email(user, mail_subject, mail_body, mail_body_html, mail_template_variables=dict()):
+    mail_template_variables["user"] = user
+
+    subject = COURSES_EMAIL_SUBJECT_PREFIX + render_to_string(mail_subject, mail_template_variables)
+    # Email subject *must not* contain newlines
+    subject = "".join(subject.splitlines())
+    message = render_to_string(mail_body, mail_template_variables)
+
+    email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+
+    if mail_body_html:
+        try:
+            message_html = render_to_string(mail_body_html, mail_template_variables)
+        except TemplateDoesNotExist:
+            pass
+        else:
+            email_message.attach_alternative(message_html, "text/html")
+
+    email_message.send()
+
+
+def generate_certificate(run, user, notify=True):
+    # TODO: check user is subscribed to this run!
+    user_certificates = Certificate.objects.filter(run=run).filter(user=user)
+
+    if user_certificates.count() == 0:
+        cert = Certificate(run=run, user=user)
+        cert.save()
+
+        if notify:
+            mail_template_variables = {
+                "certificate": cert,
+                "course_run": run,
+                "user": user,
+            }
+            mail_subject = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_SUBJECT")
+            mail_body = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY")
+            mail_body_html = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML")
+
+            send_email(user, mail_subject=mail_subject, mail_body=mail_body, mail_body_html=mail_body_html,
+                       mail_template_variables=mail_template_variables)
+
+        return True
+
+    return False
 
 
 def array_partition(array, start, end):
