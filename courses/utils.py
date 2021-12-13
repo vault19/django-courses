@@ -100,8 +100,13 @@ def generate_certificate(run, user, notify=True):
             mail_body = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY")
             mail_body_html = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML")
 
-            send_email(user, mail_subject=mail_subject, mail_body=mail_body, mail_body_html=mail_body_html,
-                       mail_template_variables=mail_template_variables)
+            send_email(
+                user,
+                mail_subject=mail_subject,
+                mail_body=mail_body,
+                mail_body_html=mail_body_html,
+                mail_template_variables=mail_template_variables,
+            )
 
         return True
 

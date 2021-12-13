@@ -67,8 +67,13 @@ class NotifyCommand(BaseCommand):
         self.mail_template_variables["course_run"] = run
 
         try:
-            send_email(user, mail_subject=self.mail_subject, mail_body=self.mail_body,
-                       mail_body_html=self.mail_body_html, mail_template_variables=self.mail_template_variables)
+            send_email(
+                user,
+                mail_subject=self.mail_subject,
+                mail_body=self.mail_body,
+                mail_body_html=self.mail_body_html,
+                mail_template_variables=self.mail_template_variables,
+            )
         except Exception as e:
             self.stdout.write(self.style.ERROR(e))
         else:

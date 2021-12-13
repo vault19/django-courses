@@ -293,7 +293,7 @@ def subscribe_to_run(request, run_slug):
                 mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
                 mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
                 mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
-                mail_template_variables={"user": request.user, "course_run": run}
+                mail_template_variables={"user": request.user, "course_run": run},
             )
     else:
         messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
@@ -398,4 +398,3 @@ class CertificatePDF(PDFTemplateView):
         self.template_name = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
 
         return super().get(request, *args, cert=cert, **kwargs)
-

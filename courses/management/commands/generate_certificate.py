@@ -5,20 +5,25 @@ from courses.models import Run, Certificate
 
 
 class Command(NotifyCommand):
-    help = "Generate certificates and notify (send email) to users that are eligible to receive certificate for " \
-           "course that has already ended."
+    help = (
+        "Generate certificates and notify (send email) to users that are eligible to receive certificate for "
+        "course that has already ended."
+    )
 
     def add_arguments(self, parser):
         super().add_arguments(parser)
         parser.add_argument(
-            "--user_ids", type=str, help="Comma separated list of IDs for which certificates will be generated "
-                                         "(no matter if they are eligible for the certificate)."
+            "--user_ids",
+            type=str,
+            help="Comma separated list of IDs for which certificates will be generated "
+            "(no matter if they are eligible for the certificate).",
         )
         parser.add_argument(
             "--run_ids", type=str, help="Comma separated list of Run IDs for which certificates will be generated."
         )
-        parser.add_argument("--fake", action="store_true",
-                            help="Fake run. Does not store anything to DB, and wont send any emails.")
+        parser.add_argument(
+            "--fake", action="store_true", help="Fake run. Does not store anything to DB, and wont send any emails."
+        )
 
     def handle(self, *args, **options):
         if options["time_delta"]:
@@ -64,16 +69,18 @@ class Command(NotifyCommand):
                         if user_certificates.count() == 0:
 
                             if options["verbosity"] >= 1:
-                                self.stdout.write(f"Generating certificate for: ", ending='')
+                                self.stdout.write(f"Generating certificate for: ", ending="")
 
                                 if options["verbosity"] >= 3:
-                                    self.stdout.write(self.style.SUCCESS(f"{user.first_name} {user.last_name}"),
-                                                      ending='')
-                                    self.stdout.write(f' (ID: {user.id})')
+                                    self.stdout.write(
+                                        self.style.SUCCESS(f"{user.first_name} {user.last_name}"), ending=""
+                                    )
+                                    self.stdout.write(f" (ID: {user.id})")
                                 else:
-                                    self.stdout.write(self.style.SUCCESS(f"{user.first_name} {user.last_name}"),
-                                                      ending='')
-                                    self.stdout.write(' in ', ending='')
+                                    self.stdout.write(
+                                        self.style.SUCCESS(f"{user.first_name} {user.last_name}"), ending=""
+                                    )
+                                    self.stdout.write(" in ", ending="")
                                     self.stdout.write(self.style.WARNING(run))
 
                             if not options["fake"]:
@@ -81,8 +88,13 @@ class Command(NotifyCommand):
                                 cert.save()
 
                                 self.mail_template_variables["certificate"] = cert
-                                self.send_email(user, run, verbosity=options["verbosity"], delay=options["delay"],
-                                                confirm=options["confirm"])
+                                self.send_email(
+                                    user,
+                                    run,
+                                    verbosity=options["verbosity"],
+                                    delay=options["delay"],
+                                    confirm=options["confirm"],
+                                )
 
                             counter += 1
 
@@ -90,12 +102,12 @@ class Command(NotifyCommand):
                     if counter - start_count == 0:
                         self.stdout.write("No (new) certificates has been generated.")
                     else:
-                        self.stdout.write('Generated ', ending='')
-                        self.stdout.write(self.style.SUCCESS(counter - start_count), ending='')
-                        self.stdout.write(' new certificates.')
+                        self.stdout.write("Generated ", ending="")
+                        self.stdout.write(self.style.SUCCESS(counter - start_count), ending="")
+                        self.stdout.write(" new certificates.")
 
             if options["verbosity"] >= 1:
-                self.stdout.write(self.style.SUCCESS(f"Total: {counter}"), ending='')
+                self.stdout.write(self.style.SUCCESS(f"Total: {counter}"), ending="")
                 self.stdout.write(" (new) certificates has been generated.")
         else:
             self.stdout.write(self.style.SUCCESS("Nothing to do..."))
