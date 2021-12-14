@@ -35,18 +35,18 @@
               {% if run|get_certificates:user %}
                 {% for cert in run|get_certificates:user %}
                   <a href="{% url 'certificate' cert.uuid %}" class="btn btn-outline-success" target="_blank">
-                    <i class="fas fa-certificate"></i> {% translate "Show Certificate" %}
+                    <i class="fas fa-certificate"></i> {% translate "View" %}
                   </a>
                 {% endfor %}
-              {% elif run|has_passed:user %}
-                <a href="{% url 'run_attendee_generate_certificate' run.slug user.id %}" class="btn btn-outline-primary">
-                  <i class="fas fa-certificate"></i> {% translate "Generate Certificate" %}
+              {% else %}
+                <a href="{% url 'run_attendee_generate_certificate' run.slug user.id %}" class="btn btn-outline-{% if run|has_passed:user %}primary{% else %}secondary{% endif %}">
+                  <i class="fas fa-certificate"></i> {% translate "Generate" %}
                 </a>
               {% endif %}
             </td>
             <td>
               <a href="{% url 'run_attendee_submissions' run.slug user.id %}" class="btn btn-outline-primary">
-                <i class="fas fa-box-open"></i> {% translate "Submissions" %}
+                <i class="fas fa-box-open"></i> {% translate "View" %}
               </a>
             </td>
           </tr>
