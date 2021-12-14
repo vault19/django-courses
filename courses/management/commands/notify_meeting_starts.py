@@ -35,7 +35,7 @@ class Command(NotifyCommand):
                     self.stdout.write(self.style.WARNING(meeting.organizer))
 
                 if meeting.organizer.email and meeting.organizer.email != meeting.run.manager.email:
-                    self.send_email(
+                    self.prepare_and_send_email(
                         meeting.organizer,
                         meeting.run,
                         verbosity=options["verbosity"],
@@ -48,7 +48,7 @@ class Command(NotifyCommand):
                     self.stdout.write(self.style.WARNING(meeting.organizer))
 
                 if meeting.leader and meeting.leader.email and meeting.leader.email != meeting.run.manager.email:
-                    self.send_email(
+                    self.prepare_and_send_email(
                         meeting.leader,
                         meeting.run,
                         verbosity=options["verbosity"],

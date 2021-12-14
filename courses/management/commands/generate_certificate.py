@@ -88,7 +88,7 @@ class Command(NotifyCommand):
                                 cert.save()
 
                                 self.mail_template_variables["certificate"] = cert
-                                self.send_email(
+                                self.prepare_and_send_email(
                                     user,
                                     run,
                                     verbosity=options["verbosity"],
