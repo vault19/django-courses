@@ -387,7 +387,7 @@ def certificate(request, uuid):
 
 
 class CertificatePDF(PDFTemplateView):
-    filename = "certificate.pdf"
+    filename = None
     template_name = "courses/certificate.html"
     cmd_options = {
         "margin-top": 3,

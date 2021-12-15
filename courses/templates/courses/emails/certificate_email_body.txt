@@ -4,7 +4,7 @@ thank you for participating in {{ course_run }}.
 
 You have sucessfuly finished this course.
 
-Youe certificate: {% url 'certificate' certificate.uuid %}.
+Youe certificate: {% url 'certificate_pdf' certificate.uuid %}.
 
 Best regards,
 

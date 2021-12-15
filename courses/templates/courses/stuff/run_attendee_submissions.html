@@ -15,7 +15,7 @@
     <p>
     {% if run|get_certificates:atendee %}
       {% for cert in run|get_certificates:atendee %}
-        <a href="{% url 'certificate' cert.uuid %}" class="btn btn-outline-success" target="_blank">
+        <a href="{% url 'certificate_pdf' cert.uuid %}" class="btn btn-outline-success" target="_blank">
           <i class="fas fa-certificate"></i> {% translate "View Certificate" %}
         </a>
       {% endfor %}
