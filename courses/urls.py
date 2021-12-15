@@ -33,6 +33,8 @@ urlpatterns = [
         views_ajax.video_lecture_submission,
         name="video_ping",
     ),
+    path("certificate/<str:uuid>/pdf/", views.CertificatePDF.as_view(), name="certificate_pdf"),
+    path("certificate/<str:uuid>/", views.certificate, name="certificate"),
     path(
         "stuff/runs/",
         views_staff.runs,
@@ -47,6 +49,11 @@ urlpatterns = [
         "stuff/run/<str:run_slug>/attendee/<int:user_id>/",
         views_staff.run_attendee_submissions,
         name="run_attendee_submissions",
+    ),
+    path(
+        "stuff/run/<str:run_slug>/attendee/<int:user_id>/generate_certificate",
+        views_staff.run_attendee_generate_certificate,
+        name="run_attendee_generate_certificate",
     ),
     path(
         "course/<str:run_slug>/<str:chapter_slug>/<str:lecture_slug>/submissions/",

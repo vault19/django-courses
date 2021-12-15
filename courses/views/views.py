@@ -1,21 +1,19 @@
 import datetime
 
 from django.db.models import Q, F
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django.template import TemplateDoesNotExist
-from django.template.loader import render_to_string
 from django.urls import reverse
 
+from wkhtmltopdf.views import PDFTemplateView
+
+from courses.models import Course, Run, Submission, Lecture, Certificate
 from courses.forms import SubmissionForm, SubscribeForm
-from courses.models import Course, Run, Submission, Lecture
-from courses.utils import get_run_chapter_context
+from courses.utils import get_run_chapter_context, send_email
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
@@ -290,30 +288,13 @@ def subscribe_to_run(request, run_slug):
             # run.save()  # No need to save run
             messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
 
-            ctx_dict = {
-                "user": request.user,
-                "course_run": run,
-            }
-            subject = run.get_setting("COURSES_EMAIL_SUBJECT_PREFIX") + render_to_string(
-                run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"), ctx_dict, request=request
+            send_email(
+                request.user,
+                mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
+                mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
+                mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
+                mail_template_variables={"user": request.user, "course_run": run},
             )
-            # Email subject *must not* contain newlines
-            subject = "".join(subject.splitlines())
-            message = render_to_string(run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"), ctx_dict, request=request)
-
-            email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [request.user.email])
-
-            if run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"):
-                try:
-                    message_html = render_to_string(
-                        run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"), ctx_dict, request=request
-                    )
-                except TemplateDoesNotExist:
-                    pass
-                else:
-                    email_message.attach_alternative(message_html, "text/html")
-
-            email_message.send()
     else:
         messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
 
@@ -395,3 +376,25 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     context["form"] = form
 
     return render(request, "courses/lecture_detail.html", context)
+
+
+@login_required
+def certificate(request, uuid):
+    cert = get_object_or_404(Certificate, uuid=uuid)
+    template = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+    return render(request, template, {"cert": cert})
+
+
+class CertificatePDF(PDFTemplateView):
+    filename = "certificate.pdf"
+    template_name = "courses/certificate.html"
+    cmd_options = {
+        "margin-top": 3,
+    }
+
+    def get(self, request, uuid, *args, **kwargs):
+        cert = get_object_or_404(Certificate, uuid=uuid)
+        self.template_name = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+        return super().get(request, *args, cert=cert, **kwargs)

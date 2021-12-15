@@ -1,3 +1,5 @@
+import uuid
+
 from datetime import datetime, date, timedelta
 
 from django.conf import settings
@@ -730,6 +732,7 @@ class Certificate(models.Model):
     objects = CertificateManager()
     objects_no_relations = models.Manager()
 
+    uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     data = models.FileField(
         verbose_name=_("Data"),
         upload_to="certificates",
