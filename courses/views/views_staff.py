@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
 from courses.forms import ReviewForm
 from courses.models import Run, Submission, Lecture
-from courses.utils import get_run_chapter_context
+from courses.utils import get_run_chapter_context, generate_certificate
 
 
 @login_required
@@ -154,3 +155,17 @@ def lecture_submission_review(request, run_slug, chapter_slug, lecture_slug, sub
     context["form"] = form
 
     return render(request, "courses/lecture_submission_review.html", context)
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def run_attendee_generate_certificate(request, run_slug, user_id):
+    run = get_object_or_404(Run, slug=run_slug)
+    user = get_object_or_404(User, id=user_id)
+
+    if generate_certificate(run, user):
+        messages.success(request, _("Certificate successfully generated for %s." % user.get_full_name()))
+    else:
+        messages.error(request, _("User already has certificate generated!"))
+
+    return redirect("run_attendees", run_slug=run_slug)

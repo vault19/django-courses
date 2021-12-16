@@ -69,6 +69,11 @@ def user_payment(run, user):
     return run.user_payment(user)
 
 
+@register.filter
+def get_certificates(run, user):
+    return run.certificate_set.filter(user=user).all()
+
+
 @register.filter()
 def lecture_type_icon(lecture_type):
     icon = ""

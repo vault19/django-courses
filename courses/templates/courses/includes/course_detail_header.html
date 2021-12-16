@@ -29,7 +29,14 @@
         <p><i class="fas fa-calendar-alt"></i> {{ run.start }}{% if run.end %} - {{ run.end }}{% endif %}
           {% if run.self_paced %}<br>{% translate "Self-paced" %}{% endif %}
         </p>
-        {% if user.is_authenticated and not run.is_past_due %}
+        {% if user.is_authenticated %}
+          {% if run.is_past_due %}
+            {% for cert in run|get_certificates:request.user %}
+              <a href="{% url 'certificate' cert.uuid %}" class="btn btn-sm btn-outline-success"><i class="fas fa-certificate"></i> {% translate "Certificate" %}</a>
+              <a href="{% url 'certificate_pdf' cert.uuid %}" class="btn btn-sm btn-outline-success"><i class="fas fa-file-pdf"></i> PDF</a>
+            {% endfor %}
+            <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
+          {% else %}
           <p>
             {% if not subscribed %}
               {% if run.limit|subtract:run.users.count < 10 %}
@@ -87,6 +94,7 @@
 {#                </button>#}
             {% endif %}
           </p>
+          {% endif %}
         {% endif %}
       {% endif %}
     </div>

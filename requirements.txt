@@ -3,3 +3,4 @@ django-autoslug
 django-bootstrap-v5
 django-embed-video
 django-markdownify
+django-wkhtmltopdf

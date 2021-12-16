@@ -8,10 +8,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
+from wkhtmltopdf.views import PDFTemplateView
+
 from courses.decorators import verify_payment
 from courses.forms import SubmissionForm, SubscribeForm
-from courses.models import Course, Run, Submission, Lecture, SubscriptionLevel
+from courses.models import Course, Run, Submission, Lecture, Certificate, SubscriptionLevel
 from courses.utils import get_run_chapter_context
+
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
@@ -276,7 +279,6 @@ def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
 
 
 @login_required
-@verify_payment
 def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
     # TODO: verify url mix and match of run and course
@@ -332,3 +334,25 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     context["form"] = form
 
     return render(request, "courses/lecture_detail.html", context)
+
+
+@login_required
+def certificate(request, uuid):
+    cert = get_object_or_404(Certificate, uuid=uuid)
+    template = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+    return render(request, template, {"cert": cert})
+
+
+class CertificatePDF(PDFTemplateView):
+    filename = None
+    template_name = "courses/certificate.html"
+    cmd_options = {
+        "margin-top": 3,
+    }
+
+    def get(self, request, uuid, *args, **kwargs):
+        cert = get_object_or_404(Certificate, uuid=uuid)
+        self.template_name = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
+
+        return super().get(request, *args, cert=cert, **kwargs)

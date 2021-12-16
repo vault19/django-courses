@@ -12,6 +12,19 @@
     <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
     <h1>{{ atendee.first_name }} {{ atendee.last_name }}</h1>
     <p>{{ atendee.email }}</p>
+    <p>
+    {% if run|get_certificates:atendee %}
+      {% for cert in run|get_certificates:atendee %}
+        <a href="{% url 'certificate_pdf' cert.uuid %}" class="btn btn-outline-success" target="_blank">
+          <i class="fas fa-certificate"></i> {% translate "View Certificate" %}
+        </a>
+      {% endfor %}
+    {% else %}
+      <a href="{% url 'run_attendee_generate_certificate' run.slug atendee.id %}" class="btn btn-outline-{% if run|has_passed:atendee %}primary{% else %}secondary{% endif %}">
+        <i class="fas fa-certificate"></i> {% translate "Generate Certificate" %}
+      </a>
+    {% endif %}
+    </p>
 
     {% for chapter in run.course.chapter_set.all %}
       <h3>{{ chapter.title }}</h3>
