@@ -6,14 +6,15 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 from django.urls import reverse
 
 from wkhtmltopdf.views import PDFTemplateView
 
-from courses.models import Course, Run, Submission, Lecture, Certificate
+from courses.decorators import verify_payment
 from courses.forms import SubmissionForm, SubscribeForm
-from courses.utils import get_run_chapter_context, send_email
+from courses.models import Course, Run, Submission, Lecture, Certificate, SubscriptionLevel
+from courses.utils import get_run_chapter_context
+
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
@@ -151,10 +152,17 @@ def all_closed_runs(request):
 
 def course_run_detail(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
+    subscription_levels = SubscriptionLevel.objects.filter(run=run)
+    form = SubscribeForm(
+        initial={"sender": request.user.username, "run_slug": run_slug},
+        subscription_levels=subscription_levels.values_list("id", "title"),
+    )
+
     context = {
         "run": run,
+        "subscription_levels": subscription_levels.all(),
         "chapters": [],
-        "form": SubscribeForm(initial={"sender": request.user.username, "run_slug": run_slug}),
+        "form": form,
         "subscribed": run.is_subscribed(request.user),
         "breadcrumbs": [
             {
@@ -197,6 +205,7 @@ def course_run_detail(request, run_slug):
 
 
 @login_required
+@verify_payment
 def chapter_detail(request, run_slug, chapter_slug):
     context = get_run_chapter_context(request, run_slug, chapter_slug)
 
@@ -204,6 +213,7 @@ def chapter_detail(request, run_slug, chapter_slug):
 
 
 @login_required
+@verify_payment
 def chapter_submission(request, run_slug, chapter_slug):
     context = get_run_chapter_context(request, run_slug, chapter_slug)
 
@@ -266,58 +276,6 @@ def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
     context["filter_lecture_type"] = lecture_type
 
     return render(request, "courses/chapter_detail.html", context)
-
-
-@login_required
-def subscribe_to_run(request, run_slug):
-    if request.method == "POST":
-        run = get_object_or_404(Run, slug=run_slug)
-
-        if run.is_full:
-            messages.error(request, _("Subscribed user's limit has been reached."))
-        elif not run.get_setting("COURSES_ALLOW_SUBSCRIPTION_TO_RUNNING_COURSE") and run.start <= timezone.now().date():
-            messages.error(request, _("You are not allowed to subscribe to course that has already started."))
-        elif run.end < timezone.now().date():
-            messages.error(request, _("You are not allowed to subscribe to course that has already finished."))
-        elif run.is_subscribed(request.user):
-            messages.warning(request, _("You are already subscribed to course: %(run)s.") % {"run": run})
-        elif run.is_subscribed_in_different_active_run(request.user):
-            messages.error(request, _("You are already subscribed in different course run."))
-        else:
-            run.users.add(request.user)  # in M2M add will store to DB!
-            # run.save()  # No need to save run
-            messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
-
-            send_email(
-                request.user,
-                mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
-                mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
-                mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
-                mail_template_variables={"user": request.user, "course_run": run},
-            )
-    else:
-        messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
-
-    return redirect("course_run_detail", run_slug=run_slug)
-
-
-@login_required
-def unsubscribe_from_run(request, run_slug):
-    if request.method == "POST":
-        run = get_object_or_404(Run, slug=run_slug)
-
-        if not run.get_setting("COURSES_ALLOW_USER_UNSUBSCRIBE"):
-            messages.warning(request, _("You are not allowed to unsubscribe from the course: %(run)s.") % {"run": run})
-        elif run.is_subscribed(request.user):
-            run.users.remove(request.user)  # in M2M remove will store to DB!
-            # run.save()  # No need to save run
-            messages.success(request, _("You have been unsubscribed from course: %(run)s.") % {"run": run})
-        else:
-            messages.warning(request, _("You are not subscribed to the course: %(run)s.") % {"run": run})
-    else:
-        messages.warning(request, _("You need to submit subscription form in order to unsubscribe!"))
-
-    return redirect("course_run_detail", run_slug=run_slug)
 
 
 @login_required

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Form, CharField, HiddenInput, ModelChoiceField
+from django.forms import ModelForm, Form, CharField, HiddenInput, ModelChoiceField, ChoiceField, RadioSelect
 from courses.models import Submission, Review
 from django.contrib.auth import get_user_model
 
@@ -44,5 +44,18 @@ class ReviewForm(ModelForm):
 
 
 class SubscribeForm(Form):
+    CHOICES = []
+
     sender = CharField(label="Sender", widget=HiddenInput())
     run_slug = CharField(label="Run", widget=HiddenInput())
+    subscription_level = ChoiceField(choices=CHOICES, widget=RadioSelect, required=False)
+
+    def __init__(self, subscription_levels=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if subscription_levels:
+            self.fields["subscription_level"] = ChoiceField(
+                choices=subscription_levels, widget=RadioSelect, required=True
+            )
+        else:
+            del self.fields["subscription_level"]

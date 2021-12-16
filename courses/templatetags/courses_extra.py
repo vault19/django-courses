@@ -54,6 +54,24 @@ def has_passed(run, user):
 
 
 @register.filter
+def check_payment(run, user):
+    for level in run.get_subscription_level(user):
+        if level[1].price == 0:
+            return 'Free'
+        elif run.user_payment(user) >= level[1].price:
+            return "Paid"
+        elif run.user_payment(user) < level[1].price:
+            return "Unpaid"
+
+    return "Free"
+
+
+@register.filter
+def user_payment(run, user):
+    return run.user_payment(user)
+
+
+@register.filter
 def get_certificates(run, user):
     return run.certificate_set.filter(user=user).all()
 

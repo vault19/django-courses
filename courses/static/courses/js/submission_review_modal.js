@@ -7,7 +7,6 @@ console.log(formErrors, typeof(formErrors));
 if(typeof(formErrors) != 'undefined' && formErrors != null) {
   var reviewModalJSObject = new bootstrap.Modal(reviewModal);
   reviewModalJSObject.show();
-  console.log('aaaaaaaaaaaaaaaaa');
 }
 
 reviewModal.addEventListener('show.bs.modal', function (event) {

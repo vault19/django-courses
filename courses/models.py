@@ -484,11 +484,51 @@ class Run(models.Model):
 
         return option_value
 
+    def get_subscription_level(self, user):
+        level = []
+
+        for run_user in self.users.through.objects.filter(run=self).filter(user=user).all():
+            if run_user.subscription_level:
+                level.append((run_user.id, run_user.subscription_level))
+
+        return level
+
+    def user_payment(self, user):
+        total = 0
+
+        for run_user in self.users.through.objects.filter(run=self).filter(user=user).all():
+            if run_user.payment:
+                total += run_user.payment
+
+        return total
+
     def save(self, *args, **kwargs):
         if self.length != 0:
             self.end = self.start + timedelta(days=self.length - 1)
 
         super().save(*args, **kwargs)
+
+
+class SubscriptionLevel(models.Model):
+    class Meta:
+        verbose_name = _("Subscription Level")
+        verbose_name_plural = _("Subscription Levels")
+
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    price = models.FloatField(verbose_name=_("Price"))
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    description = models.TextField(
+        verbose_name=_("Description"),
+        blank=True,
+        null=True,
+        help_text=_("Full description of the subscription level."),
+    )
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about uploaded data.")
+    )
+
+    def __str__(self):
+        return f"{self.title}: {self.price}"
 
 
 class RunUsers(models.Model):
@@ -498,6 +538,9 @@ class RunUsers(models.Model):
 
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    subscription_level = models.ForeignKey(
+        SubscriptionLevel, verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True
+    )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
@@ -507,6 +550,8 @@ class RunUsers(models.Model):
 
     def clean(self):
         pass
+        # TODO: validate: subscription_level.run == run
+
         # Causes error in admin, when limit is one and we want to subscribe one user...
         # if self.run.is_full:
         #     raise ValidationError({"user": _("Subscribed user's limit has been reached.")})
