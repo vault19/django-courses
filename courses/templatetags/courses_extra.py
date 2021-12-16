@@ -63,6 +63,8 @@ def check_payment(run, user):
         elif run.user_payment(user) < level[1].price:
             return "Unpaid"
 
+    return "Free"
+
 
 @register.filter
 def user_payment(run, user):

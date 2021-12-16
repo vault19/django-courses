@@ -34,21 +34,20 @@
         <div class="btn-group">
           {% if run %}
             {% with run|check_payment:request.user as payment %}
+              <a href="{% if payment == "Unpaid" %}{% url "run_payment_instructions" run.slug %}{% else %}{% url 'course_run_detail' run.slug %}{% endif %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
 
-            <a href="{% if payment == "Unpaid" %}{% url "run_payment_instructions" run.slug %}{% else %}{% url 'course_run_detail' run.slug %}{% endif %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>
+              {% if run|is_subscribed:request.user %}
+                <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-success disabled">{% translate "Subscribed" %}</a>
+                {% for cert in run|get_certificates:request.user %}
+                <a href="{% url 'certificate_pdf' cert.uuid %}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fas fa-certificate"></i> {% translate "Certificate" %}</a>
+                {% endfor %}
+              {% endif %}
 
-            {% if run|is_subscribed:request.user %}
-              <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-success disabled">{% translate "Subscribed" %}</a>
-              {% for cert in run|get_certificates:request.user %}
-              <a href="{% url 'certificate_pdf' cert.uuid %}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fas fa-certificate"></i> {% translate "Certificate" %}</a>
-              {% endfor %}
-            {% endif %}
-
-            {% if run.is_past_due %}
-              <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
-            {% endif %}
-
-            <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-{% if payment == "Unpaid" %}danger{% else %}success{% endif %} disabled">{% translate payment %}</a>
+              {% if run.is_past_due %}
+                <a href="{% url 'course_run_detail' run.slug %}" class="btn btn-sm btn-outline-danger disabled">{% translate "Ended" %}</a>
+              {% elif payment != "Free" %}
+                <a href="{% url 'run_payment_instructions' run.slug %}" class="btn btn-sm btn-outline-{% if payment == "Unpaid" %}danger{% else %}success disabled{% endif %}">{% translate "Payment" %}</a>
+              {% endif %}
             {% endwith %}
           {% else %}
               <a href="{% url 'course_detail' course.slug %}" class="btn btn-sm btn-outline-secondary">{% translate "View" %}</a>

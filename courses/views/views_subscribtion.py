@@ -19,10 +19,18 @@ def run_subscription_levels(request, run_slug):
     if subscription_levels.count() == 0:
         return redirect("course_run_detail", run_slug=run_slug)
 
-    if subscribed:
-        messages.warning(request, _("You are already subscribed to course: %(run)s.") % {"run": run})
-        messages.error(request, _("You need to finish the payment in order to continue to the course."))
-        return redirect("run_payment_instructions", run_slug=run_slug)
+    elif subscribed:
+        total_subscription = 0
+
+        for level in run.get_subscription_level(request.user):
+            total_subscription += level[1].price
+
+        if run.user_payment(request.user) >= total_subscription:
+            return redirect("course_run_detail", run_slug=run_slug)
+        else:
+            messages.warning(request, _("You are already subscribed to course: %(run)s.") % {"run": run})
+            messages.error(request, _("You need to finish the payment in order to continue to the course."))
+            return redirect("run_payment_instructions", run_slug=run_slug)
 
     form = SubscribeForm(
         initial={"sender": request.user.username, "run_slug": run_slug},
@@ -58,11 +66,23 @@ def run_subscription_levels(request, run_slug):
 @login_required
 def run_payment_instructions(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
+    run_subscription_levels = run.get_subscription_level(request.user)
+    payment = run.user_payment(request.user)
+    total_subscription = 0
+
+    for level in run_subscription_levels:
+        total_subscription += level[1].price
+
+    if payment >= total_subscription:
+        messages.success(request, _("We have received %(payment)s of %(price)s EUR. Enjoy your course." %
+                                    {'price': total_subscription, 'payment': payment}))
+        return redirect("course_run_detail", run_slug=run_slug)
 
     context = {
         "run": run,
         "subscribed": run.is_subscribed(request.user),
-        "subscribed_levels": run.get_subscription_level(request.user),
+        "subscribed_levels": run_subscription_levels,
+        "total_paid": payment,
         "breadcrumbs": [
             {
                 "url": reverse("courses"),
