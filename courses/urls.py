@@ -77,6 +77,11 @@ urlpatterns = [
         views_staff.lecture_submission_review,
         name="lecture_submission_review",
     ),
+    path(
+        "stuff/email-nofification/",
+        views_staff.email_nofification,
+        name="email_nofification",
+    ),
     # path('<int:question_id>/results/', views.results, name='results'),
     # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

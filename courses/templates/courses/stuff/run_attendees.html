@@ -1,12 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 {% load i18n %}
 {% load courses_extra %}
+
+{% block javascript %}
+  <script src="{% static 'courses/js/modal-generic.js' %}"></script>
+{% endblock %}
 
 {% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 {% endblock %}
-`
+
 {% block content %}
+<div id="modals-here"></div>
+
 <div class="py-5">
   <div class="container">
     <div class="row row-cols-1 {# row-cols-sm-2 row-cols-md-3 #} g-3">
@@ -20,34 +27,53 @@
           <th scope="col">{% translate 'Last Name' %}</th>
           <th scope="col">{% translate 'Passed' %}</th>
           <th scope="col">{% translate 'Certificate' %}</th>
-          <th scope="col">{% translate 'Submissions' %}</th>
+          <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
           {% for user in run.users.all %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ user }}<br /><small><i class="far fa-envelope"></i> {{ user.email }}</small></td>
+            <td>
+              {{ user }}<br />
+              <small><i class="far fa-envelope"></i> {{ user.email }}</small>
+            </td>
             <td>{{ user.first_name }}</td>
             <td>{{ user.last_name }}</td>
             <td>{% if run|has_passed:user %}<i class="fas fa-check-circle"></i>{% endif %}</td>
             <td>
+              <div class="d-grid gap-2">
               {% if run|get_certificates:user %}
                 {% for cert in run|get_certificates:user %}
-                  <a href="{% url 'certificate_pdf' cert.uuid %}" class="btn btn-outline-success" target="_blank">
+                  <a href="{% url 'certificate' cert.uuid %}" class="btn btn-outline-success btn-sm" target="_blank">
                     <i class="fas fa-certificate"></i> {% translate "View" %}
+                  </a>
+                  <a href="{% url 'certificate_pdf' cert.uuid %}" class="btn btn-outline-success btn-sm" target="_blank">
+                    <i class="fas fa-certificate"></i> {% translate "Download" %}
                   </a>
                 {% endfor %}
               {% else %}
-                <a href="{% url 'run_attendee_generate_certificate' run.slug user.id %}" class="btn btn-outline-{% if run|has_passed:user %}primary{% else %}secondary{% endif %}">
+                <a href="{% url 'run_attendee_generate_certificate' run.slug user.id %}" class="btn btn-outline-{% if run|has_passed:user %}primary{% else %}secondary{% endif %} btn-sm">
                   <i class="fas fa-certificate"></i> {% translate "Generate" %}
                 </a>
               {% endif %}
+              </div>
             </td>
             <td>
-              <a href="{% url 'run_attendee_submissions' run.slug user.id %}" class="btn btn-outline-primary">
-                <i class="fas fa-box-open"></i> {% translate "View" %}
-              </a>
+              <div class="d-grid gap-2">
+
+                <a href="{% url 'run_attendee_submissions' run.slug user.id %}" class="btn btn-outline-primary btn-sm">
+                  <i class="fas fa-box-open"></i> {% translate "View submission" %}
+                </a>
+
+                <button type="button" class="btn btn-outline-primary btn-sm"
+                        hx-get="{% url 'email_nofification' %}?recipient={{ user.email }}"
+                        hx-target="#modals-here"
+                        hx-trigger="click"
+                        _="on htmx:afterOnLoad wait 10ms then log 'Loaded' then add .show to #modal-generic then add .show to #modal-backdrop">
+                    <i class="far fa-envelope"></i> {% translate "Send email" %}
+                </button>
+              </div>
             </td>
           </tr>
           {% endfor %}

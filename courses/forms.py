@@ -1,6 +1,9 @@
-from django.forms import ModelForm, Form, CharField, HiddenInput, ModelChoiceField, ChoiceField, RadioSelect
-from courses.models import Submission, Review
 from django.contrib.auth import get_user_model
+from django.core.validators import EmailValidator
+from django.forms import ModelForm, Form, CharField, HiddenInput, ModelChoiceField, ChoiceField, RadioSelect, Textarea
+from django.utils.translation import ugettext_lazy as _
+
+from courses.models import Submission, Review
 
 
 class SubmissionForm(ModelForm):
@@ -46,8 +49,8 @@ class ReviewForm(ModelForm):
 class SubscribeForm(Form):
     CHOICES = []
 
-    sender = CharField(label="Sender", widget=HiddenInput())
-    run_slug = CharField(label="Run", widget=HiddenInput())
+    sender = CharField(label=_("Sender"), widget=HiddenInput())
+    run_slug = CharField(label=_("Run"), widget=HiddenInput())
     subscription_level = ChoiceField(choices=CHOICES, widget=RadioSelect, required=False)
 
     def __init__(self, subscription_levels=None, *args, **kwargs):
@@ -59,3 +62,9 @@ class SubscribeForm(Form):
             )
         else:
             del self.fields["subscription_level"]
+
+
+class MailForm(Form):
+    recipient = CharField(label=_("Recipient"), validators=[EmailValidator()])
+    subject = CharField(label=_("Subject"), min_length=3, max_length=256)
+    body = CharField(label=_("Body"), widget=Textarea(attrs={"rows": 5, "cols": 20}))

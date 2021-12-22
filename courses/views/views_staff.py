@@ -6,9 +6,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
 
-from courses.forms import ReviewForm
+from courses.forms import ReviewForm, MailForm
 from courses.models import Run, Submission, Lecture
-from courses.utils import get_run_chapter_context, generate_certificate
+from courses.utils import get_run_chapter_context, generate_certificate, send_email
 
 
 @login_required
@@ -169,3 +169,36 @@ def run_attendee_generate_certificate(request, run_slug, user_id):
         messages.error(request, _("User already has certificate generated!"))
 
     return redirect("run_attendees", run_slug=run_slug)
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def email_nofification(request):
+    context = {
+        "post_url": request.GET.get("post_url", reverse("email_nofification")),
+        "modal_icon": "far fa-envelope",
+        "modal_title": _("Send Email"),
+        "modal_action": _("Send Email"),
+    }
+
+    if request.method == "POST":
+        form = MailForm(request.POST)
+
+        if form.is_valid():
+            send_email(
+                email=form.cleaned_data["recipient"],
+                subject=form.cleaned_data["subject"],
+                message=form.cleaned_data["body"],
+                mail_subject="",
+                mail_body="",
+                mail_body_html="",
+                user=None,
+            )
+            context["message"] = _("Your message has been send to queue.")
+        else:
+            context["form"] = form
+    else:
+        form = MailForm(initial={"recipient": request.GET.get("recipient", "")})
+        context["form"] = form
+
+    return render(request, "courses/htmx/form_generic.html", context)

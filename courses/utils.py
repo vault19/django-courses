@@ -61,15 +61,22 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
     return context
 
 
-def send_email(user, mail_subject, mail_body, mail_body_html, mail_template_variables=dict()):
-    mail_template_variables["user"] = user
+def send_email(
+    user, mail_subject, mail_body, mail_body_html, email, mail_template_variables=dict(), subject=None, message=None
+):
+    if user:
+        mail_template_variables["user"] = user
+        email = user.email
 
-    subject = COURSES_EMAIL_SUBJECT_PREFIX + render_to_string(mail_subject, mail_template_variables)
-    # Email subject *must not* contain newlines
-    subject = "".join(subject.splitlines())
-    message = render_to_string(mail_body, mail_template_variables)
+    if subject is None:
+        subject = COURSES_EMAIL_SUBJECT_PREFIX + render_to_string(mail_subject, mail_template_variables)
+        # Email subject *must not* contain newlines
+        subject = "".join(subject.splitlines())
 
-    email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    if message is None:
+        message = render_to_string(mail_body, mail_template_variables)
+
+    email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
     if mail_body_html:
         try:
