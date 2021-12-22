@@ -74,8 +74,13 @@ def run_payment_instructions(request, run_slug):
         total_subscription += level[1].price
 
     if payment >= total_subscription:
-        messages.success(request, _("We have received %(payment)s of %(price)s EUR. Enjoy your course." %
-                                    {'price': total_subscription, 'payment': payment}))
+        messages.success(
+            request,
+            _(
+                "We have received %(payment)s of %(price)s EUR. Enjoy your course."
+                % {"price": total_subscription, "payment": payment}
+            ),
+        )
         return redirect("course_run_detail", run_slug=run_slug)
 
     context = {
@@ -126,15 +131,16 @@ def subscribe_to_run(request, run_slug):
             if not form.is_valid():
                 messages.error(request, _("Please correct errors in your subscription form.") + form.errors)
 
-            defaults = {
-                "payment": 0
-            }
+            defaults = {"payment": 0}
 
             if "subscription_level" in form.cleaned_data:
                 defaults["subscription_level_id"] = form.cleaned_data["subscription_level"]
 
             # in M2M add will store to DB!
-            run.users.add(request.user, through_defaults=defaults,)
+            run.users.add(
+                request.user,
+                through_defaults=defaults,
+            )
 
             # run.save()  # No need to save run
             messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})

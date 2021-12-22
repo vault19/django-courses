@@ -57,7 +57,7 @@ def has_passed(run, user):
 def check_payment(run, user):
     for level in run.get_subscription_level(user):
         if level[1].price == 0:
-            return 'Free'
+            return "Free"
         elif run.user_payment(user) >= level[1].price:
             return "Paid"
         elif run.user_payment(user) < level[1].price:
