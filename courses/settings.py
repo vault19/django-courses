@@ -1,5 +1,7 @@
 from django.conf import settings
 
+BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "base_v1.html")
+
 EXTENSION_IMAGE = ["jpg", "jpeg", "gif", "png", "tiff", "svg"]
 EXTENSION_DOCUMENT = ["pdf"]
 EXTENSION_VIDEO = ["mkv", "avi", "mp4", "mov"]
