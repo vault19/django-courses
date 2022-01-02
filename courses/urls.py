@@ -7,7 +7,7 @@ from .views import views_subscribtion
 
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    # path("", views.index, name="index"),
     path("courses/", views.courses, name="courses"),
     path("courses/open/", views.all_active_runs, name="all_active_runs"),
     path("courses/closed/", views.all_closed_runs, name="all_closed_runs"),
