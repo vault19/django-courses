@@ -1,6 +1,7 @@
 from django.conf import settings
 
-BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "base_v1.html")
+BASE_TEMPLATE = getattr(settings, "BASE_TEMPLATE", "base.html")
+TEMPLATE_THEME_DIR = getattr(settings, "TEMPLATE_THEME_DIR", "base")
 
 EXTENSION_IMAGE = ["jpg", "jpeg", "gif", "png", "tiff", "svg"]
 EXTENSION_DOCUMENT = ["pdf"]
