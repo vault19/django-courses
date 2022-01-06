@@ -73,6 +73,28 @@ def all_active_runs(request):
 
 
 @login_required
+def all_subscribed_runs(request):
+    course_runs = (
+        Run.objects.filter(runusers__user=request.user)
+        .order_by("start")
+    )
+    context = {
+        "runs": course_runs,
+        "breadcrumbs": [
+            {
+                "url": reverse("courses"),
+                "title": _("Courses"),
+            },
+            {
+                "title": _("My courses"),
+            },
+        ],
+    }
+
+    return render(request, "courses/runs_list.html", context)
+
+
+@login_required
 def all_subscribed_active_runs(request):
     course_runs = (
         Run.objects.filter(course__state="O")
