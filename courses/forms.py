@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import EmailValidator
 from django.forms import ModelForm, Form, CharField, HiddenInput, ModelChoiceField, ChoiceField, RadioSelect, Textarea
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from courses.models import Submission, Review
 

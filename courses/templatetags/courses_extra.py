@@ -2,8 +2,7 @@ from datetime import date
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
-from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import gettext_lazy as _
 
 from courses.models import Lecture, LECTURE_TYPE
 from courses.settings import EXTENSION_VIDEO, EXTENSION_IMAGE
