@@ -80,13 +80,13 @@ def lecture_type_icon(lecture_type):
     icon = ""
 
     if lecture_type == LECTURE_TYPE[0][0]:
-        icon = '<i class="fas fa-film"></i>'
+        icon = '<i class="fas fa-play"></i>'
     elif lecture_type == LECTURE_TYPE[1][0]:
         icon = '<i class="fas fa-file-alt"></i>'
     elif lecture_type == LECTURE_TYPE[2][0]:
         icon = '<i class="fas fa-users"></i><i class="fas fa-tasks"></i>'
     elif lecture_type == LECTURE_TYPE[3][0]:
-        icon = '<i class="fab fa-python"></i>'
+        icon = '<i class="fas fa-tasks"></i>'
     elif lecture_type == LECTURE_TYPE[4][0]:
         icon = '<i class="fas fa-tasks"></i>'
     elif lecture_type == LECTURE_TYPE[5][0]:
