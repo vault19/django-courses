@@ -3,6 +3,7 @@ from django.urls import path
 from .views import views
 from .views import views_staff
 from .views import views_ajax
+from .views import views_htmx
 from .views import views_subscribtion
 
 
@@ -16,6 +17,12 @@ urlpatterns = [
     path("courses/subscribed/closed/", views.all_subscribed_closed_runs, name="all_subscribed_closed_runs"),
     path("course/<str:course_slug>/details/", views.course_detail, name="course_detail"),
     path("course/<str:run_slug>/", views.course_run_detail, name="course_run_detail"),
+
+    path("course/<str:run_slug>/overview/", views_htmx.course_run_overview, name="course_run_overview"),
+    path("course/<str:run_slug>/chapters/", views_htmx.course_run_chapters, name="course_run_chapters"),
+    path("course/<str:run_slug>/group/", views_htmx.course_run_group, name="course_run_group"),
+    path("course/<str:run_slug>/help/", views_htmx.course_run_help, name="course_run_help"),
+
     path(
         "course/<str:run_slug>/subscription_levels/",
         views_subscribtion.run_subscription_levels,
@@ -83,6 +90,4 @@ urlpatterns = [
         views_staff.email_nofification,
         name="email_nofification",
     ),
-    # path('<int:question_id>/results/', views.results, name='results'),
-    # path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

@@ -24,13 +24,16 @@
             {% if form %}
               {% csrf_token %}
               {% bootstrap_form form %}
+              {% if form2 %}
+                {% bootstrap_form form2 %}
+              {% endif  %}
             {% endif  %}
           </div>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeModal()">{% translate "Close" %}</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">{% translate "Close" %}</button>
         {% if form %}
         <button type="submit" class="btn btn-primary">{{ modal_action }}</button>
         {% endif %}
