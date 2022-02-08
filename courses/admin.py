@@ -16,6 +16,7 @@ from courses.models import (
     Certificate,
     Meeting,
     SubscriptionLevel,
+    Faq,
 )
 
 
@@ -53,6 +54,12 @@ class RunInline(admin.TabularInline):
     autocomplete_fields = ["manager"]
 
 
+class FaqInline(admin.TabularInline):
+    model = Faq
+    extra = 0
+    # TODO: check if it could be ordered?
+
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
@@ -67,6 +74,7 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = (
         ChapterInline,
         RunInline,
+        FaqInline,
     )
 
     def view_run_link(self, obj):

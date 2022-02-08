@@ -35,6 +35,7 @@ def course_detail(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
     context = {
         "course": course,
+        "questions": course.faq_set.filter(state__in=("C", "B")).all(),
         "course_runs": course.run_set.filter(state="O"),
         "breadcrumbs": [
             {

@@ -98,3 +98,19 @@ def course_run_help(request, run_slug):
         return render(request, "courses/run/partial/help.html", context)
     else:
         return render(request, "courses/run/help.html", context)
+
+
+def course_faq(request, run_slug):
+    run = get_object_or_404(Run, slug=run_slug)
+
+    context = {
+        "run": run,
+        "questions": run.course.faq_set.filter(state__in=("S", "B")).all(),
+        "chapters": [],
+        "subscribed": run.is_subscribed(request.user),
+    }
+
+    if request.GET.get('partial', False):
+        return render(request, "courses/run/partial/faq.html", context)
+    else:
+        return render(request, "courses/run/faq.html", context)

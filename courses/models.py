@@ -509,6 +509,29 @@ class Run(models.Model):
         super().save(*args, **kwargs)
 
 
+class Faq(models.Model):
+    STATE = (
+        ("D", _("Draft")),
+        ("C", _("Course")),
+        ("S", _("Subscribed Course")),
+        ("B", _("Both")),
+    )
+
+    class Meta:
+        verbose_name = _("Frequently asked question")
+        verbose_name_plural = _("Frequently asked questions")
+
+    question = models.CharField(verbose_name=_("Question"), max_length=250)
+    answer = models.TextField(verbose_name=_("Description"), help_text=_("Full description of the question."))
+    order = models.IntegerField(default=0, help_text=_("Order number for the question."))
+    state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.order}. {self.question}"
+
+
 class SubscriptionLevel(models.Model):
     class Meta:
         verbose_name = _("Subscription Level")

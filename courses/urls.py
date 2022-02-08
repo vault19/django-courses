@@ -22,6 +22,7 @@ urlpatterns = [
     path("course/<str:run_slug>/chapters/", views_htmx.course_run_chapters, name="course_run_chapters"),
     path("course/<str:run_slug>/group/", views_htmx.course_run_group, name="course_run_group"),
     path("course/<str:run_slug>/help/", views_htmx.course_run_help, name="course_run_help"),
+    path("course/<str:run_slug>/faq/", views_htmx.course_faq, name="course_faq"),
 
     path(
         "course/<str:run_slug>/subscription_levels/",
