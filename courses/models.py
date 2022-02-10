@@ -1,6 +1,8 @@
 import uuid
 
 from datetime import datetime, date, timedelta
+from time import gmtime
+from time import strftime
 
 from django.conf import settings
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -79,6 +81,22 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         help_text=_("Creator of the course, mainly responsible for the content"),
     )
+    lecturers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Lecturers"),
+        blank=True,
+        related_name='lecturers',
+    )
+    thumbnail = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to='courses/',
+        validators=[FileExtensionValidator(["jpg", "jpeg", "png"])],
+        help_text=_("Preferred size is 600x450px (4by3)."),
+    )
+    video = models.CharField(max_length=250, null=True, blank=True)
+    tag = models.CharField(max_length=250, null=True, blank=True)
+    ribbon = models.CharField(max_length=250, null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -337,6 +355,16 @@ class Lecture(models.Model):
                     }
                 )
 
+    def video_duration(self):
+        if self.metadata and self.metadata.get("video_duration", None):
+            return strftime("%-Mm %Ss", gmtime(self.metadata.get("video_duration")))
+        return None
+
+    def video_duration_seconds(self):
+        if self.metadata:
+            return self.metadata.get("video_duration", 0)
+        return 0
+
 
 class RunManager(models.Manager):
     """
@@ -537,7 +565,8 @@ class SubscriptionLevel(models.Model):
         verbose_name = _("Subscription Level")
         verbose_name_plural = _("Subscription Levels")
 
-    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, null=True, blank=True)
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE, null=True, blank=True)
     price = models.FloatField(verbose_name=_("Price"))
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(

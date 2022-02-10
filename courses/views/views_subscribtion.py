@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.urls import reverse
+from django.core.exceptions import BadRequest
 
 from courses.forms import SubscribeForm
 from courses.models import Run, SubscriptionLevel
@@ -13,11 +14,14 @@ from courses.utils import send_email
 @login_required
 def run_subscription_levels(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
-    subscription_levels = SubscriptionLevel.objects.filter(run=run)
     subscribed = run.is_subscribed(request.user)
 
+    subscription_levels = SubscriptionLevel.objects.filter(run=run)
     if subscription_levels.count() == 0:
-        return redirect("course_run_detail", run_slug=run_slug)
+        subscription_levels = SubscriptionLevel.objects.filter(course=run.course)
+
+    if subscription_levels.count() == 0:
+        raise BadRequest(_("Missing Course Levels!"))
 
     elif subscribed:
         total_subscription = 0
@@ -147,6 +151,7 @@ def subscribe_to_run(request, run_slug):
 
             send_email(
                 request.user,
+                email=request.user.email,
                 mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
                 mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
                 mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
@@ -162,7 +167,7 @@ def subscribe_to_run(request, run_slug):
     if run.get_subscription_level(request.user):
         return redirect("run_payment_instructions", run_slug=run_slug)
 
-    return redirect("course_run_detail", run_slug=run_slug)
+    return redirect("all_subscribed_runs")
 
 
 @login_required

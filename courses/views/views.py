@@ -1,4 +1,6 @@
 import datetime
+from time import gmtime
+from time import strftime
 
 from django.db.models import Q, F
 from django.core.exceptions import PermissionDenied
@@ -16,6 +18,7 @@ from courses.models import Course, Run, Submission, Lecture, Certificate, Subscr
 from courses.utils import get_run_chapter_context
 
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
+from profiles.models import Profile
 
 
 def index(request):
@@ -33,6 +36,7 @@ def courses(request):
 
 def course_detail(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
+
     context = {
         "course": course,
         "questions": course.faq_set.filter(state__in=("C", "B")).all(),
@@ -46,7 +50,29 @@ def course_detail(request, course_slug):
                 "title": course.title,
             },
         ],
+        "chapters": [],
     }
+
+    total_lecture_count = 0
+    video_lecture_count = 0
+    total_video_lecture_duration = 0
+
+    for chapter in course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
+        context["chapters"].append(
+            {
+                "lecture_set": chapter.lecture_set.order_by("order", "title"),
+                "title": chapter.title,
+            }
+        )
+        total_lecture_count += chapter.lecture_set.count()
+        video_lecture_count += chapter.lecture_set.filter(lecture_type="V").count()
+
+        for lecture in chapter.lecture_set.all():
+            total_video_lecture_duration += lecture.video_duration_seconds()
+
+    context['total_lecture_count'] = total_lecture_count
+    context['video_lecture_count'] = video_lecture_count
+    context['total_video_lecture_duration'] = strftime("%-Hh %-Mm %Ss", gmtime(total_video_lecture_duration))
 
     return render(request, "courses/course_detail.html", context)
 

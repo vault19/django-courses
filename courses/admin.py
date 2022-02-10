@@ -70,7 +70,7 @@ class CourseAdmin(admin.ModelAdmin):
     )
     list_filter = ("state",)
     search_fields = ["title"]
-    autocomplete_fields = ["creator"]
+    autocomplete_fields = ["creator", "lecturers"]
     inlines = (
         ChapterInline,
         RunInline,
