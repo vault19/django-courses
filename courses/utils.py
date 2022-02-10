@@ -109,6 +109,7 @@ def generate_certificate(run, user, notify=True):
 
             send_email(
                 user,
+                email=user.email,
                 mail_subject=mail_subject,
                 mail_body=mail_body,
                 mail_body_html=mail_body_html,
