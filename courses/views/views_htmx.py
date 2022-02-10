@@ -18,6 +18,7 @@ from courses.utils import get_run_chapter_context
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
 
+@login_required
 def course_run_overview(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -34,6 +35,7 @@ def course_run_overview(request, run_slug):
         return render(request, "courses/run/overview.html", context)
 
 
+@login_required
 def course_run_chapters(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -72,6 +74,7 @@ def course_run_chapters(request, run_slug):
         return render(request, "courses/run/chapters.html", context)
 
 
+@login_required
 def course_run_group(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -88,6 +91,7 @@ def course_run_group(request, run_slug):
         return render(request, "courses/run/group.html", context)
 
 
+@login_required
 def course_run_help(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -104,6 +108,7 @@ def course_run_help(request, run_slug):
         return render(request, "courses/run/help.html", context)
 
 
+@login_required
 def course_faq(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
