@@ -25,6 +25,7 @@ def course_run_overview(request, run_slug):
         "run": run,
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
+        "page_tab_title": run.title,
     }
 
     if request.GET.get('partial', False):
@@ -40,6 +41,7 @@ def course_run_chapters(request, run_slug):
         "run": run,
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
+        "page_tab_title": run.title,
     }
 
     for chapter in run.course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
@@ -77,6 +79,7 @@ def course_run_group(request, run_slug):
         "run": run,
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
+        "page_tab_title": run.title,
     }
 
     if request.GET.get('partial', False):
@@ -92,6 +95,7 @@ def course_run_help(request, run_slug):
         "run": run,
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
+        "page_tab_title": run.title,
     }
 
     if request.GET.get('partial', False):
@@ -108,6 +112,7 @@ def course_faq(request, run_slug):
         "questions": run.course.faq_set.filter(state__in=("S", "B")).all(),
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
+        "page_tab_title": run.title,
     }
 
     if request.GET.get('partial', False):

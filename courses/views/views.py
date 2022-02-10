@@ -29,7 +29,10 @@ def index(request):
 
 def courses(request):
     courses = Course.objects_no_relations.filter(state="O").order_by("title")
-    context = {"courses": courses}
+    context = {
+        "courses": courses,
+        "page_tab_title": _("Courses"),
+    }
 
     return render(request, "courses/courses_list.html", context)
 
@@ -51,6 +54,7 @@ def course_detail(request, course_slug):
             },
         ],
         "chapters": [],
+        "page_tab_title": course.title,
     }
 
     total_lecture_count = 0
@@ -116,6 +120,7 @@ def all_subscribed_runs(request):
                 "title": _("My courses"),
             },
         ],
+        "page_tab_title": _("My courses"),
     }
 
     return render(request, "courses/runs_list.html", context)
@@ -381,6 +386,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 
     context["user_submissions"] = user_submissions
     context["form"] = form
+    context["page_tab_title"] = lecture.title
 
     return render(request, "courses/lecture_detail.html", context)
 

@@ -62,6 +62,7 @@ def run_subscription_levels(request, run_slug):
                 "title": _("Subscription levels"),
             },
         ],
+        "page_tab_title": run.course.title,
     }
 
     return render(request, "courses/run_subscription_levels.html", context)
