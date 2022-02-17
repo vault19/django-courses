@@ -97,6 +97,9 @@ class Course(models.Model):
     video = models.CharField(max_length=250, null=True, blank=True)
     tag = models.CharField(max_length=250, null=True, blank=True)
     ribbon = models.CharField(max_length=250, null=True, blank=True)
+    course_length = models.CharField(max_length=250, null=True, blank=True)
+    required_skills = models.CharField(max_length=250, null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.title}"
