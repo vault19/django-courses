@@ -1,3 +1,5 @@
+{% load markdownify %}
+
   <!-- Card header START -->
   <div class="card-header bg-transparent border-bottom">
     <h3 class="mb-0"><i class="fas fa-question fa-fw me-2"></i> Často kladené otázky</h3>
@@ -19,9 +21,9 @@
 								<span class="fw-bold">{{ question.question }}</span>
 							</button>
 						</h2>
-						<div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionFaq" style="">
+						<div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionFaq" style="">
 							<div class="accordion-body pt-0">
-								{{ question.answer }}
+								{{ question.answer|markdownify }}
 							</div>
 						</div>
 					</div>
