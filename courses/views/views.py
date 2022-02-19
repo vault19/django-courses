@@ -81,6 +81,7 @@ def course_detail(request, course_slug):
     return render(request, "courses/course_detail.html", context)
 
 
+@login_required
 def all_active_runs(request):
     course_runs = (
         Run.objects.filter(course__state="O")
