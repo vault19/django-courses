@@ -178,6 +178,16 @@ class RunUsersDetailInline(admin.TabularInline):
     classes = ["collapse"]
 
 
+@admin.register(RunUsers)
+class RunUsersAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "run",
+    )
+    list_filter = ("run",)
+    search_fields = ["user__email", "user__first_name", "user__last_name", "user__username"]
+
+
 @admin.register(Run)
 class RunAdmin(admin.ModelAdmin):
     list_display = ("title", "course", "start", "end", "view_users_link", "view_submissions_link")

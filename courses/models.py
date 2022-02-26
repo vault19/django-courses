@@ -594,7 +594,7 @@ class RunUsers(models.Model):
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     subscription_level = models.ForeignKey(
-        SubscriptionLevel, verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True
+        SubscriptionLevel, verbose_name=_("Subscription Level"), on_delete=models.CASCADE, blank=True, null=True
     )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
