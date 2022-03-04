@@ -583,7 +583,12 @@ class SubscriptionLevel(models.Model):
     )
 
     def __str__(self):
-        return f"{self.title}: {self.price}"
+        if self.run:
+            return f"{self.run}: {self.title} ({self.price})"
+        elif self.course:
+            return f"{self.course}: {self.title} ({self.price})"
+        else:
+            return f"{self.title} ({self.price})"
 
 
 class RunUsers(models.Model):
