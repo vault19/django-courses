@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import get_object_or_404
-from django.template import TemplateDoesNotExist
+from django.template import TemplateDoesNotExist, Template, Context
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -73,14 +73,23 @@ def send_email(
         subject = COURSES_EMAIL_SUBJECT_PREFIX + render_to_string(mail_subject, mail_template_variables)
         # Email subject *must not* contain newlines
         subject = "".join(subject.splitlines())
+    else:
+        _template = Template(subject)
+        subject = _template.render(Context(mail_template_variables))
 
     if message is None:
         message = render_to_string(mail_body, mail_template_variables)
+    else:
+        _template = Template(message)
+        message = _template.render(Context(mail_template_variables))
 
     email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
     if message_html:
-        email_message.attach_alternative(message_html, "text/html")
+        _template = Template(message_html)
+        email_message.attach_alternative(
+            _template.render(Context(mail_template_variables)),
+            "text/html")
     else:
         try:
             if message_html is None:
