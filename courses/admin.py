@@ -17,6 +17,8 @@ from courses.models import (
     Meeting,
     SubscriptionLevel,
     Faq,
+    EmailTemplate,
+    EmailTemplateImage,
 )
 
 
@@ -268,4 +270,14 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(EmailTemplate)
+class EmailTemplateAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(EmailTemplateImage)
+class EmailTemplateImageAdmin(admin.ModelAdmin):
     pass

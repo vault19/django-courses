@@ -150,18 +150,20 @@ def subscribe_to_run(request, run_slug):
             # run.save()  # No need to save run
             messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
 
-            send_email(
-                request.user,
-                email=request.user.email,
-                mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
-                mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
-                mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
-                mail_template_variables={
-                    "user": request.user,
-                    "course_run": run,
-                    "subscribed_levels": run.get_subscription_level(request.user),
-                },
-            )
+            mail_template = run.course.mail_subscription
+            if mail_template:
+                send_email(
+                    request.user,
+                    email=request.user.email,
+                    subject=mail_template.mail_subject,
+                    message=mail_template.mail_body_plaintext,
+                    message_html=mail_template.mail_body_html,
+                    mail_template_variables={
+                        "user": request.user,
+                        "course_run": run,
+                        "subscribed_levels": run.get_subscription_level(request.user),
+                    },
+                )
     else:
         messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
 

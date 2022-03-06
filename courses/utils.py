@@ -62,7 +62,8 @@ def get_run_chapter_context(request, run_slug, chapter_slug, raise_unsubscribed=
 
 
 def send_email(
-    user, mail_subject, mail_body, mail_body_html, email, mail_template_variables=dict(), subject=None, message=None
+    user, email, mail_subject=None, mail_body=None, mail_body_html=None, mail_template_variables=dict(), subject=None,
+        message=None, message_html=None
 ):
     if user:
         mail_template_variables["user"] = user
@@ -78,9 +79,12 @@ def send_email(
 
     email_message = EmailMultiAlternatives(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
-    if mail_body_html:
+    if message_html:
+        email_message.attach_alternative(message_html, "text/html")
+    else:
         try:
-            message_html = render_to_string(mail_body_html, mail_template_variables)
+            if message_html is None:
+                message_html = render_to_string(mail_body_html, mail_template_variables)
         except TemplateDoesNotExist:
             pass
         else:
