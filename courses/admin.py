@@ -106,9 +106,10 @@ class CourseAdmin(admin.ModelAdmin):
         return get_data
 
 
-class LectureDetailInline(admin.StackedInline):
+class LectureDetailInline(admin.TabularInline):
     model = Lecture
-    extra = 1
+    extra = 0
+    ordering = ("order",)
 
 
 @admin.register(Chapter)
