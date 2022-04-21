@@ -307,6 +307,10 @@ class Lecture(models.Model):
         default="N",
         help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
     )
+    public_submission = models.BooleanField(
+        verbose_name=_("Make submissions public within Group"),
+        default=False,
+    )
     require_submission_review = models.CharField(
         verbose_name=_("Require submission review"),
         max_length=1,
@@ -427,6 +431,10 @@ class Run(models.Model):
         on_delete=models.CASCADE,
         related_name="manager",
         help_text=_("Manager of the course run, responsible for the smoothness of the run."),
+    )
+    allow_public_submission = models.BooleanField(
+        verbose_name=_("Allow public submissions within Group (has to be set per course lecture)"),
+        default=False,
     )
 
     def __str__(self):
@@ -725,16 +733,28 @@ class Submission(models.Model):
         verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe what you have learned.")
     )
     data = models.FileField(
-        verbose_name=_("Data"),
+        verbose_name=_("Attachment"),
         blank=True,
         null=True,
         upload_to="submissions",
-        help_text=_("Upload proof of your work " "(document, video, image)."),
+        help_text=_("Upload an attachment."),
         validators=[
-            FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]),
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg", "pdf", "doc", "docx", "txt", "hex"]),
             FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
+    image = models.FileField(
+        verbose_name=_("Image"),
+        blank=True,
+        null=True,
+        upload_to="submissions",
+        help_text=_("Upload an image of your work."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg"]),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
+        ],
+    )
+    video_link = models.CharField(verbose_name=_("Video link"), max_length=250, null=True, blank=True)
     lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, verbose_name=_("Chapter"), on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)

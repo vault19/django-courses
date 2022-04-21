@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from django.db.models import Q, F
 from django.core.exceptions import PermissionDenied
@@ -84,6 +85,25 @@ def course_run_group(request, run_slug):
         "subscribed": run.is_subscribed(request.user),
         "page_tab_title": run.title,
     }
+
+    submissions = Submission.objects.filter(run__slug=run_slug)\
+        .filter(lecture__public_submission=True).filter(lecture__lecture_type="P")\
+        .filter(run__allow_public_submission=True).order_by("-timestamp_added")
+
+    regex = re.compile(
+        r'.*(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)'
+        r'/(watch\?v=|embed/|v/|.+\?v=)?(?P<id>[A-Za-z0-9\-=_]{11}).*', re.DOTALL
+    )
+
+    for submission in submissions:
+
+        if not submission.video_link:
+            match = regex.match(submission.description)
+
+            if match:
+                submission.video_link = match.group('id')
+
+    context["submissions"] = submissions
 
     if request.GET.get('partial', False):
         return render(request, "courses/run/partial/group.html", context)

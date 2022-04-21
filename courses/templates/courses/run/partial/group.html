@@ -9,11 +9,19 @@
 
     <div class="tab-pane fade active show" id="course-pills-2" role="tabpanel"
          aria-labelledby="course-pills-tab-2">
-      <p>Na tejto stránke sa pracuje.</p>
-      <p>
-        Časom tu budete môcť vidieť projekty, ktoré odovzdali ďalší účastníci kurzu a navzájom
-        si ich pripomienkovať.
-      </p>
+      {% for submission in submissions %}
+        <div class="mb-4">
+          {% include "courses/includes/submission_card.html" %}
+        </div>
+      {% endfor %}
     </div>
   </div>
   <!-- Card body START -->
+
+{% block javascript %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const player = Plyr.setup('.js-player');
+  });
+</script>
+{% endblock %}

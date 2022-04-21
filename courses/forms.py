@@ -9,7 +9,7 @@ from courses.models import Submission, Review
 class SubmissionForm(ModelForm):
     class Meta:
         model = Submission
-        fields = ["title", "description", "data"]
+        fields = ["title", "description", "video_link", "image", "data"]
 
 
 User = get_user_model()

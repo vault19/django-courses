@@ -1,0 +1,72 @@
+{% load i18n %}
+{% load markdownify %}
+{% load bootstrap5 %}
+{% load courses_extra %}
+{% load embed_video_tags %}
+{% load static %}
+
+<div class="card shadow p-2">
+  <div class="row g-0 mb-2">
+    <h5 class="card-title mb-1">{{ submission.title }}</h5>
+  </div>
+  <div class="row g-0">
+
+    <!-- Image or video -->
+    {% if submission.video_link %}
+      <div class="col-md-4">
+        <div class="video-player">
+          <div class="js-player" data-plyr-provider="youtube" data-plyr-embed-id="{{ submission.video_link }}"></div>
+        </div>
+      </div>
+    {% elif submission.image %}
+      <div class="col-md-4">
+        <img src="{{ submission.image.url }}" class="img-fluid rounded-3" alt="...">
+      </div>
+    {% endif %}
+
+    <!-- Card body -->
+    <div class="{% if submission.video_link or submission.image %}col-md-8{% else %}col-md-12{% endif %}">
+      <div class="card-body">
+        <!-- Title -->
+        <div class="d-sm-flex justify-content-sm-between mb-2 mb-sm-3">
+          <div>
+            <div class="avatar avatar-l position-relative mt-n3">
+              {% if submission.author.profile.avatar %}
+              <img class="avatar-img rounded-circle border border-white border-3 shadow" src="{{ submission.author.profile.avatar.url }}" alt="{{ submission.author.first_name }} {{ submission.author.last_name }} Avatar">
+              {% else %}
+              <img class="avatar-img rounded-circle border border-white border-3 shadow" src="{% static 'eduport/assets/images/avatar/01.jpg' %}" alt="Blank Avatar">
+              {% endif %}
+            </div>
+            <b>{{ submission.author.first_name }} {{ submission.author.last_name }}</b>
+          </div>
+          <span class="text-dark">
+            {{ submission.timestamp_added }}
+            {% if submission.timestamp_added != submission.timestamp_modified %}
+              <i class="far fa-edit" data-container="body"
+                 data-toggle="popover" data-placement="top"
+                 title="upravené {{ submission.timestamp_modified }}"
+                 data-original-title=""></i>
+            {% endif %}
+          </span>
+        </div>
+        <!-- Content -->
+        <h6 class="text-orange mb-0">Zadanie: {{ submission.lecture }}</h6>
+        <p class="text-truncate-2 mb-3">{{ submission.description|markdownify }}</p>
+        <p class="text-truncate-2 mb-3">
+          {% if submission.data %}
+            <a href="{{ submission.data.url }}" target="_blank"><i class="fas fa-download"></i> {{ submission.data }}</a>
+          {% endif %}
+        </p>
+        <!-- Info -->
+        <div class="d-sm-flex justify-content-sm-between align-items-center">
+          <!-- Button trigger submission modal -->
+          {% if edit %}
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#submissionModal">
+            {% translate "Edit" %} <i class="far fa-edit"></i>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
