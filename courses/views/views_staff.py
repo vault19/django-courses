@@ -162,8 +162,17 @@ def lecture_submission_review(request, run_slug, chapter_slug, lecture_slug, sub
 def run_attendee_generate_certificate(request, run_slug, user_id):
     run = get_object_or_404(Run, slug=run_slug)
     user = get_object_or_404(User, id=user_id)
+    certificate_template = run.course.certificate_template
 
-    if generate_certificate(run, user):
+    if not certificate_template:
+        messages.error(request, _("The course does not have a certificate template specified!"))
+        return redirect("run_attendees", run_slug=run_slug)
+
+    if not user.first_name or not user.last_name:
+        messages.error(request, _("The user does not have his and hers name specified in their profile!"))
+        return redirect("run_attendees", run_slug=run_slug)
+
+    if generate_certificate(run, user, certificate_template):
         messages.success(request, _("Certificate successfully generated for %s." % user.get_full_name()))
     else:
         messages.error(request, _("User already has certificate generated!"))

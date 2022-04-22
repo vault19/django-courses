@@ -17,6 +17,7 @@ from courses.models import (
     Meeting,
     SubscriptionLevel,
     Faq,
+    CertificateTemplate,
 )
 
 
@@ -270,3 +271,13 @@ class SubmissionAdmin(admin.ModelAdmin):
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(CertificateTemplate)
+class CertificateTemplateAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "intended_course",
+        "timestamp_added",
+    )
+

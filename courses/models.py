@@ -99,7 +99,12 @@ class Course(models.Model):
     ribbon = models.CharField(max_length=250, null=True, blank=True)
     course_length = models.CharField(max_length=250, null=True, blank=True)
     required_skills = models.CharField(max_length=250, null=True, blank=True)
-
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -864,10 +869,44 @@ class Certificate(models.Model):
         verbose_name=_("Data"),
         upload_to="certificates",
         validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+        null=True,
+        blank=True,
+        help_text=_("Field not used for now. Please ignore it."),
     )
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
 
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
     def __str__(self):
         return _("Certificate") + f": {self.run} - {self.user}"
+
+
+class CertificateTemplate(models.Model):
+    intended_course = models.ForeignKey(
+        Course,
+        verbose_name=_("Intended course"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text=_("Only for informational admin purposes, can be used by multiple courses or none"),
+    )
+    title = models.CharField(
+        max_length=250,
+        verbose_name=_("Title"),
+        help_text=_("Only for informational admin purposes, this field is not shown on the certificate")
+    )
+    html = models.TextField(
+        verbose_name=_("HTML"),
+        help_text=_("HTML template of the Certificate"),
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+    def __str__(self):
+        return self.title

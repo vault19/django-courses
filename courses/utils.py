@@ -91,12 +91,12 @@ def send_email(
     email_message.send()
 
 
-def generate_certificate(run, user, notify=True):
+def generate_certificate(run, user, certificate_template, notify=True):
     # TODO: check user is subscribed to this run!
     user_certificates = Certificate.objects.filter(run=run).filter(user=user)
 
     if user_certificates.count() == 0:
-        cert = Certificate(run=run, user=user)
+        cert = Certificate(run=run, user=user, certificate_template=certificate_template)
         cert.save()
 
         if notify:

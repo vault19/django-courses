@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.template import Template, Context
+from django.http import HttpResponseNotFound
 
 from wkhtmltopdf.views import PDFTemplateView
 
@@ -395,20 +397,33 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 @login_required
 def certificate(request, uuid):
     cert = get_object_or_404(Certificate, uuid=uuid)
-    template = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
 
-    return render(request, template, {"cert": cert})
+    if not cert.certificate_template:
+        return HttpResponseNotFound(_("Certificate template not specified!"))
+
+    template = Template(cert.certificate_template.html)
+    context = Context({"cert": cert})
+    cert_content = template.render(context)
+
+    return render(request, "courses/certificate.html", {"cert_content": cert_content})
 
 
 class CertificatePDF(PDFTemplateView):
-    filename = None
-    template_name = "courses/certificate.html"
+    filename = "certifikat.pdf"
+    template_name = "courses/certificate.html"  # only a "blank" template where the real template is later inserter
     cmd_options = {
         "margin-top": 3,
     }
 
     def get(self, request, uuid, *args, **kwargs):
         cert = get_object_or_404(Certificate, uuid=uuid)
-        self.template_name = cert.run.get_setting("COURSES_CERTIFICATE_TEMPLATE_PATH")
 
-        return super().get(request, *args, cert=cert, **kwargs)
+        if not cert.certificate_template:
+            return HttpResponseNotFound(_("Certificate template not specified!"))
+
+        # The actual template rendering happens here, it is later inserted in to a wrapper template
+        template = Template(cert.certificate_template.html)
+        context = Context({"cert": cert})
+        cert_content = template.render(context)
+
+        return super().get(request, *args, cert=cert, cert_content=cert_content, **kwargs)
