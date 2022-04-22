@@ -16,6 +16,7 @@ from courses.models import (
     Certificate,
     Meeting,
     SubscriptionLevel,
+    Faq,
 )
 
 
@@ -53,6 +54,12 @@ class RunInline(admin.TabularInline):
     autocomplete_fields = ["manager"]
 
 
+class FaqInline(admin.TabularInline):
+    model = Faq
+    extra = 0
+    # TODO: check if it could be ordered?
+
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
@@ -63,10 +70,11 @@ class CourseAdmin(admin.ModelAdmin):
     )
     list_filter = ("state",)
     search_fields = ["title"]
-    autocomplete_fields = ["creator"]
+    autocomplete_fields = ["creator", "lecturers"]
     inlines = (
         ChapterInline,
         RunInline,
+        FaqInline,
     )
 
     def view_run_link(self, obj):
@@ -98,9 +106,10 @@ class CourseAdmin(admin.ModelAdmin):
         return get_data
 
 
-class LectureDetailInline(admin.StackedInline):
+class LectureDetailInline(admin.TabularInline):
     model = Lecture
-    extra = 1
+    extra = 0
+    ordering = ("order",)
 
 
 @admin.register(Chapter)
@@ -168,6 +177,16 @@ class RunUsersDetailInline(admin.TabularInline):
     readonly_fields = ["timestamp_added", "timestamp_modified"]
     autocomplete_fields = ["user"]
     classes = ["collapse"]
+
+
+@admin.register(RunUsers)
+class RunUsersAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "run",
+    )
+    list_filter = ("run",)
+    search_fields = ["user__email", "user__first_name", "user__last_name", "user__username"]
 
 
 @admin.register(Run)

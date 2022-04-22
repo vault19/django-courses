@@ -1,4 +1,6 @@
 import datetime
+from time import gmtime
+from time import strftime
 
 from django.db.models import Q, F
 from django.core.exceptions import PermissionDenied
@@ -16,6 +18,7 @@ from courses.models import Course, Run, Submission, Lecture, Certificate, Subscr
 from courses.utils import get_run_chapter_context
 
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
+from profiles.models import Profile
 
 
 def index(request):
@@ -26,15 +29,20 @@ def index(request):
 
 def courses(request):
     courses = Course.objects_no_relations.filter(state="O").order_by("title")
-    context = {"courses": courses}
+    context = {
+        "courses": courses,
+        "page_tab_title": _("Courses"),
+    }
 
     return render(request, "courses/courses_list.html", context)
 
 
 def course_detail(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
+
     context = {
         "course": course,
+        "questions": course.faq_set.filter(state__in=("C", "B")).all(),
         "course_runs": course.run_set.filter(state="O"),
         "breadcrumbs": [
             {
@@ -45,11 +53,35 @@ def course_detail(request, course_slug):
                 "title": course.title,
             },
         ],
+        "chapters": [],
+        "page_tab_title": course.title,
     }
+
+    total_lecture_count = 0
+    video_lecture_count = 0
+    total_video_lecture_duration = 0
+
+    for chapter in course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
+        context["chapters"].append(
+            {
+                "lecture_set": chapter.lecture_set.order_by("order", "title"),
+                "title": chapter.title,
+            }
+        )
+        total_lecture_count += chapter.lecture_set.count()
+        video_lecture_count += chapter.lecture_set.filter(lecture_type="V").count()
+
+        for lecture in chapter.lecture_set.all():
+            total_video_lecture_duration += lecture.video_duration_seconds()
+
+    context['total_lecture_count'] = total_lecture_count
+    context['video_lecture_count'] = video_lecture_count
+    context['total_video_lecture_duration'] = strftime("%-Hh %-Mm %Ss", gmtime(total_video_lecture_duration))
 
     return render(request, "courses/course_detail.html", context)
 
 
+@login_required
 def all_active_runs(request):
     course_runs = (
         Run.objects.filter(course__state="O")
@@ -89,6 +121,7 @@ def all_subscribed_runs(request):
                 "title": _("My courses"),
             },
         ],
+        "page_tab_title": _("My courses"),
     }
 
     return render(request, "courses/runs_list.html", context)
@@ -354,6 +387,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 
     context["user_submissions"] = user_submissions
     context["form"] = form
+    context["page_tab_title"] = lecture.title
 
     return render(request, "courses/lecture_detail.html", context)
 

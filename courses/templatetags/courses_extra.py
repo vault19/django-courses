@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 from django import template
 from django.utils.safestring import mark_safe
@@ -19,6 +20,14 @@ def get_run_dates(chapter, run):
 @register.filter
 def get_run_setting(run, setting):
     return run.get_setting(setting)
+
+
+@register.filter
+def secondsformatter(value, arg=None):
+    if value:
+        return str(datetime.timedelta(seconds=float(value)))
+
+    return value
 
 
 @register.filter

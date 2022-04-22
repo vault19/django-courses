@@ -3,6 +3,10 @@
 {% load i18n %}
 {% load courses_extra %}
 
+{% block javascript %}
+  <script src="{% static 'courses/js/modal-generic.js' %}"></script>
+{% endblock %}
+
 {% block breadcrumbs %}
   {% include "courses/includes/breadcrumbs.html" with breadcrumbs=breadcrumbs %}
 {% endblock %}
@@ -65,10 +69,6 @@
         {% endfor %}
         </tbody>
       </table>
-    {% endfor %}
-
-    {% for submission in submissions %}
-
     {% endfor %}
 
     </div>

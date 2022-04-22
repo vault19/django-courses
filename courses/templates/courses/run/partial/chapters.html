@@ -1,0 +1,93 @@
+{% load i18n markdownify courses_extra static %}
+
+  <!-- Card header START -->
+  <div class="card-header bg-transparent border-bottom">
+    <h3 class="mb-0"><i class="bi bi-card-checklist fa-fw me-2"></i> Zoznam lekcií kurzu</h3>
+  </div>
+  <!-- Card header END -->
+
+  <!-- Card body START -->
+  <div class="card-body">
+    <div class="tab-pane fade active show" id="course-pills-2" role="tabpanel"
+         aria-labelledby="course-pills-tab-2">
+      <!-- Course accordion START -->
+      <div class="accordion accordion-icon accordion-bg-light" id="lecturesAccordion">
+
+        {% for chapter in chapters %}
+        <!-- Item -->
+        <div class="accordion-item mb-3">
+          <h6 class="accordion-header font-base" id="heading-{{ forloop.counter }}">
+            <button class="accordion-button fw-bold rounded d-sm-flex d-inline-block collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}"
+                    aria-expanded="false"
+                    aria-controls="collapse-{{ forloop.counter }}">
+              {{ chapter.title }}
+              <span class="small ms-0 ms-sm-2">
+                <i class="fas fa-calendar-alt pl-5"></i> {{ chapter.start }} - {{ chapter.end }}
+              </span>
+              {% if chapter.active or chapter.passed %}
+              {% else %}
+                <span class="badge bg-info text-white ms-2 ms-md-4">
+                  <i class="fas fa-lock fa-fw me-1"></i>{{ chapter.start|timedelta }}
+                </span>
+              {% endif %}
+            </button>
+          </h6>
+          <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse"
+               aria-labelledby="heading-{{ forloop.counter }}" data-bs-parent="#lecturesAccordion" style="">
+            <!-- Accordion body START -->
+            <div class="accordion-body mt-3">
+
+              {% for lecture in chapter.lecture_set.all %}
+
+              <!-- Course lecture START -->
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="position-relative d-flex align-items-center">
+                  <div>
+                    {% if chapter.active or chapter.passed %}
+                      <a href="{% url 'lecture_detail' run.slug chapter.slug lecture.slug %}"
+                         class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                        {{ lecture.lecture_type|lecture_type_icon }}
+                      </a>
+                    {% else %}
+                      <a class="btn btn-disabled btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                        {{ lecture.lecture_type|lecture_type_icon }}
+                      </a>
+                    {% endif %}
+                  </div>
+                  <div class="row g-sm-0 align-items-center">
+                    <div class="col-sm-6">
+                      <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-100px w-md-400px">
+                        {{ lecture.title }}
+                      </span>
+                    </div>
+                    <div class="col-sm-6">
+                      {% if chapter.active or chapter.passed %}
+                      {% else %}
+                        <span class="badge bg-info text-white ms-2 ms-md-0">
+                          <i class="fas fa-lock fa-fw me-1"></i>{{ chapter.start|timedelta }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <p class="mb-0 d-inline-block text-truncate w-70px w-sm-60px">{{ lecture.metadata.video_duration|secondsformatter }}</p>
+              </div>
+              <!-- Course lecture END -->
+
+              {% if not forloop.last %}
+                <hr>
+              {% endif %}
+
+              {% endfor%}
+
+            </div>
+            <!-- Accordion body END -->
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+  <!-- Card body START -->

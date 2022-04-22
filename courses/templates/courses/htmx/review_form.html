@@ -1,0 +1,10 @@
+{% load i18n %}
+{% load bootstrap5 %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'review_lecture' submission_id %}">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+  </div>
+</form>

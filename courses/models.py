@@ -1,6 +1,8 @@
 import uuid
 
 from datetime import datetime, date, timedelta
+from time import gmtime
+from time import strftime
 
 from django.conf import settings
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -79,6 +81,25 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         help_text=_("Creator of the course, mainly responsible for the content"),
     )
+    lecturers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Lecturers"),
+        blank=True,
+        related_name='lecturers',
+    )
+    thumbnail = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to='courses/',
+        validators=[FileExtensionValidator(["jpg", "jpeg", "png"])],
+        help_text=_("Preferred size is 600x450px (4by3)."),
+    )
+    video = models.CharField(max_length=250, null=True, blank=True)
+    tag = models.CharField(max_length=250, null=True, blank=True)
+    ribbon = models.CharField(max_length=250, null=True, blank=True)
+    course_length = models.CharField(max_length=250, null=True, blank=True)
+    required_skills = models.CharField(max_length=250, null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.title}"
@@ -337,6 +358,16 @@ class Lecture(models.Model):
                     }
                 )
 
+    def video_duration(self):
+        if self.metadata and self.metadata.get("video_duration", None):
+            return strftime("%-Mm %Ss", gmtime(self.metadata.get("video_duration")))
+        return None
+
+    def video_duration_seconds(self):
+        if self.metadata:
+            return self.metadata.get("video_duration", 0)
+        return 0
+
 
 class RunManager(models.Manager):
     """
@@ -509,12 +540,36 @@ class Run(models.Model):
         super().save(*args, **kwargs)
 
 
+class Faq(models.Model):
+    STATE = (
+        ("D", _("Draft")),
+        ("C", _("Course")),
+        ("S", _("Subscribed Course")),
+        ("B", _("Both")),
+    )
+
+    class Meta:
+        verbose_name = _("Frequently asked question")
+        verbose_name_plural = _("Frequently asked questions")
+
+    question = models.CharField(verbose_name=_("Question"), max_length=250)
+    answer = models.TextField(verbose_name=_("Description"), help_text=_("Full description of the question."))
+    order = models.IntegerField(default=0, help_text=_("Order number for the question."))
+    state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.order}. {self.question}"
+
+
 class SubscriptionLevel(models.Model):
     class Meta:
         verbose_name = _("Subscription Level")
         verbose_name_plural = _("Subscription Levels")
 
-    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, null=True, blank=True)
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE, null=True, blank=True)
     price = models.FloatField(verbose_name=_("Price"))
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(
@@ -528,7 +583,12 @@ class SubscriptionLevel(models.Model):
     )
 
     def __str__(self):
-        return f"{self.title}: {self.price}"
+        if self.run:
+            return f"{self.run}: {self.title} ({self.price})"
+        elif self.course:
+            return f"{self.course}: {self.title} ({self.price})"
+        else:
+            return f"{self.title} ({self.price})"
 
 
 class RunUsers(models.Model):
@@ -539,7 +599,7 @@ class RunUsers(models.Model):
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     subscription_level = models.ForeignKey(
-        SubscriptionLevel, verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True
+        SubscriptionLevel, verbose_name=_("Subscription Level"), on_delete=models.CASCADE, blank=True, null=True
     )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
