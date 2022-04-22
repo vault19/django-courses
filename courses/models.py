@@ -102,6 +102,12 @@ class Course(models.Model):
     mail_subscription = models.ForeignKey(
         'EmailTemplate', help_text=_("Sent after subscription."), blank=True, null=True, on_delete=models.SET_NULL
     )
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -309,6 +315,10 @@ class Lecture(models.Model):
         default="N",
         help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
     )
+    public_submission = models.BooleanField(
+        verbose_name=_("Make submissions public within Group"),
+        default=False,
+    )
     require_submission_review = models.CharField(
         verbose_name=_("Require submission review"),
         max_length=1,
@@ -429,6 +439,10 @@ class Run(models.Model):
         on_delete=models.CASCADE,
         related_name="manager",
         help_text=_("Manager of the course run, responsible for the smoothness of the run."),
+    )
+    allow_public_submission = models.BooleanField(
+        verbose_name=_("Allow public submissions within Group (has to be set per course lecture)"),
+        default=False,
     )
 
     def __str__(self):
@@ -682,11 +696,13 @@ class Meeting(models.Model):
         # if self.run.end and self.end.date() > self.run.end:
         #     raise ValidationError({'end': _('Meeting can not end after the course run is already finished.')})
 
-        if self.run.end and self.run.end < date.today():
-            raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run.end and self.run.end < date.today():
+        #     raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
 
-        if self.run not in self.lecture.chapter.course.get_active_runs():
-            raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run not in self.lecture.chapter.course.get_active_runs():
+        #     raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
 
         start, end = self.lecture.chapter.get_run_dates(self.run)
 
@@ -727,16 +743,28 @@ class Submission(models.Model):
         verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe what you have learned.")
     )
     data = models.FileField(
-        verbose_name=_("Data"),
+        verbose_name=_("Attachment"),
         blank=True,
         null=True,
         upload_to="submissions",
-        help_text=_("Upload proof of your work " "(document, video, image)."),
+        help_text=_("Upload an attachment."),
         validators=[
-            FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]),
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg", "pdf", "doc", "docx", "txt", "hex"]),
             FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
+    image = models.FileField(
+        verbose_name=_("Image"),
+        blank=True,
+        null=True,
+        upload_to="submissions",
+        help_text=_("Upload an image of your work."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg"]),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
+        ],
+    )
+    video_link = models.CharField(verbose_name=_("Video link"), max_length=250, null=True, blank=True)
     lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, verbose_name=_("Chapter"), on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
@@ -844,10 +872,19 @@ class Certificate(models.Model):
         verbose_name=_("Data"),
         upload_to="certificates",
         validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+        null=True,
+        blank=True,
+        help_text=_("Field not used for now. Please ignore it."),
     )
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     def __str__(self):
         return _("Certificate") + f": {self.run} - {self.user}"
@@ -926,3 +963,28 @@ class EmailTemplateImage(models.Model):
     )
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+
+class CertificateTemplate(models.Model):
+    intended_course = models.ForeignKey(
+        Course,
+        verbose_name=_("Intended course"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text=_("Only for informational admin purposes, can be used by multiple courses or none"),
+    )
+    title = models.CharField(
+        max_length=250,
+        verbose_name=_("Title"),
+        help_text=_("Only for informational admin purposes, this field is not shown on the certificate")
+    )
+    html = models.TextField(
+        verbose_name=_("HTML"),
+        help_text=_("HTML template of the Certificate"),
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+    def __str__(self):
+        return self.title

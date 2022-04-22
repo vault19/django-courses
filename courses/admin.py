@@ -19,6 +19,7 @@ from courses.models import (
     Faq,
     EmailTemplate,
     EmailTemplateImage,
+    CertificateTemplate,
 )
 
 
@@ -108,9 +109,10 @@ class CourseAdmin(admin.ModelAdmin):
         return get_data
 
 
-class LectureDetailInline(admin.StackedInline):
+class LectureDetailInline(admin.TabularInline):
     model = Lecture
-    extra = 1
+    extra = 0
+    ordering = ("order",)
 
 
 @admin.register(Chapter)
@@ -281,3 +283,12 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 @admin.register(EmailTemplateImage)
 class EmailTemplateImageAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(CertificateTemplate)
+class CertificateTemplateAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "intended_course",
+        "timestamp_added",
+    )

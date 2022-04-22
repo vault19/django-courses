@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import get_object_or_404
@@ -102,12 +104,12 @@ def send_email(
     email_message.send()
 
 
-def generate_certificate(run, user, notify=True):
+def generate_certificate(run, user, certificate_template, notify=True):
     # TODO: check user is subscribed to this run!
     user_certificates = Certificate.objects.filter(run=run).filter(user=user)
 
     if user_certificates.count() == 0:
-        cert = Certificate(run=run, user=user)
+        cert = Certificate(run=run, user=user, certificate_template=certificate_template)
         cert.save()
 
         if notify:
@@ -178,3 +180,33 @@ def array_merge(intervals):
             stack.append(intervals[i])
 
     return stack
+
+
+def submissions_get_video_links(submissions):
+    """
+    Runs through submissions and finds YouTube video link tags,
+    which are then added to the original object
+    """
+    # TODO: Add support for other platforms (such as Vimeo, OneDrive, ...)
+
+    regex = re.compile(
+        r'.*(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)'
+        r'/(watch\?v=|embed/|v/|.+\?v=)?(?P<id>[A-Za-z0-9\-=_]{11}).*', re.DOTALL
+    )
+
+    for submission in submissions:
+
+        # If there is not a vide link specified, try to find one in the submission description
+        if not submission.video_link:
+            match = regex.match(submission.description)
+            if match:
+                submission.video_link_tag = match.group('id')
+                submission.video_link = f"https://youtu.be/{submission.video_link_tag}"
+
+        # If a video link is specified, extract the youtube tag/ID of the video
+        else:
+            match = regex.match(submission.video_link)
+            if match:
+                submission.video_link_tag = match.group('id')
+
+    return submissions

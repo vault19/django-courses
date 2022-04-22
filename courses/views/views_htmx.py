@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from django.db.models import Q, F
 from django.core.exceptions import PermissionDenied
@@ -13,7 +14,7 @@ from wkhtmltopdf.views import PDFTemplateView
 from courses.decorators import verify_payment
 from courses.forms import SubmissionForm, SubscribeForm
 from courses.models import Course, Run, Submission, Lecture, Certificate, SubscriptionLevel
-from courses.utils import get_run_chapter_context
+from courses.utils import get_run_chapter_context, submissions_get_video_links
 
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 
@@ -82,8 +83,14 @@ def course_run_group(request, run_slug):
         "run": run,
         "chapters": [],
         "subscribed": run.is_subscribed(request.user),
-        "page_tab_title": run.title,
+        "page_tab_title": _("My group"),
     }
+
+    submissions = Submission.objects.filter(run__slug=run_slug)\
+        .filter(lecture__public_submission=True).filter(lecture__lecture_type="P")\
+        .filter(run__allow_public_submission=True).order_by("-timestamp_added")
+
+    context["submissions"] = submissions_get_video_links(submissions)
 
     if request.GET.get('partial', False):
         return render(request, "courses/run/partial/group.html", context)
