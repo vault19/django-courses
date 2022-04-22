@@ -31,6 +31,27 @@
     {% endif %}
     </p>
 
+    <hr class="mb-0 bg-dark">
+    <h1>{% translate "Projects" %}</h1>
+
+    {% for submission in project_submissions %}
+      <div class="mb-4">
+        {% include "courses/includes/submission_card.html" %}
+      </div>
+    {% endfor %}
+
+    <hr class="mb-0 bg-dark">
+    <h1>{% translate "Feedback" %}</h1>
+
+    {% for submission in feedback_submissions %}
+      <div class="mb-4">
+        {% include "courses/includes/submission_card.html" %}
+      </div>
+    {% endfor %}
+
+    <hr class="mb-0 bg-dark">
+    <h1>{% translate "Detailed report" %}</h1>
+
     {% for chapter in run.course.chapter_set.all %}
       <h3>{{ chapter.title }}</h3>
 

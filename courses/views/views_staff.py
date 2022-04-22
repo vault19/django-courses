@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from courses.forms import ReviewForm, MailForm
 from courses.models import Run, Submission, Lecture
-from courses.utils import get_run_chapter_context, generate_certificate, send_email
+from courses.utils import get_run_chapter_context, generate_certificate, send_email, submissions_get_video_links
 
 
 @login_required
@@ -82,7 +82,14 @@ def run_attendee_submissions(request, run_slug, user_id):
         },
     ]
 
-    context["submissions"] = Submission.objects.filter(run=run, author_id=user_id).all()
+    context["submissions"] = Submission.objects.filter(run=run, author_id=user_id).all().order_by("timestamp_added")
+
+    project_submissions = submissions_get_video_links(context["submissions"].filter(lecture__lecture_type="P"))
+    context["project_submissions"] = project_submissions
+
+    feedback_submissions = submissions_get_video_links(context["submissions"].filter(lecture__lecture_type="F"))
+    context["feedback_submissions"] = feedback_submissions
+
     context["passed"] = passed
 
     return render(request, "courses/stuff/run_attendee_submissions.html", context)
