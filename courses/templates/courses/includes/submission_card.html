@@ -5,29 +5,51 @@
 {% load embed_video_tags %}
 {% load static %}
 
+<!-- SUBMISSION CARD START -->
 <div class="card shadow p-2">
+
+  <!-- SUBMISSION TITLE START -->
   <div class="row g-0 mb-2">
     <h5 class="card-title mb-1">{{ submission.title }}</h5>
   </div>
-  <div class="row g-0">
+  <!-- SUBMISSION TITLE END -->
 
+  <div class="row g-0">
     <!-- Image or video -->
     {% if submission.video_link %}
       <div class="col-md-4">
-        <div class="video-player">
-          <div class="js-player" data-plyr-provider="youtube" data-plyr-embed-id="{{ submission.video_link }}"></div>
+
+        <div class="text-center position-relative">
+            <!-- Image from YouTube -->
+            <img src="https://img.youtube.com/vi/{{ submission.video_link_tag }}/mqdefault.jpg" class="" alt="">
+            <div class="position-absolute top-50 start-50 translate-middle">
+              <!-- Video link -->
+              <a href="{{ submission.video_link }}"
+                 class="btn text-danger btn-round btn-white-shadow btn-lg mb-0 glightbox"
+                 data-glightbox=""
+                 data-gallery="{{ submission.id }}">
+                <i class="fas fa-play"></i>
+              </a>
+            </div>
         </div>
+
       </div>
     {% elif submission.image %}
       <div class="col-md-4">
-        <img src="{{ submission.image.url }}" class="img-fluid rounded-3" alt="...">
+        <a href="{{ submission.image.url }}"
+           data-glightbox=""
+           class="glightbox"
+           data-gallery="{{ submission.id }}">
+          <img src="{{ submission.image.url }}" class="img-fluid rounded-3"/>
+        </a>
       </div>
     {% endif %}
 
     <!-- Card body -->
     <div class="{% if submission.video_link or submission.image %}col-md-8{% else %}col-md-12{% endif %}">
       <div class="card-body">
-        <!-- Title -->
+
+        <!-- Author name and Avatar and Timestamp-->
         <div class="d-sm-flex justify-content-sm-between mb-2 mb-sm-3">
           <div>
             <div class="avatar avatar-l position-relative mt-n3">
@@ -49,24 +71,37 @@
             {% endif %}
           </span>
         </div>
+
         <!-- Content -->
         <h6 class="text-orange mb-0">Zadanie: {{ submission.lecture }}</h6>
         <p class="text-truncate-2 mb-3">{{ submission.description|markdownify }}</p>
-        <p class="text-truncate-2 mb-3">
-          {% if submission.data %}
+        {% if submission.video_link and submission.image %}
+          <p class="text-truncate-2 mb-3">
+            <a href="{{ submission.image.url }}"
+               data-glightbox=""
+               class="glightbox"
+               data-gallery="{{ submission.id }}">
+              <img src="{{ submission.image.url }}" style="max-height:50px;"/>
+            </a>
+          </p>
+        {% endif %}
+        {% if submission.data %}
+         <p class="text-truncate-2 mb-3">
             <a href="{{ submission.data.url }}" target="_blank"><i class="fas fa-download"></i> {{ submission.data }}</a>
-          {% endif %}
-        </p>
-        <!-- Info -->
+          </p>
+        {% endif %}
+
+        <!-- Button trigger submission modal -->
         <div class="d-sm-flex justify-content-sm-between align-items-center">
-          <!-- Button trigger submission modal -->
           {% if edit %}
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#submissionModal">
-            {% translate "Edit" %} <i class="far fa-edit"></i>
-          </button>
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#submissionModal">
+              {% translate "Edit" %} <i class="far fa-edit"></i>
+            </button>
           {% endif %}
         </div>
+
       </div>
     </div>
   </div>
 </div>
+<!-- SUBMISSION CARD END -->

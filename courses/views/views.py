@@ -15,7 +15,7 @@ from wkhtmltopdf.views import PDFTemplateView
 from courses.decorators import verify_payment
 from courses.forms import SubmissionForm, SubscribeForm
 from courses.models import Course, Run, Submission, Lecture, Certificate, SubscriptionLevel
-from courses.utils import get_run_chapter_context
+from courses.utils import get_run_chapter_context, submissions_get_video_links
 
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
 from profiles.models import Profile
@@ -385,7 +385,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     else:
         form = SubmissionForm()
 
-    context["user_submissions"] = user_submissions
+    context["user_submissions"] = submissions_get_video_links(user_submissions)
     context["form"] = form
     context["page_tab_title"] = lecture.title
 

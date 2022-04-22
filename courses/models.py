@@ -688,11 +688,13 @@ class Meeting(models.Model):
         # if self.run.end and self.end.date() > self.run.end:
         #     raise ValidationError({'end': _('Meeting can not end after the course run is already finished.')})
 
-        if self.run.end and self.run.end < date.today():
-            raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run.end and self.run.end < date.today():
+        #     raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
 
-        if self.run not in self.lecture.chapter.course.get_active_runs():
-            raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run not in self.lecture.chapter.course.get_active_runs():
+        #     raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
 
         start, end = self.lecture.chapter.get_run_dates(self.run)
 
