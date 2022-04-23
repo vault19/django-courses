@@ -17,6 +17,8 @@ from courses.models import (
     Meeting,
     SubscriptionLevel,
     Faq,
+    EmailTemplate,
+    EmailTemplateImage,
     CertificateTemplate,
 )
 
@@ -273,6 +275,16 @@ class CertificateAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(EmailTemplate)
+class EmailTemplateAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(EmailTemplateImage)
+class EmailTemplateImageAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(CertificateTemplate)
 class CertificateTemplateAdmin(admin.ModelAdmin):
     list_display = (
@@ -280,4 +292,3 @@ class CertificateTemplateAdmin(admin.ModelAdmin):
         "intended_course",
         "timestamp_added",
     )
-

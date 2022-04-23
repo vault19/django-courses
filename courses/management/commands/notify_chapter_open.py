@@ -14,7 +14,7 @@ class Command(NotifyCommand):
         else:
             notify_date = datetime.today().date()
 
-        runs = Run.objects.filter(start__lt=datetime.today()).filter(end__gt=datetime.today())
+        runs = Run.objects.filter(start__lte=datetime.today()).filter(end__gt=datetime.today())
 
         if runs.count() > 0:
             if options["verbosity"] >= 2:
@@ -22,12 +22,11 @@ class Command(NotifyCommand):
 
             for run in runs.all():
                 counter = 0
-                self.mail_subject = run.get_setting("COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_SUBJECT")
-                self.mail_body = run.get_setting("COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_BODY")
-                self.mail_body_html = run.get_setting("COURSES_NOTIFY_CHAPTER_OPEN_EMAIL_HTML")
 
                 for chapter in run.course.chapter_set.all():
                     start, end = chapter.get_run_dates(run)
+
+                    self.mail_template = chapter.mail_chapter_open
 
                     if start == notify_date:
                         if options["verbosity"] >= 1:

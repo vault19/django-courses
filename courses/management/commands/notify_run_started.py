@@ -21,9 +21,7 @@ class Command(NotifyCommand):
                 self.stdout.write(f"Found {runs.count()} run(s) starting {notify_date}.")
 
             for run in runs.all():
-                self.mail_subject = run.get_setting("COURSES_NOTIFY_RUN_START_EMAIL_SUBJECT")
-                self.mail_body = run.get_setting("COURSES_NOTIFY_RUN_START_EMAIL_BODY")
-                self.mail_body_html = run.get_setting("COURSES_NOTIFY_RUN_START_EMAIL_HTML")
+                self.mail_template = run.course.mail_run_started
 
                 self.notify_users(run, options)
         else:

@@ -5,10 +5,11 @@ from time import sleep
 
 from django.core.management.base import BaseCommand
 
-from courses.utils import send_email
+from courses.utils import send_templated_email
 
 
 class NotifyCommand(BaseCommand):
+    mail_template = None
     mail_subject = None
     mail_body = None
     mail_body_html = None
@@ -67,15 +68,17 @@ class NotifyCommand(BaseCommand):
         self.mail_template_variables["course_run"] = run
 
         try:
-            send_email(
+            self.mail_subject = self.mail_template.mail_subject
+            self.mail_body_html = self.mail_template.mail_body_html
+            send_templated_email(
                 user,
                 mail_subject=self.mail_subject,
-                mail_body=self.mail_body,
                 mail_body_html=self.mail_body_html,
-                mail_template_variables=self.mail_template_variables,
+                template_variables=self.mail_template_variables,
             )
         except Exception as e:
             self.stdout.write(self.style.ERROR(e))
+            # TODO: Add email notification to admin when 'self.mail_template' is None!
         else:
             if verbosity >= 2:
                 self.stdout.write(self.style.SUCCESS(f"Notification email sent to {user}!"))

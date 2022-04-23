@@ -54,9 +54,7 @@ class Command(NotifyCommand):
 
             for run in runs.all():
                 start_count = counter
-                self.mail_subject = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_SUBJECT")
-                self.mail_body = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY")
-                self.mail_body_html = run.get_setting("COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML")
+                self.mail_template = run.course.mail_certificate_generation
 
                 if options["verbosity"] >= 3:
                     self.stdout.write(self.style.WARNING(run))

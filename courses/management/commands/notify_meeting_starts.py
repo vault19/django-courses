@@ -21,9 +21,7 @@ class Command(NotifyCommand):
                 self.stdout.write(f"Found {meetings.count()} meeting(s).")
 
             for meeting in meetings.all():
-                self.mail_subject = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_SUBJECT")
-                self.mail_body = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_BODY")
-                self.mail_body_html = meeting.run.get_setting("COURSES_NOTIFY_MEETING_START_EMAIL_HTML")
+                self.mail_template = meeting.run.course.mail_meeting_starts
 
                 if options["verbosity"] >= 1:
                     self.stdout.write(f"{meeting}: starts {meeting.start}.")
