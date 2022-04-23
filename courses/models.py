@@ -100,7 +100,35 @@ class Course(models.Model):
     course_length = models.CharField(max_length=250, null=True, blank=True)
     required_skills = models.CharField(max_length=250, null=True, blank=True)
     mail_subscription = models.ForeignKey(
-        'EmailTemplate', help_text=_("Sent after subscription."), blank=True, null=True, on_delete=models.SET_NULL
+        'EmailTemplate',
+        help_text=_("Sent after subscription."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    mail_certificate_generation = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent after Certificate generation."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_certificate_generation"
+    )
+    mail_run_started = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent right before Run starts."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_run_started"
+    )
+    mail_meeting_starts = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent right before Meeting starts."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_meeting_starts"
     )
     certificate_template = models.ForeignKey(
         "CertificateTemplate",
@@ -218,6 +246,13 @@ class Chapter(models.Model):
         choices=SUBMISSION_TYPE,
         default="D",
         help_text=_("Submission is accepted only after being accepted by a review."),
+    )
+    mail_chapter_open = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent when the Chapter opens."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -899,10 +934,6 @@ class EmailTemplate(models.Model):
     mail_subject = models.TextField(
         verbose_name=_("Email subject"),
         help_text=_("Email will be sent with this subject."),
-    )
-    mail_body_plaintext = models.TextField(
-        verbose_name=_("Email plaintext"),
-        help_text=_("Plaintext version of email body."),
     )
     mail_body_html = models.TextField(
         verbose_name=_("Email html"),

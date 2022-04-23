@@ -179,6 +179,10 @@ def run_attendee_generate_certificate(request, run_slug, user_id):
         messages.error(request, _("The user does not have his and hers name specified in their profile!"))
         return redirect("run_attendees", run_slug=run_slug)
 
+    if not run.course.mail_certificate_generation:
+        messages.error(request, _("The mail_certificate_generation template is not set!"))
+        return redirect("run_attendees", run_slug=run_slug)
+
     if generate_certificate(run, user, certificate_template):
         messages.success(request, _("Certificate successfully generated for %s." % user.get_full_name()))
     else:
