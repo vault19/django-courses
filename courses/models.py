@@ -99,7 +99,43 @@ class Course(models.Model):
     ribbon = models.CharField(max_length=250, null=True, blank=True)
     course_length = models.CharField(max_length=250, null=True, blank=True)
     required_skills = models.CharField(max_length=250, null=True, blank=True)
-
+    mail_subscription = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent after subscription."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+    )
+    mail_certificate_generation = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent after Certificate generation."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_certificate_generation"
+    )
+    mail_run_started = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent right before Run starts."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_run_started"
+    )
+    mail_meeting_starts = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent right before Meeting starts."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="mail_meeting_starts"
+    )
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -211,6 +247,13 @@ class Chapter(models.Model):
         default="D",
         help_text=_("Submission is accepted only after being accepted by a review."),
     )
+    mail_chapter_open = models.ForeignKey(
+        'EmailTemplate',
+        help_text=_("Sent when the Chapter opens."),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -306,6 +349,10 @@ class Lecture(models.Model):
         choices=SUBMISSION_TYPE,
         default="N",
         help_text=_("A submission can be required either for continuing to the next chapter or to finish the course."),
+    )
+    public_submission = models.BooleanField(
+        verbose_name=_("Make submissions public within Group"),
+        default=False,
     )
     require_submission_review = models.CharField(
         verbose_name=_("Require submission review"),
@@ -427,6 +474,10 @@ class Run(models.Model):
         on_delete=models.CASCADE,
         related_name="manager",
         help_text=_("Manager of the course run, responsible for the smoothness of the run."),
+    )
+    allow_public_submission = models.BooleanField(
+        verbose_name=_("Allow public submissions within Group (has to be set per course lecture)"),
+        default=False,
     )
 
     def __str__(self):
@@ -680,11 +731,13 @@ class Meeting(models.Model):
         # if self.run.end and self.end.date() > self.run.end:
         #     raise ValidationError({'end': _('Meeting can not end after the course run is already finished.')})
 
-        if self.run.end and self.run.end < date.today():
-            raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run.end and self.run.end < date.today():
+        #     raise ValidationError(_("You are not allowed to add meeting to run that has already finished."))
 
-        if self.run not in self.lecture.chapter.course.get_active_runs():
-            raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
+        # Commented because it prevented editing the Run after it has ended (which is sometimes necessary)
+        # if self.run not in self.lecture.chapter.course.get_active_runs():
+        #     raise ValidationError({"lecture": _("Lecture does not belong to this course (and its chapters).")})
 
         start, end = self.lecture.chapter.get_run_dates(self.run)
 
@@ -725,16 +778,28 @@ class Submission(models.Model):
         verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe what you have learned.")
     )
     data = models.FileField(
-        verbose_name=_("Data"),
+        verbose_name=_("Attachment"),
         blank=True,
         null=True,
         upload_to="submissions",
-        help_text=_("Upload proof of your work " "(document, video, image)."),
+        help_text=_("Upload an attachment."),
         validators=[
-            FileExtensionValidator(["jpg", "jpeg", "png", "pdf", "doc", "docx", "txt"]),
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg", "pdf", "doc", "docx", "txt", "hex"]),
             FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
+    image = models.FileField(
+        verbose_name=_("Image"),
+        blank=True,
+        null=True,
+        upload_to="submissions",
+        help_text=_("Upload an image of your work."),
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg"]),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
+        ],
+    )
+    video_link = models.CharField(verbose_name=_("Video link"), max_length=250, null=True, blank=True)
     lecture = models.ForeignKey(Lecture, verbose_name=_("Lecture"), on_delete=models.CASCADE, null=True, blank=True)
     chapter = models.ForeignKey(Chapter, verbose_name=_("Chapter"), on_delete=models.CASCADE, null=True, blank=True)
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
@@ -842,10 +907,115 @@ class Certificate(models.Model):
         verbose_name=_("Data"),
         upload_to="certificates",
         validators=[FileExtensionValidator(["pdf"]), FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND)],
+        null=True,
+        blank=True,
+        help_text=_("Field not used for now. Please ignore it."),
     )
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
 
+    certificate_template = models.ForeignKey(
+        "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
     def __str__(self):
         return _("Certificate") + f": {self.run} - {self.user}"
+
+
+class EmailTemplate(models.Model):
+    title = models.CharField(
+        verbose_name=_("Title"),
+        max_length=250,
+        help_text=_("This title is for management purposes only, it will not be seen by the users."),
+    )
+    mail_subject = models.TextField(
+        verbose_name=_("Email subject"),
+        help_text=_("Email will be sent with this subject."),
+    )
+    mail_body_html = models.TextField(
+        verbose_name=_("Email html"),
+        help_text=_("HTML content of email body."),
+    )
+    json = models.TextField(
+        verbose_name=_("Source JSON"),
+        help_text=_("JSON source of the email used by Unlayer Editor. Can be blank."),
+        blank=True,
+        null=True,
+    )
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Creator"),
+        on_delete=models.SET_NULL,
+        help_text=_("Creator of the email template."),
+        null=True,
+        blank=True,
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    def get_template(self):
+        return {"subject": self.mail_subject, "html": self.mail_body_html, "plaintext": self.mail_body_plaintext}
+
+
+class EmailTemplateImage(models.Model):
+    title = models.CharField(
+        verbose_name=_("Title"),
+        max_length=250,
+        help_text=_("The title of the image"),
+        blank=True,
+        null=True,
+    )
+    data = models.FileField(
+        verbose_name=_("Data"),
+        upload_to="email_template_images",
+        validators=[
+            FileExtensionValidator(["jpg", "jpeg", "gif", "png", "tiff", "svg",]),
+            FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD),
+        ],
+    )
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Creator"),
+        on_delete=models.CASCADE,
+        help_text=_("Uploader of the image."),
+    )
+    email_template = models.ForeignKey(
+        EmailTemplate,
+        verbose_name=_("Email template"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+
+class CertificateTemplate(models.Model):
+    intended_course = models.ForeignKey(
+        Course,
+        verbose_name=_("Intended course"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text=_("Only for informational admin purposes, can be used by multiple courses or none"),
+    )
+    title = models.CharField(
+        max_length=250,
+        verbose_name=_("Title"),
+        help_text=_("Only for informational admin purposes, this field is not shown on the certificate")
+    )
+    html = models.TextField(
+        verbose_name=_("HTML"),
+        help_text=_("HTML template of the Certificate"),
+    )
+    timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
+    timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+
+    def __str__(self):
+        return self.title

@@ -8,7 +8,7 @@ from django.core.exceptions import BadRequest
 
 from courses.forms import SubscribeForm
 from courses.models import Run, SubscriptionLevel
-from courses.utils import send_email
+from courses.utils import send_templated_email
 
 
 @login_required
@@ -150,18 +150,32 @@ def subscribe_to_run(request, run_slug):
             # run.save()  # No need to save run
             messages.success(request, _("You have been subscribed to course: %(run)s.") % {"run": run})
 
-            send_email(
-                request.user,
-                email=request.user.email,
-                mail_subject=run.get_setting("COURSES_SUBSCRIBED_EMAIL_SUBJECT"),
-                mail_body=run.get_setting("COURSES_SUBSCRIBED_EMAIL_BODY"),
-                mail_body_html=run.get_setting("COURSES_SUBSCRIBED_EMAIL_HTML"),
-                mail_template_variables={
-                    "user": request.user,
-                    "course_run": run,
-                    "subscribed_levels": run.get_subscription_level(request.user),
-                },
-            )
+            mail_template = run.course.mail_subscription
+
+            # If the mail_template is specified, send a subscription email
+            if mail_template:
+                send_templated_email(
+                    request.user,
+                    mail_subject=mail_template.mail_subject,
+                    mail_body_html=mail_template.mail_body_html,
+                    template_variables={
+                        "user": request.user,
+                        "course_run": run,
+                        "subscribed_levels": run.get_subscription_level(request.user),
+                    },
+                )
+            # If the mail_template is not specified, notify the Course creator
+            else:
+                send_templated_email(
+                    run.course.creator,
+                    mail_subject="Course mail_subscription not specified!",
+                    mail_body_html="The mail_subscription template is missing for {{ course|safe }}!\n\n"
+                                   "The user {{ user|safe }} did not receive an email.",
+                    template_variables={
+                        "user": request.user,
+                        "course": run.course,
+                    },
+                )
     else:
         messages.warning(request, _("You need to submit subscription form in order to subscribe!"))
 
