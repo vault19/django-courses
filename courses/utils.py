@@ -224,17 +224,18 @@ def submissions_get_video_links(submissions):
 
     for submission in submissions:
 
-        # If there is not a vide link specified, try to find one in the submission description
-        if not submission.video_link:
-            match = regex.match(submission.description)
-            if match:
-                submission.video_link_tag = match.group('id')
-                submission.video_link = f"https://youtu.be/{submission.video_link_tag}"
+        if submission.description:
+            # If there is not a vide link specified, try to find one in the submission description
+            if not submission.video_link:
+                match = regex.match(submission.description)
+                if match:
+                    submission.video_link_tag = match.group('id')
+                    submission.video_link = f"https://youtu.be/{submission.video_link_tag}"
 
-        # If a video link is specified, extract the youtube tag/ID of the video
-        else:
-            match = regex.match(submission.video_link)
-            if match:
-                submission.video_link_tag = match.group('id')
+            # If a video link is specified, extract the youtube tag/ID of the video
+            else:
+                match = regex.match(submission.video_link)
+                if match:
+                    submission.video_link_tag = match.group('id')
 
     return submissions
