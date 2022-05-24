@@ -784,7 +784,7 @@ class Submission(models.Model):
         upload_to="submissions",
         help_text=_("Upload an attachment."),
         validators=[
-            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg", "pdf", "doc", "docx", "txt", "hex"]),
+            FileExtensionValidator(["jpg", "jpeg", "png", "gif", "webp", "svg", "pdf", "doc", "docx", "txt", "hex", "zip"]),
             FileSizeValidator(course_settings.MAX_FILE_SIZE_UPLOAD_FRONTEND),
         ],
     )
