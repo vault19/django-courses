@@ -655,6 +655,9 @@ class RunUsers(models.Model):
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
+    note = models.TextField(
+        verbose_name=_("Note"), help_text=_("Visible only to admins"), null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.run}_{self.user}: {self.timestamp_added} {self.payment}"
