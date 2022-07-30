@@ -1,3 +1,7 @@
+import base64
+import requests
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -7,8 +11,12 @@ from django.urls import reverse
 from django.core.exceptions import BadRequest
 
 from courses.forms import SubscribeForm
-from courses.models import Run, SubscriptionLevel
+from courses.models import Run, SubscriptionLevel, RunUsers
 from courses.utils import send_templated_email
+from courses.decorators import paypal_enabled
+from courses.settings import PAYPAL_BASE_URL, PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_CURRENCY
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -111,7 +119,62 @@ def run_payment_instructions(request, run_slug):
         ],
     }
 
+    if PAYPAL_CLIENT_ID:
+        context["paypal_client_id"] = PAYPAL_CLIENT_ID
+        context["paypal_client_currency"] = PAYPAL_CURRENCY
+
     return render(request, "courses/run_payment_instructions.html", context)
+
+
+@login_required
+@paypal_enabled
+def verify_paypal_order(request, order_id):
+    consumer_key_secret = f"{PAYPAL_CLIENT_ID}:{PAYPAL_SECRET}"
+    consumer_key_secret_enc = base64.b64encode(consumer_key_secret.encode()).decode()
+
+    headersAuth = {
+        "Authorization": 'Basic ' + str(consumer_key_secret_enc),
+    }
+
+    data = {
+        "grant_type": "client_credentials",
+    }
+
+    ## Authentication request
+    response = requests.post(f"{PAYPAL_BASE_URL}/v1/oauth2/token", headers=headersAuth, data=data, verify=True)
+    j = response.json()
+
+    if "access_token" not in j:
+        raise BadRequest(_("PayPal Access Token missing. Please contact support with ORDER ID: %s" % order_id))
+
+    headersAPI = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {j['access_token']}",
+    }
+
+    response = requests.get(f"{PAYPAL_BASE_URL}/v2/checkout/orders/{order_id}", headers=headersAPI, verify=True)
+    order = response.json()
+
+    if 'purchase_units' not in order:
+        raise BadRequest(_("Something went wrong with the order. Please contact support with ORDER ID: %s" % order_id))
+    else:
+        if 'reference_id' not in order['purchase_units'][0]:
+            raise BadRequest(_("Missing reference_id, can not pair with payment. Please contact support with "
+                               "ORDER ID: %s" % order_id))
+        # RunUsers.id == reference_id
+        if order['status'] != 'COMPLETED':
+            raise BadRequest(_("Order is not COMPLETED. If you have finished the payment please contact support with "
+                               "ORDER ID: %s" % order_id))
+
+        subscription = RunUsers.objects.get(id=order['purchase_units'][0]['reference_id'])
+        subscription.payment = order['purchase_units'][0]['amount']['value']
+        subscription.save()
+
+        logger.info("PayPal Order %s was matched with RunUser ID %s and updated with payment of %s %s", order_id,
+                    subscription.id, subscription.payment, order['purchase_units'][0]['amount']['currency_code'])
+        messages.success(request, _("Thank you for your payment."))
+
+    return redirect("course_run_detail", run_slug=subscription.run.slug)
 
 
 @login_required
@@ -136,10 +199,14 @@ def subscribe_to_run(request, run_slug):
             if not form.is_valid():
                 messages.error(request, _("Please correct errors in your subscription form.") + form.errors)
 
-            defaults = {"payment": 0}
+            defaults = {
+                "payment": 0
+            }
 
             if "subscription_level" in form.cleaned_data:
+                subscribed_level = SubscriptionLevel.objects.get(id=form.cleaned_data["subscription_level"])
                 defaults["subscription_level_id"] = form.cleaned_data["subscription_level"]
+                defaults["price"] = subscribed_level.price
 
             # in M2M add will store to DB!
             run.users.add(

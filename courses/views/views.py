@@ -325,6 +325,7 @@ def chapter_submission(request, run_slug, chapter_slug):
 
 
 @login_required
+@verify_payment
 def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
     context = get_run_chapter_context(request, run_slug, chapter_slug)
     context["breadcrumbs"][3]["url"] = reverse("chapter_detail", args=(run_slug, chapter_slug))
@@ -336,6 +337,7 @@ def chapter_lecture_types(request, run_slug, chapter_slug, lecture_type):
 
 
 @login_required
+@verify_payment
 def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
     lecture = get_object_or_404(Lecture, slug=lecture_slug)
     # TODO: verify url mix and match of run and course
@@ -395,6 +397,7 @@ def lecture_detail(request, run_slug, chapter_slug, lecture_slug):
 
 
 @login_required
+@verify_payment
 def certificate(request, uuid):
     cert = get_object_or_404(Certificate, uuid=uuid)
 

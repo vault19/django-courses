@@ -20,6 +20,7 @@ from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_
 
 
 @login_required
+@verify_payment
 def course_run_overview(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -37,6 +38,7 @@ def course_run_overview(request, run_slug):
 
 
 @login_required
+@verify_payment
 def course_run_chapters(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -76,6 +78,7 @@ def course_run_chapters(request, run_slug):
 
 
 @login_required
+@verify_payment
 def course_run_group(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -99,6 +102,7 @@ def course_run_group(request, run_slug):
 
 
 @login_required
+@verify_payment
 def course_run_help(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 
@@ -116,6 +120,7 @@ def course_run_help(request, run_slug):
 
 
 @login_required
+@verify_payment
 def course_faq(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
 

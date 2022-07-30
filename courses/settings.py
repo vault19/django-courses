@@ -91,3 +91,8 @@ COURSES_NOTIFY_CERTIFICATE_EMAIL_BODY = getattr(
 COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML = getattr(
     settings, "COURSES_NOTIFY_CERTIFICATE_EMAIL_HTML", "courses/emails/certificate_email_body.html"
 )
+
+PAYPAL_BASE_URL = getattr(settings, "PAYPAL_BASE_URL", "https://api-m.sandbox.paypal.com")
+PAYPAL_CLIENT_ID = getattr(settings, "PAYPAL_CLIENT_ID", None)
+PAYPAL_SECRET = getattr(settings, "PAYPAL_SECRET", None)
+PAYPAL_CURRENCY = getattr(settings, "PAYPAL_CURRENCY", "EUR")

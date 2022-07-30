@@ -653,6 +653,10 @@ class RunUsers(models.Model):
         SubscriptionLevel, verbose_name=_("Subscription Level"), on_delete=models.CASCADE, blank=True, null=True
     )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
+    price = models.FloatField(verbose_name=_("Price"))
+    metadata = models.JSONField(
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about meeting.")
+    )
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
     note = models.TextField(
