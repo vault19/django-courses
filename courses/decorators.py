@@ -37,7 +37,7 @@ def verify_payment(func):
                 raise PermissionDenied(_("You are not subscribed to this course!"))
 
             for subscription in subscriptions.all():
-                if subscription.subscription_level and subscription.price >= subscription.payment:
+                if subscription.subscription_level and subscription.price > subscription.payment:
                     messages.error(request, _("You need to finish the payment in order to continue to the course."))
                     return redirect("run_payment_instructions", run_slug=kwargs["run_slug"])
 

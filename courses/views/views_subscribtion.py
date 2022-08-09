@@ -79,7 +79,8 @@ def run_subscription_levels(request, run_slug):
 @login_required
 def run_payment_instructions(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
-    run_subscription_levels = run.get_subscription_level(request.user)
+    run_user = get_object_or_404(RunUsers, run=run, user=request.user)
+    run_subscription_levels = run.get_subscription_level(request.user)  # Potentially delete
     payment = run.user_payment(request.user)
     total_subscription = 0
 
@@ -94,12 +95,13 @@ def run_payment_instructions(request, run_slug):
                 % {"price": total_subscription, "payment": payment}
             ),
         )
-        return redirect("course_run_detail", run_slug=run_slug)
+        return redirect("course_run_overview", run_slug=run_slug)
 
     context = {
         "run": run,
         "subscribed": run.is_subscribed(request.user),
         "subscribed_levels": run_subscription_levels,
+        "run_user": run_user,
         "total_paid": payment,
         "breadcrumbs": [
             {
@@ -174,7 +176,7 @@ def verify_paypal_order(request, order_id):
                     subscription.id, subscription.payment, order['purchase_units'][0]['amount']['currency_code'])
         messages.success(request, _("Thank you for your payment."))
 
-    return redirect("course_run_detail", run_slug=subscription.run.slug)
+    return redirect("course_run_overview", run_slug=subscription.run.slug)
 
 
 @login_required

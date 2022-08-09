@@ -655,7 +655,7 @@ class RunUsers(models.Model):
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     price = models.FloatField(verbose_name=_("Price"))
     metadata = models.JSONField(
-        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about meeting.")
+        verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about RunUser.")
     )
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
     timestamp_modified = models.DateTimeField(verbose_name=_("Modified"), auto_now=True)
