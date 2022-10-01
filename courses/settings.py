@@ -96,3 +96,10 @@ PAYPAL_BASE_URL = getattr(settings, "PAYPAL_BASE_URL", "https://api-m.sandbox.pa
 PAYPAL_CLIENT_ID = getattr(settings, "PAYPAL_CLIENT_ID", None)
 PAYPAL_SECRET = getattr(settings, "PAYPAL_SECRET", None)
 PAYPAL_CURRENCY = getattr(settings, "PAYPAL_CURRENCY", "EUR")
+
+BANK_TRANSFER = getattr(settings, "BANK_TRANSFER", False)
+BANK_NAME = getattr(settings, "BANK_NAME", None)
+BANK_ACCOUNT_NAME = getattr(settings, "BANK_ACCOUNT_NAME", None)
+BANK_IBAN = getattr(settings, "BANK_IBAN", None)
+BANK_SWIFT = getattr(settings, "BANK_SWIFT", None)
+BANK_CURRENCY = getattr(settings, "BANK_CURRENCY", "EUR")

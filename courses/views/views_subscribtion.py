@@ -14,7 +14,8 @@ from courses.forms import SubscribeForm
 from courses.models import Run, SubscriptionLevel, RunUsers
 from courses.utils import send_templated_email
 from courses.decorators import paypal_enabled
-from courses.settings import PAYPAL_BASE_URL, PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_CURRENCY
+from courses.settings import PAYPAL_BASE_URL, PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_CURRENCY, BANK_TRANSFER, \
+    BANK_NAME, BANK_ACCOUNT_NAME, BANK_IBAN, BANK_SWIFT, BANK_CURRENCY
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +99,7 @@ def run_payment_instructions(request, run_slug):
         return redirect("course_run_overview", run_slug=run_slug)
 
     context = {
+        "request": request,
         "run": run,
         "subscribed": run.is_subscribed(request.user),
         "subscribed_levels": run_subscription_levels,
@@ -124,6 +126,13 @@ def run_payment_instructions(request, run_slug):
     if PAYPAL_CLIENT_ID:
         context["paypal_client_id"] = PAYPAL_CLIENT_ID
         context["paypal_client_currency"] = PAYPAL_CURRENCY
+
+    if BANK_TRANSFER:
+        context["bank_name"] = BANK_NAME
+        context["bank_account_name"] = BANK_ACCOUNT_NAME
+        context["bank_iban"] = BANK_IBAN
+        context["bank_swift"] = BANK_SWIFT
+        context["bank_currency"] = BANK_CURRENCY
 
     return render(request, "courses/run_payment_instructions.html", context)
 
