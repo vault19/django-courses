@@ -136,6 +136,14 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
+    payment_profile = models.ForeignKey(
+        "PaymentProfile",
+        verbose_name=_("Payment Profile"),
+        on_delete=models.SET_NULL,
+        help_text=_("Contains Invoicing and Payment details for paid courses."),
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -1026,3 +1034,98 @@ class CertificateTemplate(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class PaymentProfile(models.Model):
+    """
+    Stores a Payment Profile of a company with payment and invoicing details. A Payment Profile can be used by
+    a single course or by multiple courses. Invoices generated with a single Payment Profile will have a single
+    invoice ID series regardless of the specific course or Payment method.
+    """
+
+    # PayPal
+    paypal_allowed = models.BooleanField(verbose_name=_("Allow PayPal payments"), default=False)
+    paypal_base_url = models.URLField(
+        verbose_name=_("PayPal Base URL"),
+        max_length=250,
+        blank=True,
+        null=True,
+    )
+    paypal_client_id = models.CharField(
+        max_length=250,
+        verbose_name=_("PayPal Client ID"),
+        blank=True,
+        null=True,
+    )
+    paypal_secret = models.CharField(
+        max_length=250,
+        verbose_name=_("PayPal Secret"),
+        blank=True,
+        null=True,
+    )
+    paypal_currency = models.CharField(
+        max_length=10,
+        verbose_name=_("PayPal Currency"),
+        blank=True,
+        null=True,
+    )
+
+    # Bank Transfer
+    bank_transfer_allowed = models.BooleanField(verbose_name=_("Allow bank transfer payments"), default=False)
+    bank_transfer_bank_name = models.CharField(
+        max_length=250,
+        verbose_name=_("Bank Name"),
+        blank=True,
+        null=True,
+    )
+    bank_transfer_account_name = models.CharField(
+        max_length=250,
+        verbose_name=_("Bank Account Name"),
+        blank=True,
+        null=True,
+    )
+    bank_transfer_iban = models.CharField(
+        max_length=250,
+        verbose_name=_("Bank IBAN"),
+        blank=True,
+        null=True,
+    )
+    bank_transfer_swift = models.CharField(
+        max_length=250,
+        verbose_name=_("Bank SWIFT"),
+        blank=True,
+        null=True,
+    )
+    bank_transfer_currency = models.CharField(
+        max_length=10,
+        verbose_name=_("Bank Currency"),
+        blank=True,
+        null=True,
+    )
+
+    # Invoicing Company Details
+    company_name = models.CharField(max_length=250, verbose_name=_("Company name"))
+    company_street = models.CharField(max_length=250, verbose_name=_("Company Street"))
+    company_post_code = models.CharField(max_length=250, verbose_name=_("Company Post Code"))
+    company_city = models.CharField(max_length=250, verbose_name=_("Company City"))
+    company_country = models.CharField(max_length=250, verbose_name=_("Company Country"))
+    company_id = models.CharField(max_length=250, verbose_name=_("Company ID"))
+    company_tax_number = models.CharField(max_length=250, verbose_name=_("Tax Number"), blank=True, null=True)
+    company_vat_number = models.CharField(max_length=250, verbose_name=_("VAT Number"), blank=True, null=True)
+    company_mail = models.CharField(max_length=250, verbose_name=_("Company Email"))
+    company_phone = models.CharField(max_length=20, verbose_name=_("Company Phone"))
+
+    # Invoice
+    company_logo = models.ImageField(
+        blank=True,
+        null=True,
+        upload_to='payment_profiles/',
+        validators=[FileExtensionValidator(["jpg", "jpeg", "png"])],
+    )
+    company_note = models.CharField(max_length=250, verbose_name=_("Invoice Company Note"), blank=True, null=True)
+    footer_note = models.CharField(max_length=500, verbose_name=_("Invoice Footer Note"), blank=True, null=True)
+    # TODO: Add Invoice and Proforma template/number_format/next_number/reset
+
+    # VAT
+    vat_rate = models.IntegerField(verbose_name=_("VAT rate"), default=0)
+    # TODO: Check whether VAT Number is entered when VAT rate != 0 and vice versa
