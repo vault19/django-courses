@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.utils.timesince import timesince
 from django.utils.translation import gettext_lazy as _
 
-from courses.models import Lecture, LECTURE_TYPE
+from courses.models import Lecture, LECTURE_TYPE, RunUsers
 from courses.settings import EXTENSION_VIDEO, EXTENSION_IMAGE
 
 register = template.Library()
@@ -63,15 +63,18 @@ def has_passed(run, user):
 
 @register.filter
 def check_payment(run, user):
-    for level in run.get_subscription_level(user):
-        if level[1].price == 0:
-            return "Free"
-        elif run.user_payment(user) >= level[1].price:
-            return "Paid"
-        elif run.user_payment(user) < level[1].price:
-            return "Unpaid"
+    """
+    Checks whether the RunUser (course registration) is "Free", "Paid" or "Unpaid"
+    and returns a string with the current status.
+    """
 
-    return "Free"
+    run_user = RunUsers.objects.get(run=run, user=user)
+    if run_user.price == 0:
+        return "Free"
+    elif run.user_payment(user) >= run_user.price:
+        return "Paid"
+    elif run.user_payment(user) < run_user.price:
+        return "Unpaid"
 
 
 @register.filter
