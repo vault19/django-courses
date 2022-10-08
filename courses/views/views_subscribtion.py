@@ -205,6 +205,12 @@ def subscribe_to_run(request, run_slug):
             messages.error(request, _("You are already subscribed in different course run."))
         else:
             subscription_levels = SubscriptionLevel.objects.filter(run=run)
+            if subscription_levels.count() == 0:
+                subscription_levels = SubscriptionLevel.objects.filter(course=run.course)
+
+            if subscription_levels.count() == 0:
+                raise BadRequest(_("Missing Course Levels!"))
+
             form = SubscribeForm(data=request.POST, subscription_levels=subscription_levels.values_list("id", "title"))
 
             if not form.is_valid():

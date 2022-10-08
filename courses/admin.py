@@ -26,8 +26,9 @@ from courses.models import (
 @admin.register(SubscriptionLevel)
 class SubscriptionLevelAdmin(admin.ModelAdmin):
     list_display = (
-        "run",
         "title",
+        "course",
+        "run",
         "price",
     )
     list_filter = ("run",)
