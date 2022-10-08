@@ -215,7 +215,7 @@ def subscribe_to_run(request, run_slug):
                 "price": 0,
             }
 
-            if "subscription_levels" in form.cleaned_data:
+            if "subscription_level" in form.cleaned_data:
                 subscribed_level = SubscriptionLevel.objects.get(id=form.cleaned_data["subscription_level"])
                 defaults["subscription_level_id"] = form.cleaned_data["subscription_level"]
                 defaults["price"] = subscribed_level.price
