@@ -52,6 +52,21 @@ class CourseManager(models.Manager):
         return qs.select_related("creator").prefetch_related("run_set", "chapter_set")
 
 
+class Category(models.Model):
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    page_title = models.CharField(verbose_name=_("Page Title"), max_length=250)
+    page_subtitle = models.CharField(verbose_name=_("Page Subtitle"), max_length=250, blank=True, null=True)
+    slug = AutoSlugField(verbose_name=_("Slug"), populate_from="name", editable=True, unique=True)
+    color = models.CharField(verbose_name=_("Color"), help_text=_("#HEX"), max_length=250)
+
+    def __str__(self):
+        return f"{self.title}"
+
+
 class Course(models.Model):
     class Meta:
         verbose_name = _("Course")
@@ -68,6 +83,14 @@ class Course(models.Model):
         help_text=_(
             "Short description of the course displayed in the list of all courses. If empty description will be used."
         ),
+    )
+    order = models.IntegerField(default=0, help_text=_("Order in which the course is displayed."))
+    categories = models.ManyToManyField(
+        "Category",
+        verbose_name=_("Categories"),
+        blank=True,
+        null=True,
+        related_name='categories',
     )
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="name", editable=True, unique=True)
     description = models.TextField(verbose_name=_("Description"), help_text=_("Full description of the course."))
