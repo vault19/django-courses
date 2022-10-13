@@ -7,6 +7,7 @@ from django import forms
 
 from courses.models import (
     Course,
+    Category,
     Chapter,
     Lecture,
     Run,
@@ -26,8 +27,9 @@ from courses.models import (
 @admin.register(SubscriptionLevel)
 class SubscriptionLevelAdmin(admin.ModelAdmin):
     list_display = (
-        "run",
         "title",
+        "course",
+        "run",
         "price",
     )
     list_filter = ("run",)
@@ -292,3 +294,13 @@ class CertificateTemplateAdmin(admin.ModelAdmin):
         "intended_course",
         "timestamp_added",
     )
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "slug",
+        "color",
+    )
+

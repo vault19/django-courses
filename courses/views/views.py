@@ -1,9 +1,10 @@
 import datetime
+import os
 from time import gmtime
 from time import strftime
 
 from django.db.models import Q, F
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -20,7 +21,8 @@ from courses.models import Course, Run, Submission, Lecture, Certificate, Subscr
 from courses.utils import get_run_chapter_context, submissions_get_video_links
 
 from courses.settings import COURSES_LANDING_PAGE_URL, COURSES_LANDING_PAGE_URL_AUTHORIZED
-from profiles.models import Profile
+
+from courses.app_logic.courses_logic import get_public_courses, get_category, get_course
 
 
 def index(request):
@@ -29,14 +31,32 @@ def index(request):
     return redirect(COURSES_LANDING_PAGE_URL)
 
 
-def courses(request):
-    courses = Course.objects_no_relations.filter(state="O").order_by("title")
-    context = {
-        "courses": courses,
-        "page_tab_title": _("Courses"),
-    }
+def courses(request, category_slug=None):
 
-    return render(request, "courses/courses_list.html", context)
+    context = {}
+
+    if category_slug is not None:
+        try:
+            category = get_category(category_slug=category_slug)
+            context["page_tab_title"] = category.page_title
+            context["page_title"] = category.page_title
+            context["page_subtitle"] = category.page_subtitle
+        except ObjectDoesNotExist as err:
+            try:
+                course = get_course(course_slug=category_slug)
+                # redirect to course if entered slug matches a course slug (mainly legacy reasons)
+                return redirect("course_detail", course_slug=category_slug)
+            except ObjectDoesNotExist as err:
+                return HttpResponseNotFound
+
+    else:
+        context["page_tab_title"] = _("Courses")
+        context["page_title"] = _("Courses")
+
+    courses = get_public_courses(category_slug)
+    context["courses"] = courses
+
+    return render(request, os.path.join("courses", "courses_list.html"), context)
 
 
 def course_detail(request, course_slug):

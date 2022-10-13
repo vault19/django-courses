@@ -205,6 +205,12 @@ def subscribe_to_run(request, run_slug):
             messages.error(request, _("You are already subscribed in different course run."))
         else:
             subscription_levels = SubscriptionLevel.objects.filter(run=run)
+            if subscription_levels.count() == 0:
+                subscription_levels = SubscriptionLevel.objects.filter(course=run.course)
+
+            if subscription_levels.count() == 0:
+                raise BadRequest(_("Missing Course Levels!"))
+
             form = SubscribeForm(data=request.POST, subscription_levels=subscription_levels.values_list("id", "title"))
 
             if not form.is_valid():
@@ -215,7 +221,7 @@ def subscribe_to_run(request, run_slug):
                 "price": 0,
             }
 
-            if "subscription_levels" in form.cleaned_data:
+            if "subscription_level" in form.cleaned_data:
                 subscribed_level = SubscriptionLevel.objects.get(id=form.cleaned_data["subscription_level"])
                 defaults["subscription_level_id"] = form.cleaned_data["subscription_level"]
                 defaults["price"] = subscribed_level.price
