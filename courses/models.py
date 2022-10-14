@@ -17,6 +17,7 @@ from embed_video.fields import EmbedVideoField
 from courses.validators import FileSizeValidator
 from courses import settings as course_settings
 
+from invoices.models import PaymentProfile
 
 STATE = (
     ("D", _("Draft")),
@@ -155,6 +156,12 @@ class Course(models.Model):
     )
     certificate_template = models.ForeignKey(
         "CertificateTemplate",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    payment_profile = models.ForeignKey(
+        PaymentProfile,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,

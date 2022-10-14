@@ -1,25 +1,9 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 
 from courses.models import RunUsers
-from courses.settings import PAYPAL_BASE_URL, PAYPAL_CLIENT_ID, PAYPAL_SECRET
-
-
-def paypal_enabled(func):
-    """
-    Decorator for views that checks whether PAYPAL is configured.
-    """
-
-    def wrapper(*args, **kwargs):
-        if PAYPAL_BASE_URL and PAYPAL_CLIENT_ID and PAYPAL_SECRET:
-            return func(*args, **kwargs)
-        else:
-            raise Http404(_("PayPal not configured."))
-
-    return wrapper
 
 
 def verify_payment(func):

@@ -34,7 +34,11 @@ urlpatterns = [
         views_subscribtion.run_payment_instructions,
         name="run_payment_instructions",
     ),
-    path("verify/paypal_order/<str:order_id>", views_subscribtion.verify_paypal_order, name="verify_paypal_order",),
+    path(
+        "verify/paypal_order/<str:run_user_id>/<str:order_id>",
+        views_subscribtion.verify_paypal_order,
+        name="verify_paypal_order",
+    ),
     path("course/<str:run_slug>/subscribe/", views_subscribtion.subscribe_to_run, name="subscribe_to_run"),
     path("course/<str:run_slug>/unsubscribe/", views_subscribtion.unsubscribe_from_run, name="unsubscribe_from_run"),
     path("course/<str:run_slug>/<str:chapter_slug>/", views.chapter_detail, name="chapter_detail"),

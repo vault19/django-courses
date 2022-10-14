@@ -9,13 +9,12 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.urls import reverse
 from django.core.exceptions import BadRequest
+from django.http import Http404
 
 from courses.forms import SubscribeForm
 from courses.models import Run, SubscriptionLevel, RunUsers
 from courses.utils import send_templated_email
-from courses.decorators import paypal_enabled
-from courses.settings import PAYPAL_BASE_URL, PAYPAL_CLIENT_ID, PAYPAL_SECRET, PAYPAL_CURRENCY, BANK_TRANSFER, \
-    BANK_NAME, BANK_ACCOUNT_NAME, BANK_IBAN, BANK_SWIFT, BANK_CURRENCY
+
 
 logger = logging.getLogger(__name__)
 
@@ -123,24 +122,39 @@ def run_payment_instructions(request, run_slug):
         ],
     }
 
-    if PAYPAL_CLIENT_ID:
-        context["paypal_client_id"] = PAYPAL_CLIENT_ID
-        context["paypal_client_currency"] = PAYPAL_CURRENCY
+    payment_profile = run_user.run.course.payment_profile
 
-    if BANK_TRANSFER:
-        context["bank_name"] = BANK_NAME
-        context["bank_account_name"] = BANK_ACCOUNT_NAME
-        context["bank_iban"] = BANK_IBAN
-        context["bank_swift"] = BANK_SWIFT
-        context["bank_currency"] = BANK_CURRENCY
+    if payment_profile:
+
+        if payment_profile.paypal and payment_profile.paypal.enabled:
+            context["paypal_client_id"] = payment_profile.paypal.client_id
+            context["paypal_client_currency"] = payment_profile.paypal.currency
+
+        if payment_profile.bank_transfer and payment_profile.bank_transfer.enabled:
+            context["bank_name"] = payment_profile.bank_transfer.bank_name
+            context["bank_account_name"] = payment_profile.bank_transfer.account_name
+            context["bank_iban"] = payment_profile.bank_transfer.iban
+            context["bank_swift"] = payment_profile.bank_transfer.swift
+            context["bank_currency"] = payment_profile.bank_transfer.currency
+            context["bank_instructions"] = payment_profile.bank_transfer.instructions
 
     return render(request, "courses/run_payment_instructions.html", context)
 
 
 @login_required
-@paypal_enabled
-def verify_paypal_order(request, order_id):
-    consumer_key_secret = f"{PAYPAL_CLIENT_ID}:{PAYPAL_SECRET}"
+def verify_paypal_order(request, run_user_id, order_id):
+
+    run_user = get_object_or_404(RunUsers, id=run_user_id)
+    payment_profile = run_user.run.course.payment_profile
+
+    # Check whether PayPal is configured for the RunUser.Run.Course
+    if payment_profile and payment_profile.paypal and payment_profile.paypal.enabled \
+            and payment_profile.paypal.base_url and payment_profile.paypal.client_id and payment_profile.paypal.secret:
+        paypal = payment_profile.paypal
+    else:
+        raise Http404(_("PayPal is not configured."))
+
+    consumer_key_secret = f"{paypal.client_id}:{paypal.secret}"
     consumer_key_secret_enc = base64.b64encode(consumer_key_secret.encode()).decode()
 
     headersAuth = {
@@ -151,8 +165,8 @@ def verify_paypal_order(request, order_id):
         "grant_type": "client_credentials",
     }
 
-    ## Authentication request
-    response = requests.post(f"{PAYPAL_BASE_URL}/v1/oauth2/token", headers=headersAuth, data=data, verify=True)
+    # Authentication request
+    response = requests.post(f"{paypal.base_url}/v1/oauth2/token", headers=headersAuth, data=data, verify=True)
     j = response.json()
 
     if "access_token" not in j:
@@ -163,7 +177,7 @@ def verify_paypal_order(request, order_id):
         "Authorization": f"Bearer {j['access_token']}",
     }
 
-    response = requests.get(f"{PAYPAL_BASE_URL}/v2/checkout/orders/{order_id}", headers=headersAPI, verify=True)
+    response = requests.get(f"{paypal.base_url}/v2/checkout/orders/{order_id}", headers=headersAPI, verify=True)
     order = response.json()
 
     if 'purchase_units' not in order:
