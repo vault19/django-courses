@@ -14,6 +14,7 @@ from django.http import Http404
 from courses.forms import SubscribeForm
 from courses.models import Run, SubscriptionLevel, RunUsers
 from courses.utils import send_templated_email
+from profiles.models import Profile
 
 
 logger = logging.getLogger(__name__)
@@ -80,6 +81,7 @@ def run_subscription_levels(request, run_slug):
 def run_payment_instructions(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
     run_user = get_object_or_404(RunUsers, run=run, user=request.user)
+    user_profile = get_object_or_404(Profile, user=request.user)
     run_subscription_levels = run.get_subscription_level(request.user)  # Potentially delete
     payment = run.user_payment(request.user)
     total_subscription = 0
@@ -104,6 +106,7 @@ def run_payment_instructions(request, run_slug):
         "subscribed_levels": run_subscription_levels,
         "run_user": run_user,
         "total_paid": payment,
+        "user_profile": user_profile,
         "breadcrumbs": [
             {
                 "url": reverse("courses"),
