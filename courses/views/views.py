@@ -47,7 +47,7 @@ def courses(request, category_slug=None):
                 # redirect to course if entered slug matches a course slug (mainly legacy reasons)
                 return redirect("course_detail", course_slug=category_slug)
             except ObjectDoesNotExist as err:
-                return HttpResponseNotFound
+                return HttpResponseNotFound(_("Specified course category not found."))
 
     else:
         context["page_tab_title"] = _("Courses")
