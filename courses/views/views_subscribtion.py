@@ -25,9 +25,9 @@ def run_subscription_levels(request, run_slug):
     run = get_object_or_404(Run, slug=run_slug)
     subscribed = run.is_subscribed(request.user)
 
-    subscription_levels = SubscriptionLevel.objects.filter(run=run)
+    subscription_levels = SubscriptionLevel.objects.filter(run=run).order_by('price')
     if subscription_levels.count() == 0:
-        subscription_levels = SubscriptionLevel.objects.filter(course=run.course)
+        subscription_levels = SubscriptionLevel.objects.filter(course=run.course).order_by('price')
 
     if subscription_levels.count() == 0:
         raise BadRequest(_("Missing Course Levels!"))

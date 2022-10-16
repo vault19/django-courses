@@ -41,6 +41,7 @@ def courses(request, category_slug=None):
             context["page_tab_title"] = category.page_title
             context["page_title"] = category.page_title
             context["page_subtitle"] = category.page_subtitle
+            context["category_footer"] = category.footer
         except ObjectDoesNotExist as err:
             try:
                 course = get_course(course_slug=category_slug)

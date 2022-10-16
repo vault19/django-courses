@@ -63,6 +63,7 @@ class Category(models.Model):
     page_subtitle = models.CharField(verbose_name=_("Page Subtitle"), max_length=250, blank=True, null=True)
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="name", editable=True, unique=True)
     color = models.CharField(verbose_name=_("Color"), help_text=_("#HEX"), max_length=250)
+    footer = models.TextField(verbose_name=_("Footer"), blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -90,7 +91,6 @@ class Course(models.Model):
         "Category",
         verbose_name=_("Categories"),
         blank=True,
-        null=True,
         related_name='categories',
     )
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="name", editable=True, unique=True)
