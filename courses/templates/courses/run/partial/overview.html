@@ -1,3 +1,5 @@
+  {% load markdownify %}
+
   <!-- Card header START -->
   <div class="card-header bg-transparent border-bottom">
     <h3 class="mb-0"><i class="bi bi-ui-checks-grid fa-fw me-2"></i> Prehľad</h3>
@@ -9,11 +11,12 @@
 
     <div class="tab-pane fade active show" id="course-pills-2" role="tabpanel"
          aria-labelledby="course-pills-tab-2">
-      <p>Na tejto stránke sa pracuje.</p>
       <p>
         <strong>K lekciám kurzu sa dostanete cez možnosť Zoznam lekcií vľavo</strong>
         (prípadne na užších obrazovkách cez tlačidlo <i>Otvoriť kurzové menu</i>).
-
+      </p>
+      <p>
+        {{ run.instructions|markdownify:"iframes_allowed" }}
       </p>
     </div>
   </div>

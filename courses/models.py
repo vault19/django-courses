@@ -509,6 +509,14 @@ class Run(models.Model):
         verbose_name=_("Allow public submissions within Group (has to be set per course lecture)"),
         default=False,
     )
+    instructions = models.TextField(
+        verbose_name=_("Instructions"),
+        blank=True,
+        null=True,
+        help_text=_(
+            "Instructions displayed in course overview (visible only to registered users)."
+        ),
+    )
 
     def __str__(self):
         return f"{self.course}: {self.title}"
