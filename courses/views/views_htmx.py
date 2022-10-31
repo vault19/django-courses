@@ -49,7 +49,7 @@ def course_run_chapters(request, run_slug):
         "page_tab_title": run.title,
     }
 
-    for chapter in run.course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
+    for chapter in run.course.chapter_set.order_by('order').all():
         start, end = chapter.get_run_dates(run=run)
 
         if (run.get_setting("COURSES_SHOW_FUTURE_CHAPTERS") or start <= datetime.date.today()) and (

@@ -66,7 +66,7 @@ def course_detail(request, course_slug):
     context = {
         "course": course,
         "questions": course.faq_set.filter(state__in=("C", "B")).all(),
-        "course_runs": course.run_set.filter(state="O"),
+        "course_runs": course.run_set.filter(state="O").order_by('start'),
         "breadcrumbs": [
             {
                 "url": reverse("courses"),
@@ -84,7 +84,7 @@ def course_detail(request, course_slug):
     video_lecture_count = 0
     total_video_lecture_duration = 0
 
-    for chapter in course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
+    for chapter in course.chapter_set.order_by('order').all():
         context["chapters"].append(
             {
                 "lecture_set": chapter.lecture_set.order_by("order", "title"),
@@ -257,7 +257,7 @@ def course_run_detail(request, run_slug):
         ],
     }
 
-    for chapter in run.course.chapter_set.order_by(F("previous").asc(nulls_first=True)).all():
+    for chapter in run.course.chapter_set.order_by('order').all():
         start, end = chapter.get_run_dates(run=run)
 
         if (run.get_setting("COURSES_SHOW_FUTURE_CHAPTERS") or start <= datetime.date.today()) and (

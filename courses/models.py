@@ -238,9 +238,13 @@ class Chapter(models.Model):
     objects_no_relations = models.Manager()
 
     title = models.CharField(verbose_name=_("Title"), max_length=250)
+    order = models.IntegerField(default=0, help_text=_("Order number for the Chapter in the Course."))
+
+    # ToDo: Soon to be replaced by 'order' completely
     previous = models.ForeignKey(
         "self", verbose_name=_("Previous chapter"), blank=True, null=True, on_delete=models.SET_NULL
     )
+
     slug = AutoSlugField(verbose_name=_("Slug"), populate_from="title", editable=True, unique=True)
     perex = models.TextField(
         verbose_name=_("Perex"),
