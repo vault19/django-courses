@@ -152,6 +152,7 @@ def run_payment_instructions(request, run_slug):
 
             try:
                 apply_coupon.execute()
+                return HttpResponseRedirect(request.path_info)
             except ObjectDoesNotExist as err:
                 discount_form._errors['discount_code'] = [_("The specified coupon does not exist.")]
                 context["coupon_message"] = _("The specified coupon does not exist.")
@@ -164,8 +165,6 @@ def run_payment_instructions(request, run_slug):
                 discount_form._errors['discount_code'] = [_("A discount has already been applied to this registration.")]
                 context["coupon_message"] = _("A discount has already been applied to this registration.")
                 context["discount_form"] = discount_form
-
-            return HttpResponseRedirect(request.path_info)
 
         else:
             context["discount_form"] = discount_form
