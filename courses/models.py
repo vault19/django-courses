@@ -696,6 +696,8 @@ class RunUsers(models.Model):
     )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     price = models.FloatField(verbose_name=_("Price"))
+    discount_coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, null=True, blank=True)
+    price_before_discount = models.FloatField(null=True, blank=True)
     metadata = models.JSONField(
         verbose_name=_("Metadata"), blank=True, null=True, help_text=_("Metadata about RunUser.")
     )
@@ -718,6 +720,51 @@ class RunUsers(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+    def calculate_savings(self):
+        if self.price_before_discount:
+            return round(self.price_before_discount - self.price, 2)
+        else:
+            return 0
+
+
+class Coupon(models.Model):
+
+    FLAT_DISCOUNT = "F"
+    PERCENTAGE_DISCOUNT = "P"
+    DISCOUNT_TYPES = (
+        (FLAT_DISCOUNT, _("Flat Discount")),
+        (PERCENTAGE_DISCOUNT, _("Percentage Discount")),
+    )
+
+    title = models.CharField(verbose_name=_("Title"), max_length=250)
+    slug = AutoSlugField(verbose_name=_("Slug"), editable=True, unique=True)
+    valid_from = models.DateField(
+        help_text=_("Coupon can be used from this date."),
+    )
+    valid_to = models.DateField(
+        help_text=_("Coupon can be used to this date."),
+    )
+    limit = models.IntegerField(default=0, help_text=_("How many times the Coupon can be used."))
+    discount_type = models.CharField(verbose_name=_("Discount Type"), max_length=1, choices=DISCOUNT_TYPES)
+    discount = models.FloatField(
+        blank=True,
+        null=True,
+        help_text=_("Discount rate in EUR (if FLAT) or in % (if PERCENTAGE).")
+    )
+    courses = models.ManyToManyField(
+        "Course",
+        verbose_name=_("Courses"),
+        blank=True,
+        related_name='courses',
+    )
+
+    def __str__(self):
+        return self.title
+
+    def count_usages(self):
+        run_users = RunUsers.objects.filter(discount_coupon=self)
+        return run_users.count()
 
 
 class MeetingManager(models.Manager):

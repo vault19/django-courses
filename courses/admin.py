@@ -21,6 +21,7 @@ from courses.models import (
     EmailTemplate,
     EmailTemplateImage,
     CertificateTemplate,
+    Coupon,
 )
 
 
@@ -192,6 +193,18 @@ class RunUsersAdmin(admin.ModelAdmin):
     )
     list_filter = ("run",)
     search_fields = ["user__email", "user__first_name", "user__last_name", "user__username"]
+
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "slug",
+        "valid_from",
+        "valid_to",
+        "discount_type",
+        "discount",
+    )
 
 
 @admin.register(Run)

@@ -6,15 +6,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.urls import reverse
 from django.core.exceptions import BadRequest
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 
-from courses.forms import SubscribeForm
+from courses.forms import SubscribeForm, DiscountForm
 from courses.models import Run, SubscriptionLevel, RunUsers
 from courses.utils import send_templated_email
 from profiles.models import Profile
+from courses.app_logic.courses_logic import ApplyCoupon, CouponNotValidException, CouponAlreadyAppliedException
 
 
 logger = logging.getLogger(__name__)
@@ -83,11 +85,8 @@ def run_payment_instructions(request, run_slug):
     run_user = get_object_or_404(RunUsers, run=run, user=request.user)
     user_profile = get_object_or_404(Profile, user=request.user)
     run_subscription_levels = run.get_subscription_level(request.user)  # Potentially delete
-    payment = run.user_payment(request.user)
-    total_subscription = 0
-
-    for level in run_subscription_levels:
-        total_subscription += level[1].price
+    payment = run_user.payment
+    total_subscription = run_user.price
 
     if payment >= total_subscription:
         messages.success(
@@ -140,6 +139,41 @@ def run_payment_instructions(request, run_slug):
             context["bank_swift"] = payment_profile.bank_transfer.swift
             context["bank_currency"] = payment_profile.bank_transfer.currency
             context["bank_instructions"] = payment_profile.bank_transfer.instructions
+
+    if request.method == "POST":
+
+        discount_form = DiscountForm(request.POST)
+
+        if run_user.price_before_discount:
+            context["coupon_message"] = _("You have already applied a coupon.")
+        elif discount_form.is_valid():
+            coupon_slug = discount_form.cleaned_data["discount_code"]
+            apply_coupon = ApplyCoupon(coupon_slug, run_user)
+
+            try:
+                apply_coupon.execute()
+            except ObjectDoesNotExist as err:
+                discount_form._errors['discount_code'] = [_("The specified coupon does not exist.")]
+                context["coupon_message"] = _("The specified coupon does not exist.")
+                context["discount_form"] = discount_form
+            except CouponNotValidException as err:
+                discount_form._errors['discount_code'] = [_("The specified coupon is not valid.")]
+                context["coupon_message"] = _("The specified coupon is not valid.")
+                context["discount_form"] = discount_form
+            except CouponAlreadyAppliedException as err:
+                discount_form._errors['discount_code'] = [_("A discount has already been applied to this registration.")]
+                context["coupon_message"] = _("A discount has already been applied to this registration.")
+                context["discount_form"] = discount_form
+
+            return HttpResponseRedirect(request.path_info)
+
+        else:
+            context["discount_form"] = discount_form
+
+    else:
+        if not run_user.price_before_discount:
+            discount_form = DiscountForm()
+            context["discount_form"] = discount_form
 
     return render(request, "courses/run_payment_instructions.html", context)
 

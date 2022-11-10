@@ -68,3 +68,8 @@ class MailForm(Form):
     recipient = CharField(label=_("Recipient"), validators=[EmailValidator()])
     subject = CharField(label=_("Subject"), min_length=3, max_length=256)
     body = CharField(label=_("Body"), widget=Textarea(attrs={"rows": 5, "cols": 20}))
+
+
+class DiscountForm(Form):
+    discount_code = CharField(label=_("Discount Code"), min_length=3, max_length=256)
+
