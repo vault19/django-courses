@@ -195,6 +195,14 @@ class RunUsersAdmin(admin.ModelAdmin):
     search_fields = ["user__email", "user__first_name", "user__last_name", "user__username"]
 
 
+class CouponUsageInline(admin.TabularInline):
+    model = RunUsers
+    fields = ("id", "user", "run")
+    readonly_fields = ("id", "user", "run")
+    can_delete = False
+    extra = 0
+
+
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = (
@@ -204,7 +212,11 @@ class CouponAdmin(admin.ModelAdmin):
         "valid_to",
         "discount_type",
         "discount",
+        "count_usages"
     )
+    inlines = [
+        CouponUsageInline,
+    ]
 
 
 @admin.register(Run)
