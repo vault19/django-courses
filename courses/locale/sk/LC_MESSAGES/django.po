@@ -1330,7 +1330,7 @@ msgstr "Už ste zaregistrovaný na kurz: %(run)s."
 #: django-courses/courses/views/views_subscribtion.py:156
 #: django-courses/courses/views/views_subscribtion.py:157
 msgid "The specified coupon does not exist."
-msgstr "Zadaný zľavový kód neexituje."
+msgstr "Zadaný zľavový kód neexistuje."
 
 #: django-courses/courses/views/views_subscribtion.py:160
 #: django-courses/courses/views/views_subscribtion.py:161
