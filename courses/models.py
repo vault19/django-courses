@@ -102,7 +102,7 @@ class Course(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("Creator"),
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         help_text=_("Creator of the course, mainly responsible for the content"),
     )
     lecturers = models.ManyToManyField(
@@ -505,7 +505,7 @@ class Run(models.Model):
     manager = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("Manager"),
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         related_name="manager",
         help_text=_("Manager of the course run, responsible for the smoothness of the run."),
     )
@@ -650,7 +650,7 @@ class Faq(models.Model):
     order = models.IntegerField(default=0, help_text=_("Order number for the question."))
     state = models.CharField(verbose_name=_("State"), max_length=1, choices=STATE, default="D")
     course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE)
-    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, blank=True, null=True)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f"{self.order}. {self.question}"
@@ -661,8 +661,8 @@ class SubscriptionLevel(models.Model):
         verbose_name = _("Subscription Level")
         verbose_name_plural = _("Subscription Levels")
 
-    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE, null=True, blank=True)
-    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.CASCADE, null=True, blank=True)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.SET_NULL, null=True, blank=True)
+    course = models.ForeignKey(Course, verbose_name=_("Course"), on_delete=models.SET_NULL, null=True, blank=True)
     price = models.FloatField(verbose_name=_("Price"))
     title = models.CharField(verbose_name=_("Title"), max_length=250)
     description = models.TextField(
@@ -692,7 +692,7 @@ class RunUsers(models.Model):
     run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     subscription_level = models.ForeignKey(
-        SubscriptionLevel, verbose_name=_("Subscription Level"), on_delete=models.CASCADE, blank=True, null=True
+        SubscriptionLevel, verbose_name=_("Subscription Level"), on_delete=models.SET_NULL, blank=True, null=True
     )
     payment = models.FloatField(verbose_name=_("Payment"), default=0)
     price = models.FloatField(verbose_name=_("Price"))
@@ -797,7 +797,7 @@ class Meeting(models.Model):
     leader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("Leader"),
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="leader",
         blank=True,
         null=True,
@@ -806,7 +806,7 @@ class Meeting(models.Model):
     organizer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("Organizer"),
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         related_name="organizer",
         help_text=_("Organizer of the meeting, responsible for the meeting."),
     )
@@ -957,7 +957,7 @@ class Review(models.Model):
         verbose_name=_("Description"), blank=True, null=True, help_text=_("Describe your opinion about the submission.")
     )
     submission = models.ForeignKey(Submission, verbose_name=_("Submission"), on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"), on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Author"), on_delete=models.RESTRICT)
     accepted = models.BooleanField(
         verbose_name=_("Accepted"),
         help_text=_(
@@ -1007,7 +1007,7 @@ class Certificate(models.Model):
         blank=True,
         help_text=_("Field not used for now. Please ignore it."),
     )
-    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.CASCADE)
+    run = models.ForeignKey(Run, verbose_name=_("Run"), on_delete=models.RESTRICT)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
     timestamp_added = models.DateTimeField(verbose_name=_("Added"), auto_now_add=True)
 
@@ -1078,7 +1078,7 @@ class EmailTemplateImage(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name=_("Creator"),
-        on_delete=models.CASCADE,
+        on_delete=models.RESTRICT,
         help_text=_("Uploader of the image."),
     )
     email_template = models.ForeignKey(
